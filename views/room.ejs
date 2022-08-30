@@ -1,0 +1,35 @@
+<%- include('partials/header') %>
+
+<div id="grid-screen">
+  <div>
+    <input
+      type="text"
+      class="form-control navbar-brand"
+      id="lblMeetingId"
+      readonly
+    />
+    <button class="btn btn-dark" id="btnToggleMic">Unmute Mic</button>
+    <button class="btn btn-dark" id="btnToggleWebCam">Disable Webcam</button>
+    <button class="btn btn-dark" id="btnLeaveMeeting">Leave Meeting</button>
+  </div>
+  <br />
+  <div id="videoContainer"></div>
+  <div
+    style="
+      position: absolute;
+      top: 10px;
+      right: 0px;
+      height: 50%;
+      overflow-y: scroll;
+    "
+  >
+    <h3>Participants List</h3>
+    <div id="participantsList"></div>
+  </div>
+</div>
+
+<script src="javascript/config.js"></script>
+<script src="javascript/index.js"></script>
+<script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script>
+
+<%- include('partials/footer') %>

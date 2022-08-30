@@ -1,0 +1,2 @@
+TOKEN = '';
+console.log(TOKEN);
