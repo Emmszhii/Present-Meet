@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+
+<div class="homepageMain">
+  <div class="text">
+    <h2>
+      80 Percent of Success is Showing Up. <br />
+      Attend Today, Achieve Tomorrow.
+    </h2>
+    <span
+      >We develope a secure and fast service to <br />
+      ensure meetings and attendance is available and free for all.</span
+    >
+
+    <div class="buttons">
+      <button class="btnJoin" id="btnJoinModal">Join</button>
+      <button class="btnCreateRoom" id="btnCreateModal">Create Room</button>
+    </div>
+
+    <hr width="500px" />
+
+    <div class="homepageFooter">
+      <p class="text1">Learn more</p>
+      <p class="text2">About</p>
+    </div>
+  </div>
+
+  <div class="homepageImg">
+    <img src="img/2.png" alt="onCall" />
+  </div>
+</div>
+
+<!-- Meeting Joining -->
+<div class="modalJoin-bg closeBg">
+  <div class="joinModal">
+    <h3>Join a meeting</h3>
+    <span>Enter a meeting code provided by the meeting organizer</span>
+    <input class="input" type="text" name="meetingLink" id="link" />
+    <div class="buttons">
+      <button id="btnJoin">Join</button>
+      <span class="modalJoin-close">X</span>
+    </div>
+  </div>
+</div>
+
+<!-- Create Meeting -->
+<div class="modalCreate-bg closeBg">
+  <div class="createModal">
+    <h3>Create a Meeting</h3>
+    <span>Here's the link to your meeting</span>
+    <input class="input" type="text" name="meetingLink" id="link" />
+    <button class="icon"><i class="fa-solid fa-copy"></i></button>
+
+    <div class="buttons">
+      <button id="btn">Enter Room</button>
+      <span class="modalCreate-close">X</span>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

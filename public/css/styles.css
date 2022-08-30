@@ -1,0 +1,114 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e8ecef;
+  box-sizing: border-box;
+}
+
+.home {
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.homepageMain {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  height: 85vh;
+  place-content: center;
+  place-items: center;
+}
+
+.text > h2 {
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 39.17px;
+}
+
+.text > span {
+  margin: 0;
+  color: #000;
+  line-height: 21.19px;
+  font-size: 15px;
+  font-weight: 400;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.homepageBtn {
+}
+
+.input {
+  width: 80%;
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.buttons > button {
+  margin-top: 10px;
+  width: 150px;
+  height: 35px;
+  border-radius: 10px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.homepageFooter {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px;
+}
+
+.modalJoin-bg,
+.modalCreate-bg {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s opacity 0, 5s;
+}
+
+.bg-active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.joinModal,
+.createModal {
+  border-radius: 10px;
+  background-color: white;
+  width: 25%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.modalJoin-close,
+.modalCreate-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.icon {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
