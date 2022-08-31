@@ -51,8 +51,8 @@ input:focus::placeholder {
   color: transparent;
 }
 
-.buttons > button,
-button {
+.buttons > .button,
+.button {
   margin-top: 10px;
   width: 150px;
   height: 35px;
@@ -63,12 +63,26 @@ button {
 
 .space {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
+  margin: 10px 10px 10px 0;
+}
+
+.space > button {
+  margin: 10px;
+}
+
+.button:hover {
+  color: white;
+  background-color: black;
+}
+
+.button:active {
+  border: 1px solid white;
 }
 
 .homepageFooter {
   display: flex;
-  justify-content: center;
+  justify-content: end;
   margin: 0px;
 }
 
@@ -121,6 +135,8 @@ button {
   cursor: pointer;
 }
 
-.logout {
-  margin-right: 30px;
+.icon:active {
+  color: white;
+  background-color: black;
+  border: 0;
 }

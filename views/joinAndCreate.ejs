@@ -13,8 +13,8 @@
     >
 
     <div class="buttons space">
-      <button class="btnJoin" id="btnJoinModal">Join</button>
-      <button class="btnCreateRoom" id="btnCreateModal">Create Room</button>
+      <button class="button btnJoin" id="btnJoinModal">Join</button>
+      <button class="button btnCreateRoom" id="btnCreateModal">Create Room</button>
     </div>
 
     <hr width="500px" />
@@ -50,11 +50,10 @@
             required
           />
         <div class="buttons">
-          <button type="submit">
+          <button class="button" type="submit">
             Join
           </button>
         </form>
-
         <span class="modalJoin-close">X</span>
       </div>
     </div>
@@ -68,9 +67,8 @@
       <form action='/room'>
         <input class="input" type="text" name="meetingId" id="link" autocomplete="off"/>
         <button onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
-        
         <div class="buttons">
-          <button type="submit" >
+          <button class="button" type="submit" >
             Enter Room
           </button>
       </form>

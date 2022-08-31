@@ -1,10 +1,10 @@
 {
-  "name": "secretsstartingcode",
+  "name": "Present Meet",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "",
     "start": "nodemon app.js"
   },
   "keywords": [],
@@ -19,7 +19,6 @@
     "express": "^4.18.1",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^8.5.1",
-    "md5": "^2.3.0",
     "mongoose": "^6.5.2",
     "mongoose-encryption": "^2.1.2",
     "mongoose-findorcreate": "^3.0.0",

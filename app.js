@@ -12,8 +12,9 @@ const morgan = require('morgan');
 const { default: fetch } = require('node-fetch');
 const jwt = require('jsonwebtoken');
 
-const mongoose = require('mongoose');
+const PORT = process.env.PORT || 3000;
 
+const mongoose = require('mongoose');
 const app = express();
 
 app.use(express.static('public'));
@@ -95,13 +96,9 @@ passport.use(
   )
 );
 
-// home
+// Home
 app.get('/', (req, res) => {
-  // if (req.isAuthenticated()) {
-  // res.redirect('/secrets');
-  // } else {
   res.render('home');
-  // }
 });
 
 // Auth Google Login
@@ -143,6 +140,61 @@ app
     const link = req.body.meetingLink;
     console.log(link);
   });
+
+// Profile of the user
+app.get('/profile', (req, res) => {
+  // console.log({ profile: req.user });
+  res.status(200).json({ profile: req.user });
+});
+
+// VideoSDK TOKEN
+
+// const videoSdkOptions = {
+//   expiresIn: '90m',
+//   algorithm: 'HS256',
+// };
+// const payload = {
+//   apikey: process.env.VIDEOSDK_ID,
+//   version: 2,
+//   roles: ['CRAWLER'],
+// };
+// const token = jwt.sign(payload, process.env.VIDEOSDK_SECRET, videoSdkOptions);
+
+// app.get('/videoSdk_token', (req, res) => {
+//   res.status(200).json({ token: token });
+// });
+
+app.get('/videoSdk_token', (req, res) => {
+  const API_KEY = process.env.VIDEOSDK_ID;
+  const SECRET_KEY = process.env.VIDEOSDK_SECRET;
+
+  const options = { expiresIn: '90m', algorithm: 'HS256' };
+
+  const payload = {
+    apikey: API_KEY,
+    permissions: ['allow_join'], // also accepts "ask_join", "allow_mod"
+  };
+
+  const token = jwt.sign(payload, SECRET_KEY, options);
+  // console.log(token);
+  res.json({ token });
+});
+
+// VideoSDK Meeting Room
+app.post('/create-meeting/', (req, res) => {
+  const { token, region } = req.body;
+  const url = `${process.env.VIDEOSDK_API_ENDPOINT}/api/meetings`;
+  const options = {
+    method: 'POST',
+    headers: { Authorization: token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ region }),
+  };
+
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((result) => res.json(result)) // result will contain meetingId
+    .catch((error) => console.error('error', error));
+});
 
 // app
 //   .route('/login')
@@ -193,22 +245,12 @@ app
 //     );
 //   });
 
-const authenticated = (user, url) => {
-  if (user.isAuthenticated()) {
-    res.render(`${url}`);
-  } else {
-    res.redirect('/');
-  }
-};
-
 app.get('/logout', (req, res) => {
   req.logout((err) => {
     err && console.log(err);
     res.redirect('/');
   });
 });
-
-const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server is up and listening on PORT ${PORT}`);

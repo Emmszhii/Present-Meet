@@ -9,46 +9,76 @@
       src="https://kit.fontawesome.com/a2592a1c75.js"
       crossorigin="anonymous"
     ></script> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Present Meet</title>
   </head>
   <body>
     <div class="videoCall">
-      <div class="tileFaces">
-        <!--dine sa div na to papasok yung bawat papasok yung naka tile sila parang sa googlemeet-->
-        <div class="facesContainer">
-          <div class="user1">1</div>
-          <div class="user">2</div>
-          <div class="user">3</div>
-          <div class="user">4</div>
+      <main class="container">
+        <div id="room__container">
+          <section class="tileFaces" id="stream__container">
+            <div id="stream__box"></div>
+
+            <div id="streams__container">
+              <div class="video__container" id="user-container-1">
+                <h1></h1>
+              </div>
+              <div class="video__container" id="user-container-1">
+                <h1>2</h1>
+              </div>
+              <div class="video__container" id="user-container-1">
+                <h1>3</h1>
+              </div>
+              <div class="video__container" id="user-container-1">
+                <h1>4</h1>
+              </div>
+            </div>
+          </section>
+
+          <section id="messages__container">
+            <div id="messages"></div>
+          </section>
         </div>
-      </div>
+      </main>
 
       <div class="footerBtn">
         <div class="videoLink">
+          <!--dine yung link-->
           <p class="link"></p>
         </div>
-        <button class="copy" onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
-        
-          
+        <button
+          class="copy"
+          onclick="copyClipboard()"
+          class="icon"
+          type="button"
+        >
+          <i class="fa-solid fa-copy"></i>
         </button>
-        <!--dine yung link-->
+
+        <!-- </button> -->
         <div class="middleBtn">
-          <button><i class="fa-solid fa-microphone"></i></button>
-          <button><i class="fa-solid fa-video"></i></button>
-          <button><i class="fa-solid fa-desktop"></i></button>
+          <button class="button"><i class="fa-solid fa-microphone"></i></button>
+          <button class="button"><i class="fa-solid fa-video"></i></button>
+          <button class="button"><i class="fa-solid fa-desktop"></i></button>
           <!-- <button><i class="fa-solid fa-ellipsis-vertical"></i></button> -->
-          <button style="background-color: red">
+          <button class="button" id="endCall">
             <i class="fa-solid fa-phone"></i>
           </button>
         </div>
         <div class="rightBtn">
-          <button><i class="fa-solid fa-users"></i></button>
-          <button><i class="fa-solid fa-envelope"></i></button>
+          <button class="button"><i class="fa-solid fa-users"></i></button>
+          <button class="button"><i class="fa-solid fa-envelope"></i></button>
         </div>
       </div>
     </div>
 
-    <script defer src="javascript/room.js"></script>
+    <script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script>
+    <script src="javascript/room.js"></script>
   </body>
 </html>
