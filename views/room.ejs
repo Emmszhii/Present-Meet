@@ -1,35 +1,54 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/room.css" />
+    <!-- <script
+      src="https://kit.fontawesome.com/a2592a1c75.js"
+      crossorigin="anonymous"
+    ></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Present Meet</title>
+  </head>
+  <body>
+    <div class="videoCall">
+      <div class="tileFaces">
+        <!--dine sa div na to papasok yung bawat papasok yung naka tile sila parang sa googlemeet-->
+        <div class="facesContainer">
+          <div class="user1">1</div>
+          <div class="user">2</div>
+          <div class="user">3</div>
+          <div class="user">4</div>
+        </div>
+      </div>
 
-<div id="grid-screen">
-  <div>
-    <input
-      type="text"
-      class="form-control navbar-brand"
-      id="lblMeetingId"
-      readonly
-    />
-    <button class="btn btn-dark" id="btnToggleMic">Unmute Mic</button>
-    <button class="btn btn-dark" id="btnToggleWebCam">Disable Webcam</button>
-    <button class="btn btn-dark" id="btnLeaveMeeting">Leave Meeting</button>
-  </div>
-  <br />
-  <div id="videoContainer"></div>
-  <div
-    style="
-      position: absolute;
-      top: 10px;
-      right: 0px;
-      height: 50%;
-      overflow-y: scroll;
-    "
-  >
-    <h3>Participants List</h3>
-    <div id="participantsList"></div>
-  </div>
-</div>
+      <div class="footerBtn">
+        <div class="videoLink">
+          <p class="link"></p>
+        </div>
+        <button class="copy" onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
+        
+          
+        </button>
+        <!--dine yung link-->
+        <div class="middleBtn">
+          <button><i class="fa-solid fa-microphone"></i></button>
+          <button><i class="fa-solid fa-video"></i></button>
+          <button><i class="fa-solid fa-desktop"></i></button>
+          <!-- <button><i class="fa-solid fa-ellipsis-vertical"></i></button> -->
+          <button style="background-color: red">
+            <i class="fa-solid fa-phone"></i>
+          </button>
+        </div>
+        <div class="rightBtn">
+          <button><i class="fa-solid fa-users"></i></button>
+          <button><i class="fa-solid fa-envelope"></i></button>
+        </div>
+      </div>
+    </div>
 
-<script src="javascript/config.js"></script>
-<script src="javascript/index.js"></script>
-<script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script>
-
-<%- include('partials/footer') %>
+    <script defer src="javascript/room.js"></script>
+  </body>
+</html>

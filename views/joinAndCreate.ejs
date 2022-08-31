@@ -1,5 +1,6 @@
 <%- include('partials/header') %>
 
+<!-- Main -->
 <div class="homepageMain">
   <div class="text">
     <h2>
@@ -11,7 +12,7 @@
       ensure meetings and attendance is available and free for all.</span
     >
 
-    <div class="buttons">
+    <div class="buttons space">
       <button class="btnJoin" id="btnJoinModal">Join</button>
       <button class="btnCreateRoom" id="btnCreateModal">Create Room</button>
     </div>
@@ -19,34 +20,40 @@
     <hr width="500px" />
 
     <div class="homepageFooter">
-      <p class="text1">Learn more</p>
-      <p class="text2">About</p>
+      <!-- <p class="text1">Learn more</p>
+      <p class="text2">About</p> -->
+      <form action="/logout">
+        <button class="button logout" type="submit">Logout</button>
+      </form>
     </div>
   </div>
-
   <div class="homepageImg">
     <img src="img/2.png" alt="onCall" />
   </div>
 </div>
 
+<!-- MODALS -->
 <!-- Meeting Joining -->
-<div id="join-screen">
-  <div class="modalJoin-bg closeBg">
-    <div class="joinModal">
-      <h3>Join a meeting</h3>
-      <span>Enter a meeting code provided by the meeting organizer</span>
-      <input
-        class="input"
-        type="text"
-        name="meetingLink"
-        id="txtMeetingCode"
-        placeholder="Enter Meeting Code..."
-        required
-      />
-      <div class="buttons">
-        <button id="btnJoinMeeting" onclick="meetingHandler(false)">
-          Join
-        </button>
+  <div id="join-screen">
+    <div class="modalJoin-bg closeBg">
+      <div class="joinModal">
+        <h3>Join a meeting</h3>
+        <span>Enter a meeting code provided by the meeting organizer</span>
+        <form action="#" method="post">
+          <input
+            class="input"
+            type="text"
+            name="meetingLink"
+            id="txtMeetingCode"
+            placeholder="Enter Meeting Code..."
+            autocomplete="off"
+            required
+          />
+        <div class="buttons">
+          <button type="submit">
+            Join
+          </button>
+        </form>
 
         <span class="modalJoin-close">X</span>
       </div>
@@ -58,24 +65,20 @@
     <div class="createModal">
       <h3>Create a Meeting</h3>
       <span>Here's the link to your meeting</span>
-      <input class="input" type="text" name="meetingLink" id="link" />
-      <button class="icon"><i class="fa-solid fa-copy"></i></button>
-
-      <div class="buttons">
-        <button id="btnCreateMeeting" onclick="meetingHandler(true)">
-          Enter Room
-        </button>
-        <span class="modalCreate-close">X</span>
+      <form action='/room'>
+        <input class="input" type="text" name="meetingId" id="link" autocomplete="off"/>
+        <button onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
+        
+        <div class="buttons">
+          <button type="submit" >
+            Enter Room
+          </button>
+      </form>
+          <span class="modalCreate-close">X</span>
       </div>
     </div>
   </div>
 </div>
 
 <script defer src="javascript/script.js"></script>
-<script defer src="javascript/index.js"></script>
-<script defer src="javascript/config.js"></script>
-<script
-  defer
-  src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"
-></script>
 <%- include('partials/footer') %>

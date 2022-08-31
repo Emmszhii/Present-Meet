@@ -80,7 +80,6 @@ passport.use(
       userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
     },
     function (accessToken, refreshToken, profile, cb) {
-      console.log(profile);
       User.findOrCreate(
         {
           googleId: profile.id,
@@ -88,7 +87,7 @@ passport.use(
           photoUrl: profile.photos[0].value,
         },
         function (err, user) {
-          console.log(user);
+          // console.log(user);
           return cb(err, user);
         }
       );
@@ -105,27 +104,7 @@ app.get('/', (req, res) => {
   // }
 });
 
-//
-app
-  .route('/joinAndCreate')
-  .get((req, res) => {
-    // session user algorithm
-    if (req.isAuthenticated()) {
-      res.render('joinAndCreate');
-    } else {
-      res.redirect('/');
-    }
-  })
-  .post((req, res) => {
-    if (req.isAuthenticated()) {
-      const showJoinModal = !!req.body.joinModal;
-      res.render('joinAndCreate', { showJoinModal });
-    } else {
-      res.redirect('/');
-    }
-  });
-
-// Auth Login
+// Auth Google Login
 app
   .route('/auth/google')
   .get(passport.authenticate('google', { scope: ['profile'] }));
@@ -139,6 +118,31 @@ app.get(
     res.redirect('/joinAndCreate');
   }
 );
+
+// join or create room
+app.route('/joinAndCreate').get((req, res) => {
+  // session user algorithm
+  if (req.isAuthenticated()) {
+    res.render('joinAndCreate');
+  } else {
+    res.redirect('/');
+  }
+});
+
+app
+  .route('/room')
+  .get((req, res) => {
+    if (req.isAuthenticated()) {
+      res.render('room');
+    } else {
+      res.redirect('/');
+    }
+  })
+  .post((req, res) => {
+    authenticated(req, 'room');
+    const link = req.body.meetingLink;
+    console.log(link);
+  });
 
 // app
 //   .route('/login')
@@ -189,67 +193,13 @@ app.get(
 //     );
 //   });
 
-// room
-app.route('/room').get((req, res) => {
-  if (req.isAuthenticated) {
-    res.render('room');
+const authenticated = (user, url) => {
+  if (user.isAuthenticated()) {
+    res.render(`${url}`);
   } else {
     res.redirect('/');
   }
-});
-
-// GET VIDEO SDK TOKEN
-
-// VIDEOSDK TOKEN
-app.get('/get-token', (req, res) => {
-  const API_KEY = process.env.VIDEOSDK_ID;
-  const SECRET_KEY = process.env.VIDEOSDK_SECRET;
-
-  const options = { expiresIn: '90m', algorithm: 'HS256' };
-
-  const payload = {
-    apikey: API_KEY,
-    permissions: ['allow_join', 'allow_mod'],
-  };
-
-  const token = jwt.sign(payload, SECRET_KEY, options);
-  console.log(token);
-  res.json({ token });
-});
-
-// VIDEOSDK CREATING MEETING
-app.post('/create-meeting/', (req, res) => {
-  const { token, region } = req.body;
-  const url = `${process.env.VIDEOSDK_API_ENDPOINT}/api/meetings`;
-  const options = {
-    method: 'POST',
-    headers: { Authorization: token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ region }),
-  };
-
-  fetch(url, options)
-    .then((response) => response.json())
-    .then((result) => res.json(result)) // result will contain meetingId
-    .catch((error) => console.error('error', error));
-});
-
-// VIDEOSDK VALIDATE MEETING
-app.post('/validate-meeting/:meetingId', (req, res) => {
-  const token = req.body.token;
-  const meetingId = req.params.meetingId;
-
-  const url = `${process.env.VIDEOSDK_API_ENDPOINT}/api/meetings/${meetingId}`;
-
-  const options = {
-    method: 'POST',
-    headers: { Authorization: token },
-  };
-
-  fetch(url, options)
-    .then((response) => response.json())
-    .then((result) => res.json(result)) // result will contain meetingId
-    .catch((error) => console.error('error', error));
-});
+};
 
 app.get('/logout', (req, res) => {
   req.logout((err) => {

@@ -37,9 +37,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.homepageBtn {
-}
-
 .input {
   width: 80%;
   text-align: center;
@@ -54,7 +51,8 @@ input:focus::placeholder {
   color: transparent;
 }
 
-.buttons > button {
+.buttons > button,
+button {
   margin-top: 10px;
   width: 150px;
   height: 35px;
@@ -63,9 +61,14 @@ input:focus::placeholder {
   cursor: pointer;
 }
 
+.space {
+  display: flex;
+  justify-content: space-around;
+}
+
 .homepageFooter {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin: 0px;
 }
 
@@ -116,4 +119,8 @@ input:focus::placeholder {
   border: 0;
   background: transparent;
   cursor: pointer;
+}
+
+.logout {
+  margin-right: 30px;
 }
