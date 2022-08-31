@@ -1,4 +1,0 @@
-POST http://localhost:3000/rtcToken
-
-
-GET http://localhost:3000/profile

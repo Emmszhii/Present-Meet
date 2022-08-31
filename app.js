@@ -17,10 +17,10 @@ const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const app = express();
 
+app.use(cors());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
-app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -148,103 +148,53 @@ app.get('/profile', (req, res) => {
 });
 
 // VideoSDK TOKEN
+const baseURL = `https://api.videosdk.live`;
 
-// const videoSdkOptions = {
-//   expiresIn: '90m',
-//   algorithm: 'HS256',
-// };
-// const payload = {
-//   apikey: process.env.VIDEOSDK_ID,
-//   version: 2,
-//   roles: ['CRAWLER'],
-// };
-// const token = jwt.sign(payload, process.env.VIDEOSDK_SECRET, videoSdkOptions);
+const API_KEY = process.env.VIDEOSDK_ID;
+const SECRET_KEY = process.env.VIDEOSDK_SECRET;
 
-// app.get('/videoSdk_token', (req, res) => {
-//   res.status(200).json({ token: token });
-// });
+const options = {
+  expiresIn: '10m',
+  algorithm: 'HS256',
+};
+const payload = {
+  apikey: API_KEY,
+  version: 2,
+  roles: ['CRAWLER'],
+};
+// TOKEN
+const videoSdkToken = jwt.sign(payload, SECRET_KEY, options);
+console.log('VideoSDK TOKEN : ', videoSdkToken);
 
-app.get('/videoSdk_token', (req, res) => {
-  const API_KEY = process.env.VIDEOSDK_ID;
-  const SECRET_KEY = process.env.VIDEOSDK_SECRET;
+// VideoSDK ROOMS
 
-  const options = { expiresIn: '90m', algorithm: 'HS256' };
+// const roomID = getRooms();
+// console.log(roomID);
+// GET TOKEN
+app.get('/get-token', (req, res) => [
+  res.status(200).json({ token: videoSdkToken }),
+]);
 
-  const payload = {
-    apikey: API_KEY,
-    permissions: ['allow_join'], // also accepts "ask_join", "allow_mod"
-  };
-
-  const token = jwt.sign(payload, SECRET_KEY, options);
-  // console.log(token);
-  res.json({ token });
-});
-
-// VideoSDK Meeting Room
-app.post('/create-meeting/', (req, res) => {
-  const { token, region } = req.body;
-  const url = `${process.env.VIDEOSDK_API_ENDPOINT}/api/meetings`;
-  const options = {
+// GET ROOM
+app.get('/create-meeting', (req, res) => {
+  const optionsRoom = {
     method: 'POST',
-    headers: { Authorization: token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ region }),
+    headers: {
+      Authorization: videoSdkToken,
+      'Content-Type': 'application/json',
+    },
   };
-
-  fetch(url, options)
-    .then((response) => response.json())
-    .then((result) => res.json(result)) // result will contain meetingId
-    .catch((error) => console.error('error', error));
+  const roomUrl = `https://api.videosdk.live/v2/rooms`;
+  const getRoomId = async () => {
+    const response = await fetch(roomUrl, optionsRoom);
+    const data = await response.json();
+    console.log(data);
+    res.status(200).json(data);
+  };
+  getRoomId();
 });
 
-// app
-//   .route('/login')
-//   .get((req, res) => {
-//     res.render('login');
-//   })
-//   .post(
-//     passport.authenticate('local', {
-//       successRedirect: '/secrets',
-//       failureRedirect: '/login',
-//     }),
-//     (req, res) => {
-//       const user = new User({
-//         username: req.body.username,
-//         password: req.body.password,
-//       });
-
-//       // login algorithm
-//       req.login(user, (err) => {
-//         err && console.log(err);
-//         passport.authenticate('local')(req, res, () => {
-//           res.redirect('/secrets');
-//         });
-//       });
-//     }
-//   );
-
-// app
-//   .route('/register')
-//   .get((req, res) => {
-//     res.render('register');
-//   })
-//   .post((req, res) => {
-//     //register algorithm
-//     User.register(
-//       { username: req.body.username },
-//       req.body.password,
-//       (err, user) => {
-//         if (err) {
-//           console.log(err);
-//           res.redirect('/register');
-//         } else {
-//           passport.authenticate('local')(req, res, function () {
-//             res.redirect('/secrets');
-//           });
-//         }
-//       }
-//     );
-//   });
-
+// Logout
 app.get('/logout', (req, res) => {
   req.logout((err) => {
     err && console.log(err);
