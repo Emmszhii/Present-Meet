@@ -1,6 +1,8 @@
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
 const meetingId = urlParams.get('meetingId').trim();
+const videoConfig = urlParams.get('video');
+const audioConfig = urlParams.get('audio');
 const AUTH_URL = `http://localhost:3000`;
 const API_BASE_URL = 'https://api.videosdk.live';
 const videoLink = document.querySelector('.link');
@@ -16,7 +18,7 @@ let mic = true;
 let video = true;
 let screenShareOn = false;
 
-// Copy Meetiing ID
+// Copy Meeting ID
 const copyClipboard = () => {
   navigator.clipboard.writeText(meetingId);
 };
@@ -57,6 +59,9 @@ videoLink.addEventListener('click', copyClipboard);
 
 window.addEventListener('load', () => {
   videoLink.textContent = meetingId;
+  audioConfig === null ? (mic = false) : (mic = true);
+  videoConfig === null ? (video = false) : (video = true);
+  console.log(mic, video);
   const url = `${AUTH_URL}/profile`;
   (async function () {
     const res = await fetch(url, { method: 'GET' });

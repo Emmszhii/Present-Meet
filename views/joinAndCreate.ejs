@@ -38,17 +38,18 @@
       <div class="joinModal">
         <h3>Join a meeting</h3>
         <span>Enter a meeting code provided by the meeting organizer</span>
-        <div class="checkBoxes">
-          <label class="container" id="videoCheckbox">Video
-          <input type="checkbox">
-          <span class="checkmark"></span>
-          </label>
-          <label class="container" id="MicCheckbox">Mic
-          <input type="checkbox">
-          <span class="checkmark"></span>
-          </label>
-        </div>
         <form action="/room" method="get">
+          <div class="checkBoxes">
+            <label class="container" >Video
+              <input name="video" type="checkbox" id="videoCheckbox1" value='false'>
+              <span span class="checkmark"></span>
+            </label>
+            <label class="container" >Mic
+              <input name="audio" type="checkbox" id="micCheckbox1" value="false">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        
           <input
             class="input"
             type="text"
@@ -59,12 +60,11 @@
             required
           />
           <div class="buttons">
-            <button class="button" type="submit" onclick="joinMeeting()">
+            <button class="button" type="submit">
             Join
           </button>
         </form>
         <span class="modalJoin-close">X</span>
-        <div id="message"></div>
       </div>
     </div>
   </div>
@@ -74,31 +74,30 @@
     <div class="createModal">
       <h3>Create a Meeting</h3>
       <span>Here's the link to your meeting</span>
-      <div class="checkBoxes">
-        <label class="container" id="videoCheckbox">Video
-        <input type="checkbox">
-        <span class="checkmark"></span>
-      </label>
-      <label class="container" id="micCheckbox">Mic
-        <input type="checkbox">
-        <span class="checkmark"></span>
-      </label>
-      </div>
       <form action='/room' method="get">
-        <input class="input" type="text" name="meetingId" id="link" autocomplete="off"/>
+        <div class="checkBoxes">
+          <label class="container" >Video
+            <input name="video" type="checkbox" id="videoCheckbox2" value="false">
+            <span span class="checkmark"></span>
+          </label>
+          <label class="container" >Mic
+            <input name="audio" type="checkbox" id="micCheckbox2" value="false">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      
+        <input class="input" type="text" name="meetingId" id="link" autocomplete="off" readonly/>
         <button onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
         <div class="buttons">
           <button class="button" type="submit" >
             Enter Room
           </button>
       </form>
-          <span class="modalCreate-close">X</span>
+        <span class="modalCreate-close">X</span>
       </div>
-      <div id="message"></div>
     </div>
-  </div>
-</div>
+  
 
 <script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script>
-<script src="javascript/script.js"></script>
+<script  src="javascript/script.js"></script>
 <%- include('partials/footer') %>

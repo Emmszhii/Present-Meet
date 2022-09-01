@@ -87,7 +87,11 @@ passport.use(
 
 // Home
 app.get('/', (req, res) => {
-  res.render('home');
+  if (req.isAuthenticated()) {
+    res.redirect('/join-and-create');
+  } else {
+    res.render('home');
+  }
 });
 
 // Auth Google Login
@@ -99,12 +103,12 @@ app.get(
   passport.authenticate('google', { failureRedirect: '/home' }),
   function (req, res) {
     // Successful authentication, redirect secrets.
-    res.redirect('/joinAndCreate');
+    res.redirect('/join-and-create');
   }
 );
 
 // join or create room
-app.route('/joinAndCreate').get((req, res) => {
+app.route('/join-and-create').get((req, res) => {
   // session user algorithm
   if (req.isAuthenticated()) {
     res.render('joinAndCreate');
@@ -115,6 +119,7 @@ app.route('/joinAndCreate').get((req, res) => {
 
 // Room Route
 app.route('/room').get((req, res) => {
+  console.log(req.body);
   if (req.isAuthenticated()) {
     const idRoom = req.query.meetingId;
     validateRoomId(idRoom).then((result) => {
