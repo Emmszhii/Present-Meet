@@ -20,7 +20,7 @@
   </head>
   <body>
     <div class="videoCall">
-      <main class="container">
+      <main class="container__streams">
         <div id="room__container">
           <section class="tileFaces" id="stream__container">
             <div id="stream__box"></div>
@@ -33,10 +33,22 @@
                 <h1>2</h1>
               </div>
               <div class="video__container" id="user-container-1">
-                <h1>3</h1>
-              </div>
-              <div class="video__container" id="user-container-1">
-                <h1>4</h1>
+                <!-- <video
+                  class="video"
+                  id="joinCam"
+                  style="
+                    position: absolute;
+                    width: 300px;
+                    height: 200px;
+                    border-radius: 20px;
+                    /* transform: rotate('90'); */
+                    object-fit: cover;
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+                      0 6px 6px rgba(0, 0, 0, 0.23);
+                  "
+                >
+                  1
+                </video> -->
               </div>
             </div>
           </section>
@@ -63,11 +75,17 @@
 
         <!-- </button> -->
         <div class="middleBtn">
-          <button class="button"><i class="fa-solid fa-microphone"></i></button>
-          <button class="button"><i class="fa-solid fa-video"></i></button>
-          <button class="button"><i class="fa-solid fa-desktop"></i></button>
+          <button class="button" id="btnMic">
+            <i class="fa-solid fa-microphone"></i>
+          </button>
+          <button class="button" id="btnCamera">
+            <i class="fa-solid fa-video"></i>
+          </button>
+          <button class="button" id="btnScreenShare">
+            <i class="fa-solid fa-desktop"></i>
+          </button>
           <!-- <button><i class="fa-solid fa-ellipsis-vertical"></i></button> -->
-          <button class="button" id="endCall">
+          <button class="button" id="btnCall">
             <i class="fa-solid fa-phone"></i>
           </button>
         </div>
@@ -78,7 +96,7 @@
       </div>
     </div>
 
-    <script defer src="javascript/room.js"></script>
     <script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script>
+    <script src="javascript/room.js"></script>
   </body>
 </html>

@@ -5,24 +5,13 @@ const createModal = document.querySelector('.modalCreate-bg');
 const closeJoinBtn = document.querySelector('.modalJoin-close');
 const closeCreateBtn = document.querySelector('.modalCreate-close');
 const linkInput = document.getElementById('link');
-
-const userData = [];
+const joinMeetingInput = document.getElementById('txtMeetingCode');
 
 const baseURL = `https://api.videosdk.live`;
 const LOCAL_SERVER_URL = `http://localhost:3000`;
 
-// declare all characters
-const characters =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-// program to generate random strings
-function generateString(length) {
-  let result = ' ';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+let joinCode;
+let meetId;
 
 const copyClipboard = () => {
   const text = linkInput.value;
@@ -30,12 +19,13 @@ const copyClipboard = () => {
 };
 
 joinRoomBtn.addEventListener('click', () => {
-  console.log(role);
   joinModal.classList.add('bg-active');
+  joinCode = joinMeetingInput.value;
 });
 
 closeJoinBtn.addEventListener('click', () => {
   joinModal.classList.remove('bg-active');
+  joinMeetingInput.value = '';
 });
 
 createRoomBtn.addEventListener('click', () => {
@@ -48,7 +38,18 @@ closeCreateBtn.addEventListener('click', () => {
   createModal.classList.remove('bg-active');
 });
 
-const getToken = async () => {
+const getMeetingId = async () => {
+  const url = `${LOCAL_SERVER_URL}/create-meeting`;
+  (async () => {
+    const res = await fetch(url, { method: 'GET' });
+    const data = await res.json();
+    meetId = data.roomId;
+    return data.roomId;
+  })();
+};
+
+// TOKEN GENERATOR
+async function tokenGeneration() {
   try {
     const response = await fetch(`${LOCAL_SERVER_URL}/get-token`, {
       method: 'GET',
@@ -62,30 +63,15 @@ const getToken = async () => {
   } catch (e) {
     console.log(e);
   }
-};
+}
 
-const TOKEN = getToken();
-VideoSDK.config(TOKEN);
-console.log(TOKEN);
-
-let meetId;
-
-const getMeetingId = async () => {
-  const url = `${LOCAL_SERVER_URL}/create-meeting`;
-  (async () => {
-    const res = await fetch(url, { method: 'GET' });
-    const data = await res.json();
-    meetId = data.roomId;
-    return data.roomId;
-  })();
+const joinMeeting = (e) => {
+  joinCode = joinMeetingInput.value;
+  if (joinCode.trim() === '') {
+    return;
+  }
 };
 
 window.addEventListener('load', () => {
-  const infoUrl = `${LOCAL_SERVER_URL}/profile`;
-  (async function () {
-    const res = await fetch(infoUrl, { method: 'GET' });
-    const data = await res.json();
-    userData.push(data.profile);
-    getMeetingId();
-  })();
+  getMeetingId();
 });

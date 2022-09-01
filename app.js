@@ -24,6 +24,8 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(morgan('dev'));
 
+app.use('/public', express.static('public'));
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -38,17 +40,7 @@ app.use(passport.session());
 
 mongoose.connect('mongodb://127.0.0.1:27017/userDB', { useNewUrlParser: true });
 
-// mongoose.set('useCreateIndex', true);
-
 const userSchema = new mongoose.Schema({
-  // email: {
-  //   type: String,
-  //   required: [true, 'Please insert a username!'],
-  // },
-  // password: {
-  //   type: String,
-  //   required: [true, 'Please insert a password!'],
-  // },
   googleId: String,
   fullName: String,
   photoUrl: String,
@@ -61,8 +53,6 @@ const User = new mongoose.model('User', userSchema);
 
 passport.use(User.createStrategy());
 
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -88,7 +78,6 @@ passport.use(
           photoUrl: profile.photos[0].value,
         },
         function (err, user) {
-          // console.log(user);
           return cb(err, user);
         }
       );
@@ -105,8 +94,6 @@ app.get('/', (req, res) => {
 app
   .route('/auth/google')
   .get(passport.authenticate('google', { scope: ['profile'] }));
-
-//
 app.get(
   '/auth/google/secrets',
   passport.authenticate('google', { failureRedirect: '/home' }),
@@ -126,35 +113,38 @@ app.route('/joinAndCreate').get((req, res) => {
   }
 });
 
-app
-  .route('/room')
-  .get((req, res) => {
-    if (req.isAuthenticated()) {
-      res.render('room');
-    } else {
-      res.redirect('/');
-    }
-  })
-  .post((req, res) => {
-    authenticated(req, 'room');
-    const link = req.body.meetingLink;
-    console.log(link);
-  });
+// Room Route
+app.route('/room').get((req, res) => {
+  if (req.isAuthenticated()) {
+    const idRoom = req.query.meetingId;
+    validateRoomId(idRoom).then((result) => {
+      if (!result) {
+        res
+          .status(404)
+          .json({ message: 'Invalid room please check or create a new one' });
+      } else {
+        if (result.roomId === idRoom) {
+          res.render('room', { profile: req.user });
+        }
+      }
+    });
+  } else {
+    res.redirect('/');
+  }
+});
 
 // Profile of the user
 app.get('/profile', (req, res) => {
-  // console.log({ profile: req.user });
   res.status(200).json({ profile: req.user });
 });
 
 // VideoSDK TOKEN
-const baseURL = `https://api.videosdk.live`;
-
+const API_BASE_URL = `https://api.videosdk.live`;
 const API_KEY = process.env.VIDEOSDK_ID;
 const SECRET_KEY = process.env.VIDEOSDK_SECRET;
 
 const options = {
-  expiresIn: '10m',
+  expiresIn: '90m',
   algorithm: 'HS256',
 };
 const payload = {
@@ -164,34 +154,68 @@ const payload = {
 };
 // TOKEN
 const videoSdkToken = jwt.sign(payload, SECRET_KEY, options);
-console.log('VideoSDK TOKEN : ', videoSdkToken);
+// console.log('VideoSDK TOKEN : ', videoSdkToken);
 
-// VideoSDK ROOMS
-
-// const roomID = getRooms();
-// console.log(roomID);
 // GET TOKEN
 app.get('/get-token', (req, res) => [
   res.status(200).json({ token: videoSdkToken }),
 ]);
 
+// VideoSDK ROOMS
 // GET ROOM
+const optionsRoom = {
+  method: 'POST',
+  headers: {
+    Authorization: videoSdkToken,
+    'Content-Type': 'application/json',
+  },
+};
+const roomUrl = `${API_BASE_URL}/v2/rooms`;
+const getRoomId = async () => {
+  try {
+    const response = await fetch(roomUrl, optionsRoom);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
 app.get('/create-meeting', (req, res) => {
-  const optionsRoom = {
-    method: 'POST',
+  getRoomId().then((result) => {
+    console.log(result);
+    res.status(200).json(result);
+  });
+});
+
+// VideoSDK Validate-Meeting
+const validateRoomId = async (roomId) => {
+  const optionsValidate = {
+    method: 'GET',
     headers: {
       Authorization: videoSdkToken,
       'Content-Type': 'application/json',
     },
   };
-  const roomUrl = `https://api.videosdk.live/v2/rooms`;
-  const getRoomId = async () => {
-    const response = await fetch(roomUrl, optionsRoom);
+  const urlValidate = `${API_BASE_URL}/v2/rooms/validate/${roomId}`;
+  try {
+    const response = await fetch(urlValidate, optionsValidate);
     const data = await response.json();
-    console.log(data);
-    res.status(200).json(data);
-  };
-  getRoomId();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+app.route('/validate-meeting/:meetId').get((req, res) => {
+  const idRoom = req.params.meetId;
+  validateRoomId(idRoom)
+    .then((result) => {
+      // console.log(result);
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 // Logout

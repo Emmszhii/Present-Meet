@@ -140,3 +140,10 @@ input:focus::placeholder {
   background-color: black;
   border: 0;
 }
+
+.checkBoxes {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

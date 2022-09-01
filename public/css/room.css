@@ -143,6 +143,7 @@ body {
 }
 
 #stream__box {
+  display: block;
   margin: auto;
   background-color: #494949;
   height: 65vh;
@@ -156,6 +157,16 @@ body {
   align-items: center;
   margin: 10px;
   gap: 2em;
+}
+
+.container__stream {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Messages */

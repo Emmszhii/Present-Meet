@@ -12,49 +12,6 @@ const screenShareBtn = document.getElementById('btnScreenShare');
 const videoContainer = document.getElementById('stream__container');
 const screenShare = document.getElementById('stream__box');
 
-let mic = true;
-let video = true;
-let screenShareOn = false;
-
-// Copy Meetiing ID
-const copyClipboard = () => {
-  navigator.clipboard.writeText(meetingId);
-};
-
-videoLink.addEventListener('click', copyClipboard);
-
-// Initializing the meeting
-// navigator.mediaDevices
-//   .getUserMedia({
-//     video: true,
-//     audio: true,
-// })
-// .then((stream) => {
-// console.log(stream);
-// joinPageWebcam.srcObject = stream;
-// joinPageWebcam.play();
-// });
-
-// TOKEN GENERATOR
-// async function tokenGeneration() {
-//   try {
-//     const response = await fetch(`${AUTH_URL}/get-token`, {
-//       method: 'GET',
-//       headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     const { TOKEN } = await response.json();
-//     return TOKEN;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
-
-// token = tokenGeneration().then((res) => res);
-// console.log(token);
-
 window.addEventListener('load', () => {
   videoLink.textContent = meetingId;
   const url = `${AUTH_URL}/profile`;

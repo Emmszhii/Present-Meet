@@ -11,7 +11,6 @@
       >We develope a secure and fast service to <br />
       ensure meetings and attendance is available and free for all.</span
     >
-
     <div class="buttons space">
       <button class="button btnJoin" id="btnJoinModal">Join</button>
       <button class="button btnCreateRoom" id="btnCreateModal">Create Room</button>
@@ -39,22 +38,33 @@
       <div class="joinModal">
         <h3>Join a meeting</h3>
         <span>Enter a meeting code provided by the meeting organizer</span>
-        <form action="#" method="post">
+        <div class="checkBoxes">
+          <label class="container" id="videoCheckbox">Video
+          <input type="checkbox">
+          <span class="checkmark"></span>
+          </label>
+          <label class="container" id="MicCheckbox">Mic
+          <input type="checkbox">
+          <span class="checkmark"></span>
+          </label>
+        </div>
+        <form action="/room" method="get">
           <input
             class="input"
             type="text"
-            name="meetingLink"
+            name="meetingId"
             id="txtMeetingCode"
             placeholder="Enter Meeting Code..."
             autocomplete="off"
             required
           />
-        <div class="buttons">
-          <button class="button" type="button" onclick="joinRoom()">
+          <div class="buttons">
+            <button class="button" type="submit" onclick="joinMeeting()">
             Join
           </button>
         </form>
         <span class="modalJoin-close">X</span>
+        <div id="message"></div>
       </div>
     </div>
   </div>
@@ -64,7 +74,17 @@
     <div class="createModal">
       <h3>Create a Meeting</h3>
       <span>Here's the link to your meeting</span>
-      <form action='/room'>
+      <div class="checkBoxes">
+        <label class="container" id="videoCheckbox">Video
+        <input type="checkbox">
+        <span class="checkmark"></span>
+      </label>
+      <label class="container" id="micCheckbox">Mic
+        <input type="checkbox">
+        <span class="checkmark"></span>
+      </label>
+      </div>
+      <form action='/room' method="get">
         <input class="input" type="text" name="meetingId" id="link" autocomplete="off"/>
         <button onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
         <div class="buttons">
@@ -74,10 +94,11 @@
       </form>
           <span class="modalCreate-close">X</span>
       </div>
+      <div id="message"></div>
     </div>
   </div>
 </div>
 
-<script defer src="javascript/script.js"></script>
 <script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script>
+<script src="javascript/script.js"></script>
 <%- include('partials/footer') %>
