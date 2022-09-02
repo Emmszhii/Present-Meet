@@ -11,15 +11,11 @@ const joinAudioBox = document.getElementById('micCheckbox1');
 const createVideoBox = document.getElementById('videoCheckbox2');
 const createAudioBox = document.getElementById('micCheckbox2');
 
-const baseURL = `https://api.videosdk.live`;
+// const baseURL = `https://api.videosdk.live`;
 const LOCAL_SERVER_URL = `http://localhost:3000`;
 
-let joinCode;
-let meetId;
-let micEnable = false;
-let webCamEnable = false;
+let idRoom;
 
-// CHECKBOXES
 joinVideoBox.addEventListener('click', (e) => {
   e.target.checked ? (e.target.value = true) : (e.target.value = false);
 });
@@ -38,9 +34,19 @@ const disable = () => {
   joinAudioBox.checked = false;
   createVideoBox.checked = false;
   createAudioBox.checked = false;
-  micEnable = false;
-  webCamEnable = false;
 };
+
+// Random Code
+function makeId(length) {
+  var result = '';
+  var characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 // COPY MEETING CODE
 const copyClipboard = () => {
@@ -61,9 +67,9 @@ closeJoinBtn.addEventListener('click', () => {
 });
 
 createRoomBtn.addEventListener('click', () => {
-  getMeetingId();
+  idRoom = makeId(9);
   createModal.classList.add('bg-active');
-  linkInput.setAttribute('value', meetId);
+  linkInput.setAttribute('value', idRoom);
 });
 
 closeCreateBtn.addEventListener('click', () => {
@@ -71,48 +77,40 @@ closeCreateBtn.addEventListener('click', () => {
   createModal.classList.remove('bg-active');
 });
 
-// MEETING CODE
-const getMeetingId = async () => {
-  const url = `${LOCAL_SERVER_URL}/create-meeting`;
-  (async () => {
-    const res = await fetch(url, { method: 'GET' });
-    const data = await res.json();
-    meetId = data.roomId;
-    return data;
-  })();
-};
+// // MEETING CODE
+// const getMeetingId = async () => {
+//   const url = `${LOCAL_SERVER_URL}/create-meeting`;
+//   (async () => {
+//     const res = await fetch(url, { method: 'GET' });
+//     const data = await res.json();
+//     idRoom = data.roomId;
+//     roomId = data.id;
+//     console.log(idRoom, roomId);
+//     return data;
+//   })();
+// };
 
-// TOKEN GENERATOR
-async function tokenGeneration() {
-  try {
-    const response = await fetch(`${LOCAL_SERVER_URL}/get-token`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-    const { token } = await response.json();
-    return token;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-//
-const joinMeeting = () => {
-  joinCode = joinMeetingInput.value;
-  if (joinCode.trim() === '') {
-    return;
-  }
-};
+// // TOKEN GENERATOR
+// async function tokenGeneration() {
+//   try {
+//     const response = await fetch(`${LOCAL_SERVER_URL}/get-token`, {
+//       method: 'GET',
+//       headers: {
+//         Accept: 'application/json',
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     const data = await response.json();
+//     token = data.token;
+//     console.log(token);
+//     return token;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
 
 // Onload Webpage
 window.addEventListener('load', () => {
-  getMeetingId();
+  // getMeetingId();
+  idRoom = makeId(9);
 });
-
-const a = {
-  name: 'akjhsdkhas',
-  kasjdka: 'akshjdkajsk',
-};

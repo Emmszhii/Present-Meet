@@ -33,22 +33,7 @@
                 <h1>2</h1>
               </div>
               <div class="video__container" id="user-container-1">
-                <!-- <video
-                  class="video"
-                  id="joinCam"
-                  style="
-                    position: absolute;
-                    width: 300px;
-                    height: 200px;
-                    border-radius: 20px;
-                    /* transform: rotate('90'); */
-                    object-fit: cover;
-                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
-                      0 6px 6px rgba(0, 0, 0, 0.23);
-                  "
-                >
-                  1
-                </video> -->
+                <h1>3</h1>
               </div>
             </div>
           </section>
@@ -97,7 +82,18 @@
     </div>
 
     <!-- <script src="javascript/script.js"></script> -->
-    <script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script>
-    <script defer src="javascript/room.js"></script>
+    <!-- <script src="https://sdk.videosdk.live/js-sdk/0.0.41/videosdk.js"></script> -->
+    <!-- <script src="javascript/config.js"></script> -->
+    <script
+      type="text/javascript"
+      src="javascript/AgoraSDK/AgoraRTC_N-4.13.0.js"
+    ></script>
+    <script defer type="text/javascript" src="javascript/room.js">
+      // AGORA_APP_ID: process.env.AGORA_APP_ID,
+      // rtcToken: token,
+      // user: req.user,
+      var app_id = "<%= AGORA_APP_ID %>";
+      console.log(app_id)
+    </script>
   </body>
 </html>
