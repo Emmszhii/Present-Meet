@@ -25,6 +25,8 @@ body {
   text-align: justify;
 }
 
+/* Buttons Styles*/
+
 .footerBtn {
   position: absolute;
   width: 100%;
@@ -78,6 +80,11 @@ body {
   border-radius: 1000px;
 }
 
+.active {
+  background-color: green;
+  color: black;
+}
+
 .button:hover,
 .copy:hover {
   color: black !important;
@@ -124,7 +131,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-/* stream */
 
 /* Users Stream */
 
@@ -140,6 +146,10 @@ body {
   width: 300px;
   height: 200px;
   position: relative;
+  background-image: url('../img/logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
 }
 
 .video-player {

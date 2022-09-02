@@ -18,16 +18,24 @@ const LOCAL_SERVER_URL = `http://localhost:3000`;
 let idRoom;
 
 joinVideoBox.addEventListener('click', (e) => {
-  e.target.checked ? (e.target.value = true) : (e.target.value = false);
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
 });
 joinAudioBox.addEventListener('click', (e) => {
-  e.target.checked ? (e.target.value = true) : (e.target.value = false);
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
 });
 createVideoBox.addEventListener('click', (e) => {
-  e.target.checked ? (e.target.value = true) : (we.target.value = false);
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
 });
 createAudioBox.addEventListener('click', (e) => {
-  e.target.checked ? (e.target.value = true) : (e.target.value = false);
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
 });
 
 // disable the video and audio checkbox

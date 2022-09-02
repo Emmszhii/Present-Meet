@@ -1,4 +1,4 @@
-AgoraRTC.setLogLevel(3);
+// AgoraRTC.setLogLevel(3);
 
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
@@ -45,9 +45,13 @@ const hideDisplayFrame = () => {
   let child = displayFrame.children[0];
   document.getElementById('streams__container').appendChild(child);
 
-  if (videoFrames[i].id != userIdInDisplayFrame) {
-    videoFrames[i].style.width = '300px';
-    videoFrames[i].style.height = '200px';
+  try {
+    if (videoFrames[i].id != userIdInDisplayFrame) {
+      videoFrames[i].style.width = '300px';
+      videoFrames[i].style.height = '200px';
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
