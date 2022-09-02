@@ -1,3 +1,4 @@
+// initializing the variables
 const joinRoomBtn = document.getElementById('btnJoinModal');
 const createRoomBtn = document.getElementById('btnCreateModal');
 const joinModal = document.querySelector('.modalJoin-bg');
@@ -11,9 +12,9 @@ const joinAudioBox = document.getElementById('micCheckbox1');
 const createVideoBox = document.getElementById('videoCheckbox2');
 const createAudioBox = document.getElementById('micCheckbox2');
 
-// const baseURL = `https://api.videosdk.live`;
 const LOCAL_SERVER_URL = `http://localhost:3000`;
 
+// let idRoom for random id generator
 let idRoom;
 
 joinVideoBox.addEventListener('click', (e) => {
@@ -29,6 +30,7 @@ createAudioBox.addEventListener('click', (e) => {
   e.target.checked ? (e.target.value = true) : (e.target.value = false);
 });
 
+// disable the video and audio checkbox
 const disable = () => {
   joinVideoBox.checked = false;
   joinAudioBox.checked = false;
@@ -36,7 +38,7 @@ const disable = () => {
   createAudioBox.checked = false;
 };
 
-// Random Code
+// Random room id generator Code
 function makeId(length) {
   var result = '';
   var characters =
@@ -54,7 +56,7 @@ const copyClipboard = () => {
   navigator.clipboard.writeText(text);
 };
 
-// MODAL
+// MODAL for joining and creating room
 joinRoomBtn.addEventListener('click', () => {
   joinModal.classList.add('bg-active');
   joinCode = joinMeetingInput.value;
@@ -77,40 +79,7 @@ closeCreateBtn.addEventListener('click', () => {
   createModal.classList.remove('bg-active');
 });
 
-// // MEETING CODE
-// const getMeetingId = async () => {
-//   const url = `${LOCAL_SERVER_URL}/create-meeting`;
-//   (async () => {
-//     const res = await fetch(url, { method: 'GET' });
-//     const data = await res.json();
-//     idRoom = data.roomId;
-//     roomId = data.id;
-//     console.log(idRoom, roomId);
-//     return data;
-//   })();
-// };
-
-// // TOKEN GENERATOR
-// async function tokenGeneration() {
-//   try {
-//     const response = await fetch(`${LOCAL_SERVER_URL}/get-token`, {
-//       method: 'GET',
-//       headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     const data = await response.json();
-//     token = data.token;
-//     console.log(token);
-//     return token;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
-
 // Onload Webpage
 window.addEventListener('load', () => {
-  // getMeetingId();
   idRoom = makeId(9);
 });

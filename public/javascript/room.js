@@ -1,3 +1,5 @@
+AgoraRTC.setLogLevel(3);
+
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
 const meetingId = urlParams.get('meetingId').trim();
@@ -9,121 +11,50 @@ const micBtn = document.getElementById('btnMic');
 const camBtn = document.getElementById('btnCamera');
 const screenShareBtn = document.getElementById('btnScreenShare');
 const videoContainer = document.getElementById('stream__container');
-const screenShare = document.getElementById('stream__box');
 
-const userData = {};
-let APP_ID;
-let id;
-let fullName;
-let token;
-let client;
-let localTracks = [];
-let remoteUsers = {};
+// Expand Video Frame on Click
+let displayFrame = document.getElementById('stream__box');
+let videoFrames = document.getElementsByClassName('video__container');
+let userIdInDisplayFrame = null;
 
-const getInfo = async () => {
-  const url = `${AUTH_URL}/getInfo`;
-  const res = await fetch(url, { method: 'GET' });
-  const data = await res.json();
-  return data;
+const expandVideoFrame = (e) => {
+  let child = displayFrame.children[0];
+  if (child) {
+    document.getElementById('streams__container').appendChild(child);
+  }
+
+  displayFrame.style.display = 'block';
+  displayFrame.appendChild(e.currentTarget);
+  userIdInDisplayFrame = e.currentTarget.id;
+
+  for (let i = 0; videoFrames.length > i; i++) {
+    if (videoFrames[i].id != userIdInDisplayFrame) {
+      videoFrames[i].style.width = '250px';
+      videoFrames[i].style.height = '150px';
+    }
+  }
 };
-// getInfo().then((data) => {
-// userData.fullName = data.user.fullName;
-// userData.id = data.user.googleId;
-// userData.sliceId = data.user.googleId.slice(0, 4);
-// fullName = data.user.fullName;
-// id = data.user.googleId;
-// console.log(fullName);
-// console.log('ID : ' + id);
-// });
-const getToken = async () => {
-  getInfo().then(async (user) => {
-    userData.fullName = user.user.fullName;
-    userData.id = user.user.googleId;
-    userData.sliceId = Number(user.user.googleId.slice(0, 4));
-    const url = `${AUTH_URL}/rtc/${meetingId}/publisher/uid/${userData.sliceId}`;
-    const res = await fetch(url, { method: 'GET' });
-    await res.json().then((data) => {
-      userData.APP_ID = data.AGORA_APP_ID;
-      userData.token = data.rtcToken;
-    });
-    // console.log(data);
-    // return data;
-  });
+for (let i = 0; videoFrames.length > i; i++) {
+  videoFrames[i].addEventListener('click', expandVideoFrame);
+}
 
-  // const url = `${AUTH_URL}/rtc/${meetingId}/publisher/uid/${userData.sliceId}`;
-  // const res = await fetch(url, { method: 'GET' });
-  // const data = await res.json();
-  // return data;
+const hideDisplayFrame = () => {
+  userIdInDisplayFrame = null;
+  displayFrame.style.display = null;
+
+  let child = displayFrame.children[0];
+  document.getElementById('streams__container').appendChild(child);
+
+  if (videoFrames[i].id != userIdInDisplayFrame) {
+    videoFrames[i].style.width = '300px';
+    videoFrames[i].style.height = '200px';
+  }
 };
 
-getToken().then((data) => {
-  // userData.APP_ID = data.AGORA_APP_ID;
-  // userData.token = data.rtcToken;
-  // console.log(userData);
-  // APP_ID = data.AGORA_APP_ID;
-  // token = data.rtcToken;
-  // console.log(APP_ID, token);
-});
+displayFrame.addEventListener('click', hideDisplayFrame);
 
-const joinRoomInit = async () => {
-  client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
-  const id = userData.id.slice(0, 4);
-  console.log(id);
-  await client.join(
-    userData.APP_ID,
-    meetingId,
-    userData.token,
-    userData.sliceId
-  );
-
-  joinStream();
+// Copy Meeting ID
+const copyClipboard = () => {
+  navigator.clipboard.writeText(meetingId);
 };
-
-const joinStream = async () => {
-  localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
-
-  let player = `
-    <div class="video__container" id="user-container-${id}">
-      <div class="video-player" id="user-${id}"></div>
-        <span class="name">${fullName}</span>
-    </div>
-  `;
-
-  document
-    .getElementById('streams__container')
-    .insertAdjacentHTML('beforeend', player);
-
-  localTracks[1].play(`user-${id}`);
-};
-
-window.addEventListener('load', () => {
-  videoLink.textContent = meetingId;
-
-  // getToken();
-  // const url = `${AUTH_URL}/getInfo`;
-  // (async function () {
-  //   const res = await fetch(url, { method: 'GET' });
-  //   await res.json().then((data) => {
-  //     id = data.user._id;
-  //     fullName = data.user.fullName;
-  //
-  //   });
-  // })();
-  setTimeout(joinRoomInit, 5000);
-});
-
-// ((async function () {
-//   const url = `${AUTH_URL}/getInfo`;
-//   const res = await fetch(url, { method: 'GET' });
-//   await res.json().then((data) => {
-//     console.log(data);
-//   });
-// },
-// async function () {
-//   const url = `${AUTH_URL}/rtc/${meetingId}/publisher/uid/${id}`;
-//   const res = await fetch(url, { method: 'GET' });
-//   await res.json().then((data) => {
-//     console.log(data);
-//     // fullName = data.user.fullName
-//   });
-// })());
+videoLink.addEventListener('click', copyClipboard);

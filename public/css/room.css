@@ -1,6 +1,5 @@
 body {
   box-sizing: border-box;
-  /* position: relative; */
   margin: 0px;
   padding: 0px;
   background-color: #000000;
@@ -138,8 +137,31 @@ body {
   border-radius: 20px;
   cursor: pointer;
   overflow: hidden;
-  height: 200px;
   width: 300px;
+  height: 200px;
+  position: relative;
+}
+
+.video-player {
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+}
+
+.video-player video {
+  display: block;
+  position: absolute;
+  border-radius: 20px;
+}
+
+.name {
+  font-size: 18px;
+  margin: -11px;
+  position: absolute;
+  text-shadow: 2px 2px black;
+  padding: 0;
+  bottom: 0;
+  /* right: 20px; */
 }
 
 #stream__box {
@@ -148,6 +170,18 @@ body {
   background-color: #494949;
   height: 65vh;
   width: 80vw;
+  display: none;
+}
+
+#stream__box .video__container {
+  border: 2px solid white;
+  border-radius: 10px;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#stream__box video {
+  border-radius: 10px;
 }
 
 #streams__container {

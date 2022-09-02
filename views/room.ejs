@@ -26,15 +26,8 @@
             <div id="stream__box"></div>
 
             <div id="streams__container">
-              <div class="video__container" id="user-container-1">
-                <h1>1</h1>
-              </div>
-              <div class="video__container" id="user-container-1">
-                <h1>2</h1>
-              </div>
-              <div class="video__container" id="user-container-1">
-                <h1>3</h1>
-              </div>
+            </div>
+
             </div>
           </section>
 
@@ -88,12 +81,7 @@
       type="text/javascript"
       src="javascript/AgoraSDK/AgoraRTC_N-4.13.0.js"
     ></script>
-    <script defer type="text/javascript" src="javascript/room.js">
-      // AGORA_APP_ID: process.env.AGORA_APP_ID,
-      // rtcToken: token,
-      // user: req.user,
-      var app_id = "<%= AGORA_APP_ID %>";
-      console.log(app_id)
-    </script>
+    <script type="text/javascript" src="javascript/room.js"></script>
+    <script type="text/javascript" src="javascript/room_rtc.js"></script>
   </body>
 </html>
