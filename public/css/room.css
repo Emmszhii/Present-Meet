@@ -11,7 +11,7 @@ body {
 }
 
 /* Screen */
-.tileFaces {
+/* .tileFaces {
   z-index: 1;
   margin: 0 auto;
   position: absolute;
@@ -23,6 +23,21 @@ body {
   overflow: hidden;
   overflow-y: auto;
   text-align: justify;
+} */
+
+.tileFaces {
+  z-index: 1;
+  margin: 0 auto;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-57%, -49%);
+  height: 90vh;
+  width: 86%;
+  overflow: hidden;
+  overflow-y: auto;
+  text-align: justify;
+  float: left;
 }
 
 /* Buttons Styles*/
@@ -174,11 +189,15 @@ body {
   /* right: 20px; */
 }
 
+video {
+  object-fit: fill !important;
+}
+
 #stream__box {
   display: block;
   margin: auto;
   background-color: #494949;
-  height: 65vh;
+  height: 85vh;
   width: 80vw;
   display: none;
 }
@@ -255,6 +274,21 @@ body {
 .message__body strong {
   font-weight: 600;
   color: #ede0e0;
+}
+
+/* members container */
+
+#members__container {
+  z-index: 99;
+  display: block;
+  height: calc(100vh - 85px);
+  background-color: #262625;
+  right: 0;
+  position: absolute;
+  width: 100%;
+  max-width: 15rem;
+  overflow-y: auto;
+  border-left: 1px solid #111;
 }
 
 @media (max-width: 1400px) {

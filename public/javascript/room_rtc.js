@@ -62,10 +62,10 @@ const joinStream = async () => {
   rtc.localTracks = await AgoraRTC.createMicrophoneAndCameraTracks(
     {},
     {
-      encoderConfig: {
-        width: { min: 640, ideal: 1920, max: 1920 },
-        height: { min: 480, ideal: 1080, max: 1080 },
-      },
+      // encoderConfig: {
+      //   width: { min: 640, ideal: 1920, max: 1920 },
+      //   height: { min: 480, ideal: 1080, max: 1080 },
+      // },
     }
   );
 
@@ -193,46 +193,52 @@ const toggleScreen = async (e) => {
   const cameraButton = document.getElementById('camera-btn');
 
   if (!rtc.sharingScreen) {
-    rtc.localScreenTracks = await AgoraRTC.createScreenVideoTrack()
-      .then(async () => {
-        rtc.sharingScreen = true;
-        screenButton.classList.add('active');
-        cameraButton.classList.remove('active');
-        cameraButton.style.display = 'none';
+    rtc.localScreenTracks = await AgoraRTC.createScreenVideoTrack().catch(
+      (err) => {
+        rtc.sharingScreen = false;
+        cameraButton.style.display = 'block';
+        console.log(err);
+        return;
+      }
+    );
 
-        document.getElementById(`user-container-${userData.sliceId}`).remove();
-        displayFrame.style.display = ' block';
+    try {
+      rtc.sharingScreen = true;
+      screenButton.classList.add('active');
+      cameraButton.classList.remove('active');
+      cameraButton.style.display = 'none';
 
-        let player = `
+      document.getElementById(`user-container-${userData.sliceId}`).remove();
+      displayFrame.style.display = ' block';
+
+      let player = `
         <div class="video__container" id="user-container-${userData.sliceId}">
           <div class="video-player" id="user-${userData.sliceId}">
           </div>
         </div>
       `;
 
-        displayFrame.insertAdjacentHTML('beforeend', player);
-        document
-          .getElementById(`user-container-${userData.sliceId}`)
-          .addEventListener('click', expandVideoFrame);
+      displayFrame.insertAdjacentHTML('beforeend', player);
+      document
+        .getElementById(`user-container-${userData.sliceId}`)
+        .addEventListener('click', expandVideoFrame);
 
-        userIdInDisplayFrame = `user-container-${userData.sliceId}`;
-        rtc.localScreenTracks.play(`user-${userData.sliceId}`);
+      userIdInDisplayFrame = `user-container-${userData.sliceId}`;
+      rtc.localScreenTracks.play(`user-${userData.sliceId}`);
 
-        await rtc.client.unpublish([rtc.localTracks[1]]);
-        await rtc.client.publish([rtc.localScreenTracks]);
+      await rtc.client.unpublish([rtc.localTracks[1]]);
+      await rtc.client.publish([rtc.localScreenTracks]);
 
-        const videoFrames = document.getElementsByClassName(`video__container`);
-        for (let i = 0; videoFrames.length > i; i++) {
-          if (videoFrames[i].id != userIdInDisplayFrame) {
-            videoFrames[i].style.width = '250px';
-            videoFrames[i].style.height = '150px';
-          }
+      const videoFrames = document.getElementsByClassName(`video__container`);
+      for (let i = 0; videoFrames.length > i; i++) {
+        if (videoFrames[i].id != userIdInDisplayFrame) {
+          videoFrames[i].style.width = '250px';
+          videoFrames[i].style.height = '150px';
         }
-      })
-      .catch((err) => {
-        console.log(err);
-        return;
-      });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   } else {
     rtc.sharingScreen = false;
     cameraButton.style.display = 'block';
@@ -250,7 +256,7 @@ const switchToCamera = async () => {
       <div class="video-player" id="user-${userData.sliceId}">
       </div>
       <div class="name">
-        <p>${userData.fullName}</p>
+        <p>${userData.sliceId}</p>
       </div>
     </div>
   `;
