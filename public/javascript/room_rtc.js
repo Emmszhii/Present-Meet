@@ -14,45 +14,89 @@ const rtc = {
   // rtc boolean screen share
   sharingScreen: false,
 };
+const rtm = {
+  // rtm.client
+  client: null,
+  channel: null,
+};
+const rtmOption = {
+  token: '',
+  uid: '',
+};
 const remoteUsers = {};
 
 // getting local user info
 const getInfo = async () => {
   const url = `${AUTH_URL}/getInfo`;
   const res = await fetch(url, { method: 'GET' });
-  const data = await res.json();
+  const data = await res.json().catch((err) => console.log(err));
   return data;
 };
 
 // getting token and storing it in the userData
-const getToken = async () => {
+const getTokens = async () => {
+  // User Information 1st
   getInfo().then(async (user) => {
     userData.fullName = user.user.fullName;
     userData.id = user.user.googleId;
-    userData.sliceId = Number(user.user.googleId.slice(0, 4));
-    const url = `${AUTH_URL}/rtc/${meetingId}/publisher/uid/${userData.sliceId}`;
+    userData.rtcId = user.user.googleId.slice(0, 4);
+    userData.rtmId = user.user.googleId.slice(0, 5);
+    // then Rtc Token
+    const url = `${AUTH_URL}/rtc/${meetingId}/publisher/uid/${userData.rtcId}`;
     const res = await fetch(url, { method: 'GET' });
-    await res.json().then((data) => {
-      userData.APP_ID = data.AGORA_APP_ID;
-      userData.token = data.rtcToken;
-    });
+    await res
+      .json()
+      .then(async (data) => {
+        userData.APP_ID = data.AGORA_APP_ID;
+        userData.rtcToken = data.rtcToken;
+        // then Rtm Token
+        const url = `${AUTH_URL}/rtm/${userData.rtmId}`;
+        const res = await fetch(url, { method: 'GET' });
+        await res.json().then((data) => {
+          userData.rtmToken = data.rtmToken;
+          console.log(userData);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   });
 };
 
 // initializing the agora sdk for joining the room and validating the user token for security joining
 const joinRoomInit = async () => {
+  rtm.client = await AgoraRTM.createInstance(userData.APP_ID);
+
+  // option to login into RTM
+  const rtmOption = {
+    uid: userData.rtmId,
+    token: userData.rtmToken,
+  };
+
+  // login to the rtm
+  await rtm.client.login(rtmOption);
+
+  // create client with meetingId
+  rtm.channel = await rtm.client.createChannel(meetingId);
+  // join RTM
+  await rtm.channel.join();
+
+  // initialize setting the rtc
   rtc.client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
+  // join rtc with the params info
   await rtc.client.join(
     userData.APP_ID,
     meetingId,
-    userData.token,
-    userData.sliceId
+    userData.rtcToken,
+    userData.rtcId
   );
 
+  // on user publish and left method
   rtc.client.on('user-published', handleUserPublished);
   rtc.client.on('user-left', handleUserLeft);
 
+  // join stream functions
   joinStream();
 };
 
@@ -71,8 +115,8 @@ const joinStream = async () => {
 
   // user DOM
   const player = `
-    <div class="video__container" id="user-container-${userData.sliceId}">
-      <div class="video-player" id="user-${userData.sliceId}">
+    <div class="video__container" id="user-container-${userData.rtcId}">
+      <div class="video-player" id="user-${userData.rtcId}">
       </div>
       <div class="name">
         <p>${userData.fullName}</p>
@@ -85,14 +129,15 @@ const joinStream = async () => {
     .getElementById('streams__container')
     .insertAdjacentHTML('beforeend', player);
   document
-    .getElementById(`user-container-${userData.sliceId}`)
+    .getElementById(`user-container-${userData.rtcId}`)
     .addEventListener('click', expandVideoFrame);
 
   // play the local video track of the user
-  rtc.localTracks[1].play(`user-${userData.sliceId}`);
+  rtc.localTracks[1].play(`user-${userData.rtcId}`);
 
   // publish the video for other users to see
-  await rtc.client.publish([rtc.localTracks[0], rtc.localTracks[1]]);
+  await rtc.client.publish([rtc.localTracks[1]]);
+  // rtc.localTracks[0],
 };
 
 // user joined the meeting
@@ -208,23 +253,23 @@ const toggleScreen = async (e) => {
       cameraButton.classList.remove('active');
       cameraButton.style.display = 'none';
 
-      document.getElementById(`user-container-${userData.sliceId}`).remove();
+      document.getElementById(`user-container-${userData.rtcId}`).remove();
       displayFrame.style.display = ' block';
 
       let player = `
-        <div class="video__container" id="user-container-${userData.sliceId}">
-          <div class="video-player" id="user-${userData.sliceId}">
+        <div class="video__container" id="user-container-${userData.rtcId}">
+          <div class="video-player" id="user-${userData.rtcId}">
           </div>
         </div>
       `;
 
       displayFrame.insertAdjacentHTML('beforeend', player);
       document
-        .getElementById(`user-container-${userData.sliceId}`)
+        .getElementById(`user-container-${userData.rtcId}`)
         .addEventListener('click', expandVideoFrame);
 
-      userIdInDisplayFrame = `user-container-${userData.sliceId}`;
-      rtc.localScreenTracks.play(`user-${userData.sliceId}`);
+      userIdInDisplayFrame = `user-container-${userData.rtcId}`;
+      rtc.localScreenTracks.play(`user-${userData.rtcId}`);
 
       await rtc.client.unpublish([rtc.localTracks[1]]);
       await rtc.client.publish([rtc.localScreenTracks]);
@@ -242,7 +287,7 @@ const toggleScreen = async (e) => {
   } else {
     rtc.sharingScreen = false;
     cameraButton.style.display = 'block';
-    document.getElementById(`user-container-${userData.sliceId}`).remove();
+    document.getElementById(`user-container-${userData.rtcId}`).remove();
     await rtc.client.unpublish([rtc.localScreenTracks]);
 
     switchToCamera();
@@ -252,11 +297,11 @@ const toggleScreen = async (e) => {
 // After disabling the share screen function then switch to Camera
 const switchToCamera = async () => {
   const player = `
-    <div class="video__container" id="user-container-${userData.sliceId}">
-      <div class="video-player" id="user-${userData.sliceId}">
+    <div class="video__container" id="user-container-${userData.rtcId}">
+      <div class="video-player" id="user-${userData.rtcId}">
       </div>
       <div class="name">
-        <p>${userData.sliceId}</p>
+        <p>${userData.rtcId}</p>
       </div>
     </div>
   `;
@@ -269,7 +314,7 @@ const switchToCamera = async () => {
   document.getElementById(`mic-btn`).classList.remove('active');
   document.getElementById(`screen-btn`).classList.remove('active');
 
-  rtc.localTracks[1].play(`user-${userData.sliceId}`);
+  rtc.localTracks[1].play(`user-${userData.rtcId}`);
   await rtc.client.publish([rtc.localTracks[1]]);
 };
 
@@ -282,6 +327,7 @@ document.getElementById('screen-btn').addEventListener('click', toggleScreen);
 // webpage on load
 window.addEventListener('load', () => {
   videoLink.textContent = meetingId;
-  getToken();
+  getTokens();
+  // getRtmToken();
   setTimeout(joinRoomInit, 5000);
 });

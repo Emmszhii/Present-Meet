@@ -11,7 +11,12 @@ const cors = require('cors');
 const morgan = require('morgan');
 const { default: fetch } = require('node-fetch');
 const jwt = require('jsonwebtoken');
-const { RtcTokenBuilder, RtcRole } = require('agora-access-token');
+const {
+  RtcTokenBuilder,
+  RtcRole,
+  RtmTokenBuilder,
+  RtmRole,
+} = require('agora-access-token');
 
 const PORT = process.env.PORT || 3000;
 
@@ -123,23 +128,7 @@ app.route('/join-and-create').get((req, res) => {
 app.route('/room').get((req, res) => {
   if (req.isAuthenticated()) {
     const idRoom = req.query.meetingId;
-    console.log(idRoom);
-    res.render('room', {
-      AGORA_APP_ID: process.env.AGORA_APP_ID,
-      // rtcToken: token,
-      // user: req.user,
-    });
-    // validateRoomId(idRoom).then((result) => {
-    //   if (!result) {
-    //     res
-    //       .status(404)
-    //       .json({ message: 'Invalid room please check or create a new one' });
-    //   } else {
-    //     if (result.roomId === idRoom) {
-    //       res.render('room', { profile: req.user });
-    //     }
-    //   }
-    // });
+    res.render('room');
   } else {
     res.redirect('/');
   }
@@ -154,15 +143,14 @@ const nocache = (_, resp, next) => {
   next();
 };
 
+// GENERATE RTC TOKEN
 const generateRTCToken = (req, resp) => {
   resp.header('Access-Control-Allow-Origin', '*');
   const channelName = req.params.channel;
-  // console.log(channelName);
   if (!channelName) {
     return resp.status(500).json({ error: 'channel is required' });
   }
   let id = req.params.id;
-  console.log(id);
   if (!id || id === '') {
     return resp.status(500).json({ error: 'id is required' });
   }
@@ -202,7 +190,6 @@ const generateRTCToken = (req, resp) => {
       role,
       privilegeExpireTime
     );
-    console.log(token);
   } else {
     return resp.status(500).json({ error: 'token type is invalid' });
   }
@@ -212,7 +199,46 @@ const generateRTCToken = (req, resp) => {
   });
 };
 
+// GENERATE RTM TOKEN
+
+const generateRTMToken = (req, resp) => {
+  // set response header
+  resp.header('Access-Control-Allow-Origin', '*');
+
+  // get uid
+  const uid = req.params.uid;
+  if (!uid || uid === '') {
+    return resp.status(500).json({ error: 'uid is required' });
+  }
+  // get role
+  const role = RtmRole.Rtm_User;
+  // get the expire time
+  let expireTime = req.query.expiry;
+  if (!expireTime || expireTime === '') {
+    expireTime = 3600;
+  } else {
+    expireTime = parseInt(expireTime, 10);
+  }
+  // calculate privilege expire time
+  const currentTime = Math.floor(Date.now() / 1000);
+  const privilegeExpireTime = currentTime + expireTime;
+  // build the token
+  const APP_ID = process.env.AGORA_APP_ID;
+  const APP_CERTIFICATE = process.env.AGORA_APP_CERTIFICATE;
+  const token = RtmTokenBuilder.buildToken(
+    APP_ID,
+    APP_CERTIFICATE,
+    uid,
+    role,
+    privilegeExpireTime
+  );
+  // return the token
+  return resp.json({ rtmToken: token });
+};
+
 app.get('/rtc/:channel/:role/:tokentype/:id', nocache, generateRTCToken);
+
+app.get('/rtm/:uid', nocache, generateRTMToken);
 
 app.get('/getInfo', (req, res) => {
   if (req.isAuthenticated()) {
