@@ -15,6 +15,8 @@ const screenShareBtn = document.getElementById('btnScreenShare');
 const videoContainer = document.getElementById('stream__container');
 const usersBtn = document.getElementById('users-btn');
 const chatBtn = document.getElementById('chat-btn');
+const loader = document.getElementById('preloader');
+const linkBtn = document.getElementById('link-btn');
 
 // Expand Video Frame on Click
 let displayFrame = document.getElementById('stream__box');
@@ -98,8 +100,9 @@ function membersToggle(e) {
 
 // Event Listeners
 // display and un-display
+linkBtn.addEventListener('click', copyClipboard);
 usersBtn.addEventListener('click', membersToggle);
 chatBtn.addEventListener('click', messagesToggle);
 displayFrame.addEventListener('click', hideDisplayFrame);
 // copying the meeting code
-videoLink.addEventListener('click', copyClipboard);
+// videoLink.addEventListener('click', copyClipboard);

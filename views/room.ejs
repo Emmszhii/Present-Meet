@@ -19,6 +19,8 @@
     <title>Present Meet</title>
   </head>
   <body>
+    <div id="preloader"></div>
+
     <div class="videoCall">
       <main class="container__streams">
         <div id="room__container">
@@ -29,63 +31,6 @@
                 <div class="video-player" id="user-12323">1
                 </div>
               </div> -->
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
-              <div class="video__container" id="user-container-232">
-                <div class="video-player" id="user-12323">1</div>
-              </div>
             </div>
           </section>
 
@@ -100,7 +45,7 @@
               />
             </form>
           </section>
-          <section id="members__container">
+          <section id="members__container" style="display: block">
             <div id="members__header">
               <p>Participants</p>
               <strong id="members__count">0</strong>
@@ -113,12 +58,7 @@
       <div class="footerBtn">
         <div class="videoLink">
           <!-- Button for copying the room ID -->
-          <button
-            class="copy"
-            onclick="copyClipboard()"
-            class="icon"
-            type="button"
-          >
+          <button class="copy" id="link-btn" class="icon" type="button">
             <i class="fa-solid fa-copy"></i>
           </button>
           <!-- Left side for the ink of the room -->
