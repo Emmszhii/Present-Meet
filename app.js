@@ -68,6 +68,7 @@ passport.deserializeUser((id, done) => {
   });
 });
 
+// passport google strategy
 passport.use(
   new GoogleStrategy(
     {
@@ -92,7 +93,7 @@ passport.use(
   )
 );
 
-// Home
+// home route
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
     res.redirect('/join-and-create');
@@ -101,7 +102,7 @@ app.get('/', (req, res) => {
   }
 });
 
-// Auth Google Login
+// Auth Google Login route
 app
   .route('/auth/google')
   .get(passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -114,7 +115,7 @@ app.get(
   }
 );
 
-// join or create room
+// join or create room route
 app.route('/join-and-create').get((req, res) => {
   // session user algorithm
   if (req.isAuthenticated()) {
@@ -124,7 +125,7 @@ app.route('/join-and-create').get((req, res) => {
   }
 });
 
-// Room Route
+// room Route
 app.route('/room').get((req, res) => {
   if (req.isAuthenticated()) {
     const idRoom = req.query.meetingId;
@@ -236,10 +237,13 @@ const generateRTMToken = (req, resp) => {
   return resp.json({ rtmToken: token });
 };
 
+// fetch rtc token
 app.get('/rtc/:channel/:role/:tokentype/:id', nocache, generateRTCToken);
 
+// fetch rtm token
 app.get('/rtm/:uid', nocache, generateRTMToken);
 
+// fetch user information
 app.get('/getInfo', (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).json({ user: req.user });
@@ -248,7 +252,7 @@ app.get('/getInfo', (req, res) => {
   }
 });
 
-// Logout
+// logout route
 app.get('/logout', (req, res) => {
   req.logout((err) => {
     err && console.log(err);
@@ -256,6 +260,7 @@ app.get('/logout', (req, res) => {
   });
 });
 
+// listen to the route
 app.listen(PORT, () => {
   console.log(`Server is up and listening on PORT ${PORT}`);
 });

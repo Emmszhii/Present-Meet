@@ -34,13 +34,9 @@ const expandVideoFrame = (e) => {
   displayFrame.appendChild(e.currentTarget);
   userIdInDisplayFrame = e.currentTarget.id;
 
-  for (let i = 0; videoFrames.length > i; i++) {
-    if (videoFrames[i].id != userIdInDisplayFrame) {
-      videoFrames[i].style.width = '300px';
-      videoFrames[i].style.height = '200px';
-    }
-  }
+  resetTheFrames();
 };
+
 for (let i = 0; videoFrames.length > i; i++) {
   videoFrames[i].addEventListener('click', expandVideoFrame);
 }
@@ -53,13 +49,13 @@ const hideDisplayFrame = () => {
   let child = displayFrame.children[0];
   document.getElementById('streams__container').appendChild(child);
 
-  try {
-    if (videoFrames[i].id != userIdInDisplayFrame) {
-      videoFrames[i].style.width = '300px';
-      videoFrames[i].style.height = '200px';
-    }
-  } catch (err) {
-    console.log(err);
+  resetTheFrames();
+};
+
+const resetTheFrames = () => {
+  for (let i = 0; videoFrames.length > i; i++) {
+    videoFrames[i].style.width = '300px';
+    videoFrames[i].style.height = '200px';
   }
 };
 
