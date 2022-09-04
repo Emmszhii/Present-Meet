@@ -89,4 +89,5 @@ function membersToggle() {
 
 // Event Listeners
 displayFrame.addEventListener('click', hideDisplayFrame);
+// copying the meeting code
 videoLink.addEventListener('click', copyClipboard);

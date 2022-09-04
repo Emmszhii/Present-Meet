@@ -17,14 +17,6 @@ const LOCAL_SERVER_URL = `http://localhost:3000`;
 // let idRoom for random id generator
 let idRoom;
 
-// disable the video and audio checkbox function
-const disable = () => {
-  joinVideoBox.checked = false;
-  joinAudioBox.checked = false;
-  createVideoBox.checked = false;
-  createAudioBox.checked = false;
-};
-
 // Random room id generator Code
 function makeId(length) {
   let result = '';
@@ -45,27 +37,6 @@ const copyClipboard = () => {
 
 // Event Listeners
 
-joinVideoBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-joinAudioBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-createVideoBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-createAudioBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-
 // MODAL for joining and creating room
 joinRoomBtn.addEventListener('click', () => {
   joinModal.classList.add('bg-active');
@@ -73,7 +44,7 @@ joinRoomBtn.addEventListener('click', () => {
 });
 
 closeJoinBtn.addEventListener('click', () => {
-  disable();
+  // disable();
   joinMeetingInput.value = '';
   joinModal.classList.remove('bg-active');
 });
@@ -85,7 +56,7 @@ createRoomBtn.addEventListener('click', () => {
 });
 
 closeCreateBtn.addEventListener('click', () => {
-  disable();
+  // disable();
   createModal.classList.remove('bg-active');
 });
 

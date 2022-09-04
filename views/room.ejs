@@ -50,10 +50,11 @@
       </main>
 
       <div class="footerBtn">
+        <!-- Left side for the ink of the room -->
         <div class="videoLink">
-          <!--dine yung link-->
           <p class="link"></p>
         </div>
+        <!-- Button for copying the room ID -->
         <button
           class="copy"
           onclick="copyClipboard()"
@@ -63,7 +64,7 @@
           <i class="fa-solid fa-copy"></i>
         </button>
 
-        <!-- </button> -->
+        <!-- Main Button at middle-->
         <div class="middleBtn">
           <button class="button active" id="mic-btn">
             <i class="fa-solid fa-microphone"></i>
@@ -78,7 +79,13 @@
           <button class="button" id="leave-btn">
             <i class="fa-solid fa-phone"></i>
           </button>
+        
+        
+          <!-- <button id="join-btn">Join Stream</button> -->
         </div>
+
+
+        <!-- Right side button for messaging and the participants list -->
         <div class="rightBtn">
           <button class="button" onclick="membersToggle()"><i class="fa-solid fa-users"></i></button>
           <button class="button" onclick="messagesToggle()"><i class="fa-solid fa-envelope"></i></button>
@@ -95,7 +102,7 @@
       src="javascript/AgoraSDK/agora-rtm-sdk-1.5.0.js"
     ></script>
     <script type="text/javascript" src="javascript/room.js"></script>
-    <script type="text/javascript" src="javascript/room_rtc.js"></script>
     <script type="text/javascript" src="javascript/room_rtm.js"></script>
+    <script type="text/javascript" src="javascript/room_rtc.js"></script>
   </body>
 </html>

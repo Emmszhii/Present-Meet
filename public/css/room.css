@@ -267,7 +267,7 @@ video {
 }
 
 .message__body {
-  background-color: white;
+  background-color: #4c5265;
   border-radius: 10px;
   padding: 10px 15px;
   width: fit-content;
@@ -287,7 +287,7 @@ video {
 
 .message__author {
   margin-right: 10px;
-  color: #2aca3e !important;
+  color: yellow !important;
 }
 
 .message__author__bot {
@@ -296,6 +296,7 @@ video {
 }
 
 .message__text {
+  color: white;
   margin: 0;
 }
 
@@ -341,6 +342,7 @@ video {
   width: 100%;
   max-width: 15rem;
   overflow-y: auto;
+  overflow-x: hidden;
   border-left: 2px solid white;
   border-bottom: 2px solid white;
 }
@@ -351,21 +353,22 @@ video {
   justify-content: space-around;
   align-items: center;
   padding: 0 1rem;
-  position: fixed;
+  /* position: fixed; */
   font-size: 18px;
   background-color: #323143;
   width: 218px;
 }
 
-#members__list {
+#member__list {
+  color: white;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-top: 5rem;
-  padding-bottom: 6.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
-.members__list::-webkit-scrollbar {
+.member__list::-webkit-scrollbar {
   height: 14px;
 }
 
@@ -403,7 +406,7 @@ video {
     height: 75vh;
   }
   .video__container {
-    height: 100px;
     width: 120px;
+    height: 100px;
   }
 }

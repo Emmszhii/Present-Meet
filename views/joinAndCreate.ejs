@@ -39,7 +39,7 @@
         <h3>Join a meeting</h3>
         <span>Enter a meeting code provided by the meeting organizer</span>
         <form action="/room" method="get">
-          <div class="checkBoxes">
+          <!-- <div class="checkBoxes">
             <label class="container" >Video
               <input name="video" type="checkbox" id="videoCheckbox1" value='false'>
               <span span class="checkmark"></span>
@@ -48,7 +48,7 @@
               <input name="audio" type="checkbox" id="micCheckbox1" value="false">
               <span class="checkmark"></span>
             </label>
-          </div>
+          </div> -->
         
           <input
             class="input"
@@ -75,7 +75,7 @@
       <h3>Create a Meeting</h3>
       <span>Here's the link to your meeting</span>
       <form action='/room' method="get">
-        <div class="checkBoxes">
+        <!-- <div class="checkBoxes">
           <label class="container" >Video
             <input name="video" type="checkbox" id="videoCheckbox2" value="false">
             <span span class="checkmark"></span>
@@ -84,8 +84,8 @@
             <input name="audio" type="checkbox" id="micCheckbox2" value="false">
             <span class="checkmark"></span>
           </label>
-        </div>
-      
+        </div> -->
+        
         <input class="input" type="text" name="meetingId" id="link" autocomplete="off" readonly/>
         <button onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
         <div class="buttons">

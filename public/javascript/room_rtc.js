@@ -1,5 +1,4 @@
 // initializing the variables
-
 // user local data and tokens
 const userData = {};
 
@@ -62,7 +61,6 @@ const getTokens = async () => {
         const res = await fetch(url, { method: 'GET' });
         await res.json().then((data) => {
           userData.rtmToken = data.rtmToken;
-          console.log(userData);
         });
       })
       .catch((err) => {
@@ -74,7 +72,9 @@ const getTokens = async () => {
 // initializing the agora sdk for joining the room and validating the user token for security joining
 const joinRoomInit = async () => {
   // letting rtc.client become the instance with APP_ID
-  rtm.client = await AgoraRTM.createInstance(userData.APP_ID);
+  rtm.client = await AgoraRTM.createInstance(userData.APP_ID, {
+    logFilter: AgoraRTM.LOG_FILTER_WARNING,
+  });
 
   // option to login into RTM
   const rtmOption = {
@@ -85,10 +85,21 @@ const joinRoomInit = async () => {
   // login to the rtm with user id and rtmToken
   await rtm.client.login(rtmOption);
 
-  // create client with meetingId
+  await rtm.client.addOrUpdateLocalUserAttributes({ name: userData.fullName });
+
+  // create channel with meetingId
   rtm.channel = await rtm.client.createChannel(meetingId);
   // join RTM
   await rtm.channel.join();
+
+  // setting the rtm channel on with handlers
+  rtm.channel.on('MemberJoined', handleMemberJoin);
+  rtm.channel.on('MemberLeft', handleMemberLeft);
+  rtm.channel.on('ChannelMessage', handleChannelMessage);
+
+  // get all members in render it to the dom
+  getMembers();
+  addBotMessageToDom(`Welcome to the room ${userData.fullName}! 🤗`);
 
   // initialize setting the rtc
   rtc.client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
@@ -127,9 +138,6 @@ const joinStream = async () => {
     <div class="video__container" id="user-container-${userData.rtcId}">
       <div class="video-player" id="user-${userData.rtcId}">
       </div>
-      <div class="name">
-        <p>${userData.fullName}</p>
-      </div>
     </div>
   `;
 
@@ -145,16 +153,14 @@ const joinStream = async () => {
   rtc.localTracks[1].play(`user-${userData.rtcId}`);
 
   // publish the video for other users to see
-  // localTracks[1] for audio and localTracks[0] for the video
-  await rtc.client.publish([rtc.localTracks[1]]);
-  // rtc.localTracks[0],
+  // localTracks[0] for audio and localTracks[1] for the video
+  await rtc.client.publish([rtc.localTracks[0], rtc.localTracks[1]]);
 };
 
 // user joined the meeting handler
 const handleUserPublished = async (user, mediaType) => {
   // set remote users as user
   remoteUsers[user.uid] = user;
-  console.log(user);
 
   // subscribe to the meeting
   await rtc.client.subscribe(user, mediaType);
@@ -166,9 +172,6 @@ const handleUserPublished = async (user, mediaType) => {
     player = `
     <div class="video__container" id="user-container-${user.uid}">
       <div class="video-player" id="user-${user.uid}">
-      </div>
-      <div class="name">
-        <p>${user.uid}</p>
       </div>
     </div>
   `;
@@ -313,8 +316,8 @@ const toggleScreen = async (e) => {
       // reset the frames
       for (let i = 0; videoFrames.length > i; i++) {
         if (videoFrames[i].id != userIdInDisplayFrame) {
-          videoFrames[i].style.width = '250px';
-          videoFrames[i].style.height = '150px';
+          videoFrames[i].style.width = '300px';
+          videoFrames[i].style.height = '200px';
         }
       }
     } catch (err) {
@@ -346,9 +349,6 @@ const switchToCamera = async () => {
   let player = `
     <div class="video__container" id="user-container-${userData.rtcId}">
       <div class="video-player" id="user-${userData.rtcId}">
-      </div>
-      <div class="name">
-        <p>${userData.rtcId}</p>
       </div>
     </div>
   `;
