@@ -13,6 +13,9 @@ const micBtn = document.getElementById('btnMic');
 const camBtn = document.getElementById('btnCamera');
 const screenShareBtn = document.getElementById('btnScreenShare');
 const videoContainer = document.getElementById('stream__container');
+const usersBtn = document.getElementById('users-btn');
+const chatBtn = document.getElementById('chat-btn');
+
 // Expand Video Frame on Click
 let displayFrame = document.getElementById('stream__box');
 let videoFrames = document.getElementsByClassName('video__container');
@@ -31,8 +34,8 @@ const expandVideoFrame = (e) => {
 
   for (let i = 0; videoFrames.length > i; i++) {
     if (videoFrames[i].id != userIdInDisplayFrame) {
-      videoFrames[i].style.width = '250px';
-      videoFrames[i].style.height = '150px';
+      videoFrames[i].style.width = '300px';
+      videoFrames[i].style.height = '200px';
     }
   }
 };
@@ -65,29 +68,38 @@ const copyClipboard = () => {
 
 // message and participant toggle
 
-function messagesToggle() {
+function messagesToggle(e) {
+  const btn = e.currentTarget;
   const x = document.getElementById('messages__container');
   const y = document.getElementById('members__container');
   if (y.style.display === 'block') return;
   if (x.style.display === 'block') {
+    btn.classList.remove('active');
     x.style.display = 'none';
   } else {
+    btn.classList.add('active');
     x.style.display = 'block';
   }
 }
 
-function membersToggle() {
+function membersToggle(e) {
+  const btn = e.currentTarget;
   const x = document.getElementById('members__container');
   const y = document.getElementById('messages__container');
   if (y.style.display === 'block') return;
   if (x.style.display === 'block') {
+    btn.classList.remove('active');
     x.style.display = 'none';
   } else {
+    btn.classList.add('active');
     x.style.display = 'block';
   }
 }
 
 // Event Listeners
+// display and un-display
+usersBtn.addEventListener('click', membersToggle);
+chatBtn.addEventListener('click', messagesToggle);
 displayFrame.addEventListener('click', hideDisplayFrame);
 // copying the meeting code
 videoLink.addEventListener('click', copyClipboard);

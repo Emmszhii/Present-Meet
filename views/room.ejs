@@ -24,46 +24,106 @@
         <div id="room__container">
           <section class="tileFaces" id="stream__container">
             <div id="stream__box"></div>
-
             <div id="streams__container">
-            </div>
-
+              <!-- <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1
+                </div>
+              </div> -->
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
+              <div class="video__container" id="user-container-232">
+                <div class="video-player" id="user-12323">1</div>
+              </div>
             </div>
           </section>
 
           <section id="messages__container">
-
             <div id="messages"></div>
             <form id="message__form">
-                <input type="text" name="message" placeholder="Send a message...." autocomplete="off"/>
+              <input
+                type="text"
+                name="message"
+                placeholder="Send a message...."
+                autocomplete="off"
+              />
             </form>
-        </section>
+          </section>
           <section id="members__container">
-
             <div id="members__header">
-                <p>Participants</p>
-                <strong id="members__count">0</strong>
+              <p>Participants</p>
+              <strong id="members__count">0</strong>
             </div>
             <div id="member__list"></div>
-            </section>
+          </section>
         </div>
       </main>
 
       <div class="footerBtn">
-        <!-- Left side for the ink of the room -->
         <div class="videoLink">
+          <!-- Button for copying the room ID -->
+          <button
+            class="copy"
+            onclick="copyClipboard()"
+            class="icon"
+            type="button"
+          >
+            <i class="fa-solid fa-copy"></i>
+          </button>
+          <!-- Left side for the ink of the room -->
           <p class="link"></p>
         </div>
-        <!-- Button for copying the room ID -->
-        <button
-          class="copy"
-          onclick="copyClipboard()"
-          class="icon"
-          type="button"
-        >
-          <i class="fa-solid fa-copy"></i>
-        </button>
-
         <!-- Main Button at middle-->
         <div class="middleBtn">
           <button class="button active" id="mic-btn">
@@ -79,17 +139,17 @@
           <button class="button" id="leave-btn">
             <i class="fa-solid fa-phone"></i>
           </button>
-        
-        
-          <!-- <button id="join-btn">Join Stream</button> -->
         </div>
-
-
         <!-- Right side button for messaging and the participants list -->
         <div class="rightBtn">
-          <button class="button" onclick="membersToggle()"><i class="fa-solid fa-users"></i></button>
-          <button class="button" onclick="messagesToggle()"><i class="fa-solid fa-envelope"></i></button>
+          <button class="button active" id="users-btn">
+            <i class="fa-solid fa-users"></i>
+          </button>
+          <button class="button" id="chat-btn">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
         </div>
+        <button id="join-btn">Join Stream</button>
       </div>
     </div>
 

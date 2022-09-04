@@ -9,22 +9,6 @@ body {
   height: 100vh;
   position: relative;
 }
-
-/* Screen */
-.tileFaces {
-  z-index: 1;
-  margin: 0 auto;
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -49%);
-  height: 90vh;
-  width: 95%;
-  overflow: hidden;
-  overflow-y: auto;
-  text-align: justify;
-}
-
 /* .tileFaces {
   z-index: 1;
   margin: 0 auto;
@@ -40,8 +24,7 @@ body {
   float: left;
 } */
 
-/* Buttons Styles*/
-
+/* Buttons */
 .footerBtn {
   position: absolute;
   width: 100%;
@@ -53,59 +36,53 @@ body {
   color: #fff;
   font-size: 20px;
 }
-
 .videoLink {
-  padding-left: 50px;
-  float: left;
-  justify-content: flex-start;
-}
-
-.rightBtn {
-  margin-right: 50px;
-}
-
-.middleBtn {
   display: flex;
-  margin: auto;
   justify-content: center;
   align-items: center;
-  width: 20vw;
-  justify-content: space-evenly;
+  width: 10%;
+  margin: 0px;
 }
-
+.middleBtn {
+  position: absolute;
+  display: none;
+  margin: 0px auto;
+  align-items: center;
+  width: 20%;
+  justify-content: space-evenly;
+  left: 40%;
+}
 .rightBtn {
-  margin-right: 50px;
+  float: right;
   display: flex;
   justify-content: space-evenly;
-  width: 10vw;
+  width: 10%;
+  margin: 0px 0px 0px auto;
 }
-
 #endCall {
   background-color: red;
 }
-
 .button {
   background-color: #494949;
-  color: white;
+  color: white !important;
+  font-size: 20px;
   width: 60px;
   height: 60px;
   display: flex;
   place-content: center;
   place-items: center;
-  border-radius: 1000px;
+  border-radius: 100%;
+  cursor: pointer;
 }
-
 .active {
   background-color: green;
   color: black;
 }
-
 .button:hover,
 .copy:hover {
   color: black !important;
   background-color: white;
 }
-
 .copy {
   color: #fff;
   background-color: #494949;
@@ -116,38 +93,64 @@ body {
   place-items: center;
   border-radius: 10px;
 }
-
 .copy:active {
   border: 1px solid black;
 }
-
-.footerBtn > .middleBtn > button {
+/* .footerBtn > .middleBtn > button {
   color: #fff;
   font-size: 20px;
+} */
+#join-btn {
+  /* display: block !important; */
+  background-color: #2aca3e;
+  font-size: 18px;
+  padding: 15px 25px;
+  border: none;
+  color: #fff;
+  text-shadow: 2px 2px black;
+  position: fixed;
+  bottom: 0.9rem;
+  border-radius: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
 }
-
+/* End Button */
 /* Scrollbar */
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
-
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
+/* End ScrollBar */
 /* Users Stream */
+.tileFaces {
+  z-index: 1;
+  margin: 0 auto;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -49%);
+  height: 90vh;
+  width: 95%;
+  overflow: hidden;
+  overflow-y: auto;
+  text-align: justify;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
 
 .video__container {
   color: white;
@@ -197,8 +200,9 @@ video {
   display: block;
   margin: auto;
   background-color: #494949;
-  height: 85vh;
-  width: 80vw;
+  height: 88vh;
+  width: 89vw;
+  margin-bottom: 10px;
   display: none;
 }
 
@@ -232,6 +236,7 @@ video {
   transform: translate(-50%, -50%);
 }
 
+/* End Stream */
 /* Messages */
 
 #messages__container {
@@ -333,7 +338,7 @@ video {
 /* members container */
 
 #members__container {
-  display: none;
+  display: block;
   z-index: 99;
   height: calc(100vh - 85px);
   background-color: #262625;
@@ -394,19 +399,39 @@ video {
 
 /* End members */
 
+/* responsiveness of mobile */
 @media (max-width: 1400px) {
-  .video__container {
+  .middleBtn {
+    width: 40%;
+    left: 30%;
+  }
+  .rightBtn {
+    width: 15%;
+  }
+  .videoLink {
+    width: 20%;
+  }
+  /* .video__container {
     height: 200px;
     width: 200px;
-  }
+  } */
 }
 
 @media (max-width: 768px) {
   #stream__box {
-    height: 75vh;
+    height: 85vh;
   }
-  .video__container {
+  /* .video__container {
     width: 120px;
     height: 100px;
+  } */
+  .middleBtn {
+    width: 40%;
+  }
+  .rightBtn {
+    width: 20%;
+  }
+  .videoLink {
+    width: 20%;
   }
 }
