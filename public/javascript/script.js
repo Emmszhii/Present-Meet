@@ -17,28 +17,7 @@ const LOCAL_SERVER_URL = `http://localhost:3000`;
 // let idRoom for random id generator
 let idRoom;
 
-joinVideoBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-joinAudioBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-createVideoBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-createAudioBox.addEventListener('click', (e) => {
-  e.target.checked
-    ? (e.currentTarget.value = true)
-    : (e.currentTarget.value = false);
-});
-
-// disable the video and audio checkbox
+// disable the video and audio checkbox function
 const disable = () => {
   joinVideoBox.checked = false;
   joinAudioBox.checked = false;
@@ -63,6 +42,29 @@ const copyClipboard = () => {
   const text = linkInput.value;
   navigator.clipboard.writeText(text);
 };
+
+// Event Listeners
+
+joinVideoBox.addEventListener('click', (e) => {
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
+});
+joinAudioBox.addEventListener('click', (e) => {
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
+});
+createVideoBox.addEventListener('click', (e) => {
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
+});
+createAudioBox.addEventListener('click', (e) => {
+  e.target.checked
+    ? (e.currentTarget.value = true)
+    : (e.currentTarget.value = false);
+});
 
 // MODAL for joining and creating room
 joinRoomBtn.addEventListener('click', () => {

@@ -18,6 +18,7 @@ let displayFrame = document.getElementById('stream__box');
 let videoFrames = document.getElementsByClassName('video__container');
 let userIdInDisplayFrame = null;
 
+// Expand VideoFrame Function
 const expandVideoFrame = (e) => {
   let child = displayFrame.children[0];
   if (child) {
@@ -39,6 +40,7 @@ for (let i = 0; videoFrames.length > i; i++) {
   videoFrames[i].addEventListener('click', expandVideoFrame);
 }
 
+// Hide Display Frame Function
 const hideDisplayFrame = () => {
   userIdInDisplayFrame = null;
   displayFrame.style.display = null;
@@ -56,13 +58,10 @@ const hideDisplayFrame = () => {
   }
 };
 
-displayFrame.addEventListener('click', hideDisplayFrame);
-
-// Copy Meeting ID
+// Copy Meeting ID function
 const copyClipboard = () => {
   navigator.clipboard.writeText(meetingId);
 };
-videoLink.addEventListener('click', copyClipboard);
 
 // message and participant toggle
 
@@ -87,3 +86,7 @@ function membersToggle() {
     x.style.display = 'block';
   }
 }
+
+// Event Listeners
+displayFrame.addEventListener('click', hideDisplayFrame);
+videoLink.addEventListener('click', copyClipboard);

@@ -1,5 +1,9 @@
 // initializing the variables
+
+// user local data and tokens
 const userData = {};
+
+// rtc API
 const rtc = {
   // rtc.client
   client: null,
@@ -14,6 +18,8 @@ const rtc = {
   // rtc boolean screen share
   sharingScreen: false,
 };
+
+// rtm API
 const rtm = {
   // rtm.client
   client: null,
@@ -23,6 +29,8 @@ const rtmOption = {
   token: '',
   uid: '',
 };
+
+// remote users
 const remoteUsers = {};
 
 // getting local user info
@@ -65,6 +73,7 @@ const getTokens = async () => {
 
 // initializing the agora sdk for joining the room and validating the user token for security joining
 const joinRoomInit = async () => {
+  // letting rtc.client become the instance with APP_ID
   rtm.client = await AgoraRTM.createInstance(userData.APP_ID);
 
   // option to login into RTM
@@ -73,7 +82,7 @@ const joinRoomInit = async () => {
     token: userData.rtmToken,
   };
 
-  // login to the rtm
+  // login to the rtm with user id and rtmToken
   await rtm.client.login(rtmOption);
 
   // create client with meetingId
@@ -136,34 +145,39 @@ const joinStream = async () => {
   rtc.localTracks[1].play(`user-${userData.rtcId}`);
 
   // publish the video for other users to see
+  // localTracks[1] for audio and localTracks[0] for the video
   await rtc.client.publish([rtc.localTracks[1]]);
   // rtc.localTracks[0],
 };
 
-// user joined the meeting
+// user joined the meeting handler
 const handleUserPublished = async (user, mediaType) => {
+  // set remote users as user
   remoteUsers[user.uid] = user;
   console.log(user);
 
   // subscribe to the meeting
   await rtc.client.subscribe(user, mediaType);
 
-  // add frame to the dom
+  // creating let variable for rendering other user
   let player = document.getElementById(`user-container-${user.uid}`);
+  // if player is null then run it
   if (player === null) {
     player = `
     <div class="video__container" id="user-container-${user.uid}">
       <div class="video-player" id="user-${user.uid}">
       </div>
       <div class="name">
-        <p>${user.fullName}</p>
+        <p>${user.uid}</p>
       </div>
     </div>
   `;
 
+    // add player to the dom
     document
       .getElementById('streams__container')
       .insertAdjacentHTML('beforeend', player);
+    //onClick user will be able to expand it
     document
       .getElementById(`user-container-${user.uid}`)
       .addEventListener('click', expandVideoFrame);
@@ -189,13 +203,16 @@ const handleUserPublished = async (user, mediaType) => {
 
 // user left the meeting
 const handleUserLeft = async (user) => {
+  // delete a remote user with their uid
   delete remoteUsers[user.uid];
+  // delete the dom of the user uid who left
   document.getElementById(`user-container-${user.uid}`).remove();
 
   // if user is on big display and left delete it
   if (userIdInDisplayFrame === `user-container-${user.uid}`) {
     displayFrame.style.display = null;
 
+    // videoFrames variable
     let videoFrames = document.getElementsByClassName('video__container');
 
     // default size
@@ -209,8 +226,10 @@ const handleUserLeft = async (user) => {
 // Buttons
 // Camera function
 const toggleCamera = async (e) => {
+  // button target
   const button = e.currentTarget;
 
+  // rtc video muting
   if (rtc.localTracks[1].muted) {
     await rtc.localTracks[1].setMuted(false);
     button.classList.add('active');
@@ -221,8 +240,10 @@ const toggleCamera = async (e) => {
 };
 // Audio function
 const toggleMic = async (e) => {
+  // button target
   const button = e.currentTarget;
 
+  // rtc audio muting
   if (rtc.localTracks[0].muted) {
     await rtc.localTracks[0].setMuted(false);
     button.classList.add('active');
@@ -234,28 +255,36 @@ const toggleMic = async (e) => {
 
 // Screen function
 const toggleScreen = async (e) => {
+  // button target
   const screenButton = e.currentTarget;
+  // camera button
   const cameraButton = document.getElementById('camera-btn');
 
+  // if rtc sharing screen is false
   if (!rtc.sharingScreen) {
+    // run rtc localScreenTracks
     rtc.localScreenTracks = await AgoraRTC.createScreenVideoTrack().catch(
       (err) => {
+        // if error occurs reset the buttons and rtc sharingScreen boolean
         rtc.sharingScreen = false;
         cameraButton.style.display = 'block';
-        console.log(err);
         return;
       }
     );
 
+    // if it run
     try {
+      // setting the active buttons
       rtc.sharingScreen = true;
       screenButton.classList.add('active');
       cameraButton.classList.remove('active');
       cameraButton.style.display = 'none';
 
+      // remove the local video screen
       document.getElementById(`user-container-${userData.rtcId}`).remove();
       displayFrame.style.display = ' block';
 
+      // player variable for their screen
       let player = `
         <div class="video__container" id="user-container-${userData.rtcId}">
           <div class="video-player" id="user-${userData.rtcId}">
@@ -263,18 +292,25 @@ const toggleScreen = async (e) => {
         </div>
       `;
 
+      // display in big frame the player dom
       displayFrame.insertAdjacentHTML('beforeend', player);
       document
         .getElementById(`user-container-${userData.rtcId}`)
         .addEventListener('click', expandVideoFrame);
 
+      //
       userIdInDisplayFrame = `user-container-${userData.rtcId}`;
       rtc.localScreenTracks.play(`user-${userData.rtcId}`);
 
+      // unpublish the video track
       await rtc.client.unpublish([rtc.localTracks[1]]);
+      // publish the screen track
       await rtc.client.publish([rtc.localScreenTracks]);
 
-      const videoFrames = document.getElementsByClassName(`video__container`);
+      // video__container
+      let videoFrames = document.getElementsByClassName(`video__container`);
+
+      // reset the frames
       for (let i = 0; videoFrames.length > i; i++) {
         if (videoFrames[i].id != userIdInDisplayFrame) {
           videoFrames[i].style.width = '250px';
@@ -285,18 +321,29 @@ const toggleScreen = async (e) => {
       console.log(err);
     }
   } else {
-    rtc.sharingScreen = false;
-    cameraButton.style.display = 'block';
-    document.getElementById(`user-container-${userData.rtcId}`).remove();
-    await rtc.client.unpublish([rtc.localScreenTracks]);
+    try {
+      // reset the values to false
+      rtc.sharingScreen = false;
+      cameraButton.style.display = 'block';
 
-    switchToCamera();
+      // remove the local screen tracks to the dom
+      document.getElementById(`user-container-${userData.rtcId}`).remove();
+
+      //unpublish the local screen tracks
+      await rtc.client.unpublish([rtc.localScreenTracks]);
+
+      // then switch to camera
+      switchToCamera();
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 
 // After disabling the share screen function then switch to Camera
 const switchToCamera = async () => {
-  const player = `
+  // player DOM
+  let player = `
     <div class="video__container" id="user-container-${userData.rtcId}">
       <div class="video-player" id="user-${userData.rtcId}">
       </div>
@@ -306,17 +353,25 @@ const switchToCamera = async () => {
     </div>
   `;
 
+  // display the frame
   displayFrame.insertAdjacentHTML('beforeend', player);
 
+  // mute the local tracks of the user
   await rtc.localTracks[0].setMuted(true);
   await rtc.localTracks[1].setMuted(true);
 
+  // removing the active class
   document.getElementById(`mic-btn`).classList.remove('active');
   document.getElementById(`screen-btn`).classList.remove('active');
 
+  // play the user video
   rtc.localTracks[1].play(`user-${userData.rtcId}`);
+
+  // publish the video
   await rtc.client.publish([rtc.localTracks[1]]);
 };
+
+// Event Listeners
 
 // Camera Button
 document.getElementById('camera-btn').addEventListener('click', toggleCamera);
@@ -326,8 +381,10 @@ document.getElementById('screen-btn').addEventListener('click', toggleScreen);
 
 // webpage on load
 window.addEventListener('load', () => {
+  // display the meeting link
   videoLink.textContent = meetingId;
+  // get tokens and user info
   getTokens();
-  // getRtmToken();
-  setTimeout(joinRoomInit, 5000);
+  // need 3 seconds to run because of fetching the info and tokens
+  setTimeout(joinRoomInit, 3000);
 });
