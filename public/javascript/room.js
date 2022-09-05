@@ -9,12 +9,13 @@ const AUTH_URL = `http://localhost:3000`;
 const API_BASE_URL = 'https://api.videosdk.live';
 // Selectors
 const videoLink = document.querySelector('.link');
-const micBtn = document.getElementById('btnMic');
-const camBtn = document.getElementById('btnCamera');
-const screenShareBtn = document.getElementById('btnScreenShare');
 const videoContainer = document.getElementById('stream__container');
+const micBtn = document.getElementById('mic-btn');
+const cameraBtn = document.getElementById('camera-btn');
+const screenBtn = document.getElementById('screen-btn');
 const usersBtn = document.getElementById('users-btn');
 const chatBtn = document.getElementById('chat-btn');
+const leaveBtn = document.getElementById('leave-btn');
 const loader = document.getElementById('preloader');
 const linkBtn = document.getElementById('link-btn');
 

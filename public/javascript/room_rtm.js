@@ -1,3 +1,6 @@
+// Initialize the variable
+const messageForm = document.getElementById('message__form');
+
 // get members names and total and add it to the dom;
 
 // member joining handler
@@ -170,5 +173,4 @@ const leaveChannel = async () => {
 // when a user forced close they will be deleted to the dom
 window.addEventListener('beforeunload', leaveChannel);
 
-const messageForm = document.getElementById('message__form');
 messageForm.addEventListener('submit', sendMessage);

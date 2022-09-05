@@ -125,9 +125,6 @@ const joinRoomInit = async () => {
   // on user publish and left method
   rtc.client.on('user-published', handleUserPublished);
   rtc.client.on('user-left', handleUserLeft);
-  rtc.client.on('track-ended', (err) => {
-    console.log(err);
-  });
 
   // join stream functions
   // joinStream();
@@ -164,10 +161,6 @@ const joinStream = async () => {
   // publish the video for other users to see
   // localTracks[0] for audio and localTracks[1] for the video
   await rtc.client.publish([rtc.localTracks[0], rtc.localTracks[1]]);
-};
-
-const handleScreenTrackEnded = async () => {
-  console.log(`screen ended`);
 };
 
 // user joined the meeting handler
@@ -268,7 +261,14 @@ const toggleMic = async (e) => {
 // After disabling the share screen function then switch to Camera
 const switchToCamera = async () => {
   // display the frame
-  displayFrame.insertAdjacentHTML('beforeend', player(userData.rtc));
+  // displayFrame.insertAdjacentHTML('beforeend', player(userData.rtcId));
+  displayFrame.style.display = null;
+  document
+    .getElementById('streams__container')
+    .insertAdjacentHTML('beforeend', player(userData.rtcId));
+  document
+    .getElementById(`user-container-${userData.rtcId}`)
+    .addEventListener('click', expandVideoFrame);
 
   // mute the local tracks of the user
   await rtc.localTracks[0].setMuted(true);
@@ -283,66 +283,87 @@ const switchToCamera = async () => {
 
   // publish the video
   await rtc.client.publish([rtc.localTracks[1]]);
+  console.log(`switch to camera just got run`);
+};
+
+const handleStopShareScreen = async () => {
+  rtc.sharingScreen = false;
+  cameraBtn.style.display = 'block';
+  if (screenBtn.classList.contains('active')) {
+    screenBtn.classList.remove('active');
+  }
+
+  // remove the local screen tracks to the dom
+  document.getElementById(`user-container-${userData.rtcId}`).remove();
+
+  //unpublish the local screen tracks
+  await rtc.client.unpublish([rtc.localScreenTracks]);
+
+  // then switch to camera
+  switchToCamera();
+  console.log(`handle stop share screen got run!`);
 };
 
 // Screen function
 const toggleScreen = async (e) => {
-  // button target
-  const screenButton = e.currentTarget;
-  // camera button
-  const cameraButton = document.getElementById('camera-btn');
-
   // if rtc sharing screen is false
   if (!rtc.sharingScreen) {
-    // run rtc localScreenTracks
-    try {
-      rtc.localScreenTracks = await AgoraRTC.createScreenVideoTrack({
-        withAudio: 'auto',
-      });
-
-      rtc.sharingScreen = true;
-      screenButton.classList.add('active');
-      cameraButton.classList.remove('active');
-      cameraButton.style.display = 'none';
-
-      // remove the local video screen
-      document.getElementById(`user-container-${userData.rtcId}`).remove() ||
-        '';
-      displayFrame.style.display = ' block';
-
-      // display in big frame the player dom
-      displayFrame.insertAdjacentHTML('beforeend', player(userData.rtcId));
-      document
-        .getElementById(`user-container-${userData.rtcId}`)
-        .addEventListener('click', expandVideoFrame);
-
-      //
-      userIdInDisplayFrame = `user-container-${userData.rtcId}`;
-      rtc.localScreenTracks.play(`user-${userData.rtcId}`);
-
-      // unpublish the video track
-      await rtc.client.unpublish([rtc.localTracks[1]]);
-      // publish the screen track
-      await rtc.client.publish([rtc.localScreenTracks]);
-
-      // video__container
-      let videoFrames = document.getElementsByClassName(`video__container`);
-      // reset the frames
-      for (let i = 0; videoFrames.length > i; i++) {
-        if (videoFrames[i].id != userIdInDisplayFrame) {
-          videoFrames[i].style.width = '300px';
-          videoFrames[i].style.height = '200px';
-        }
-      }
-    } catch (err) {
+    // let variable for error handling
+    let error = false;
+    // // run rtc localScreenTracks
+    // try {
+    rtc.localScreenTracks = await AgoraRTC.createScreenVideoTrack({
+      withAudio: 'auto',
+    }).catch(() => {
       rtc.sharingScreen = false;
-      screenButton.classList.remove('active');
-      console.log(err);
+      screenBtn.classList.remove('active');
+      console.log('this error just got run');
+      error = !error;
+    });
+
+    if (error === true) return;
+    rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
+
+    rtc.sharingScreen = true;
+    screenBtn.classList.add('active');
+    cameraBtn.classList.remove('active');
+    cameraBtn.style.display = 'none';
+
+    // remove the local video screen
+    document.getElementById(`user-container-${userData.rtcId}`).remove();
+    displayFrame.style.display = ' block';
+
+    // display in big frame the player dom
+    displayFrame.insertAdjacentHTML('beforeend', player(userData.rtcId));
+    document
+      .getElementById(`user-container-${userData.rtcId}`)
+      .addEventListener('click', expandVideoFrame);
+
+    //
+    userIdInDisplayFrame = `user-container-${userData.rtcId}`;
+    rtc.localScreenTracks.play(`user-${userData.rtcId}`);
+
+    // unpublish the video track
+    await rtc.client.unpublish([rtc.localTracks[1]]);
+    // publish the screen track
+    await rtc.client.publish([rtc.localScreenTracks]);
+
+    // video__container
+    let videoFrames = document.getElementsByClassName(`video__container`);
+    // reset the frames
+    for (let i = 0; videoFrames.length > i; i++) {
+      if (videoFrames[i].id != userIdInDisplayFrame) {
+        videoFrames[i].style.width = '300px';
+        videoFrames[i].style.height = '200px';
+      }
     }
+    console.log('this sharing screen running!');
   } else {
-    // reset the values to false
     rtc.sharingScreen = false;
-    cameraButton.style.display = 'block';
+    cameraBtn.style.display = 'block';
+    if (screenBtn.classList.contains('active')) {
+      screenBtn.classList.remove('active');
+    }
 
     // remove the local screen tracks to the dom
     document.getElementById(`user-container-${userData.rtcId}`).remove();
@@ -352,6 +373,7 @@ const toggleScreen = async (e) => {
 
     // then switch to camera
     switchToCamera();
+    console.log(`share screen end successfully`);
   }
 };
 
