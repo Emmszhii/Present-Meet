@@ -112,7 +112,7 @@ body {
   font-size: 20px;
 } */
 #join-btn {
-  /* display: block !important; */
+  display: block;
   background-color: #2aca3e;
   font-size: 18px;
   padding: 15px 25px;

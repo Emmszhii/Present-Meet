@@ -40,7 +40,6 @@ const copyClipboard = () => {
 // MODAL for joining and creating room
 joinRoomBtn.addEventListener('click', () => {
   joinModal.classList.add('bg-active');
-  joinCode = joinMeetingInput.value;
 });
 
 closeJoinBtn.addEventListener('click', () => {

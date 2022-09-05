@@ -1,3 +1,4 @@
+import { userData, rtm } from './room_rtc.js';
 // Initialize the variable
 const messageForm = document.getElementById('message__form');
 
@@ -174,3 +175,15 @@ const leaveChannel = async () => {
 window.addEventListener('beforeunload', leaveChannel);
 
 messageForm.addEventListener('submit', sendMessage);
+
+export {
+  sendMessage,
+  getMembers,
+  handleChannelMessage,
+  handleMemberJoin,
+  handleMemberLeft,
+  addBotMessageToDom,
+  addMemberToDom,
+  addMessageToDom,
+  leaveChannel,
+};

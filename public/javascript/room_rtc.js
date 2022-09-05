@@ -1,4 +1,38 @@
 // initializing the variables
+const videoLink = document.querySelector('.link');
+const AUTH_URL = `http://localhost:3000`;
+const videoContainer = document.getElementById('stream__container');
+const micBtn = document.getElementById('mic-btn');
+const cameraBtn = document.getElementById('camera-btn');
+const screenBtn = document.getElementById('screen-btn');
+const usersBtn = document.getElementById('users-btn');
+const chatBtn = document.getElementById('chat-btn');
+const leaveBtn = document.getElementById('leave-btn');
+const loader = document.getElementById('preloader');
+const linkBtn = document.getElementById('link-btn');
+
+import {
+  getMembers,
+  handleChannelMessage,
+  handleMemberJoin,
+  handleMemberLeft,
+  addBotMessageToDom,
+  addMemberToDom,
+  addMessageToDom,
+} from './room_rtm.js';
+
+import {
+  meetingId,
+  membersToggle,
+  messagesToggle,
+  copyClipboard,
+  resetTheFrames,
+  hideDisplayFrame,
+  displayFrame,
+  userIdInDisplayFrame,
+  expandVideoFrame,
+} from './room.js';
+
 // user local data and tokens
 const userData = {};
 
@@ -23,10 +57,6 @@ const rtm = {
   // rtm.client
   client: null,
   channel: null,
-};
-const rtmOption = {
-  token: '',
-  uid: '',
 };
 
 // remote users
@@ -139,14 +169,6 @@ const joinStream = async () => {
   // initialize local tracks
   rtc.localTracks = await AgoraRTC.createMicrophoneAndCameraTracks({}, {});
 
-  // user DOM
-  // const player = `
-  //   <div class="video__container" id="user-container-${userData.rtcId}">
-  //     <div class="video-player" id="user-${userData.rtcId}">
-  //     </div>
-  //   </div>
-  // `;
-
   // add the player into the DOM
   document
     .getElementById('streams__container')
@@ -155,6 +177,9 @@ const joinStream = async () => {
     .getElementById(`user-container-${userData.rtcId}`)
     .addEventListener('click', expandVideoFrame);
 
+  // mute video and audio local track
+  rtc.localTracks[0].setMuted(true);
+  rtc.localTracks[1].setMuted(true);
   // play the local video track of the user
   rtc.localTracks[1].play(`user-${userData.rtcId}`);
 
@@ -171,7 +196,7 @@ const handleUserPublished = async (user, mediaType) => {
   // subscribe to the meeting
   await rtc.client.subscribe(user, mediaType);
 
-  // creating let variable for rendering other user
+  //
   const playerDom = document.getElementById(`user-container-${user.uid}`);
   // if player is null then run it
   if (playerDom === null) {
@@ -260,9 +285,11 @@ const toggleMic = async (e) => {
 
 // After disabling the share screen function then switch to Camera
 const switchToCamera = async () => {
-  // display the frame
-  // displayFrame.insertAdjacentHTML('beforeend', player(userData.rtcId));
+  // rtc.localScreenTracks.close();
+  // reset the Display Frame
   displayFrame.style.display = null;
+
+  // add the local user in the dom
   document
     .getElementById('streams__container')
     .insertAdjacentHTML('beforeend', player(userData.rtcId));
@@ -310,8 +337,7 @@ const toggleScreen = async (e) => {
   if (!rtc.sharingScreen) {
     // let variable for error handling
     let error = false;
-    // // run rtc localScreenTracks
-    // try {
+    // run rtc localScreenTracks
     rtc.localScreenTracks = await AgoraRTC.createScreenVideoTrack({
       withAudio: 'auto',
     }).catch(() => {
@@ -320,8 +346,10 @@ const toggleScreen = async (e) => {
       console.log('this error just got run');
       error = !error;
     });
-
+    // if error is true this function will end
     if (error === true) return;
+
+    // if error is false this will run
     rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
 
     rtc.sharingScreen = true;
@@ -340,7 +368,7 @@ const toggleScreen = async (e) => {
       .addEventListener('click', expandVideoFrame);
 
     //
-    userIdInDisplayFrame = `user-container-${userData.rtcId}`;
+    let userIdInDisplayFrame = `user-container-${userData.rtcId}`;
     rtc.localScreenTracks.play(`user-${userData.rtcId}`);
 
     // unpublish the video track
@@ -371,6 +399,7 @@ const toggleScreen = async (e) => {
     //unpublish the local screen tracks
     await rtc.client.unpublish([rtc.localScreenTracks]);
 
+    rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
     // then switch to camera
     switchToCamera();
     console.log(`share screen end successfully`);
@@ -381,6 +410,8 @@ const toggleScreen = async (e) => {
 const leaveStream = async (e) => {
   e.preventDefault();
 
+  document.getElementById('camera-btn').classList.remove('active');
+  document.getElementById('mic-btn').classList.remove('active');
   document.getElementById('join-btn').style.display = 'block';
   document.getElementsByClassName('middleBtn')[0].style.display = 'none';
 
@@ -415,24 +446,20 @@ const leaveStream = async (e) => {
   });
 };
 
-// Event Listeners
-
-// Camera Button
-document.getElementById('camera-btn').addEventListener('click', toggleCamera);
-// Mic Button
-document.getElementById('mic-btn').addEventListener('click', toggleMic);
-// let toggle a screen
-document.getElementById('screen-btn').addEventListener('click', toggleScreen);
-//
-document.getElementById('join-btn').addEventListener('click', joinStream);
-document.getElementById('leave-btn').addEventListener('click', leaveStream);
-
-// webpage on load
-window.addEventListener('load', () => {
-  // display the meeting link
-  videoLink.textContent = meetingId;
-  // get tokens and user info
-  getTokens();
-  // need 3 seconds to run because of fetching the info and tokens
-  setTimeout(joinRoomInit, 3000);
-});
+export {
+  userData,
+  rtc,
+  rtm,
+  joinRoomInit,
+  getTokens,
+  handleMemberJoin,
+  handleUserLeft,
+  handleUserPublished,
+  handleStopShareScreen,
+  handleChannelMessage,
+  toggleCamera,
+  toggleMic,
+  toggleScreen,
+  joinStream,
+  leaveStream,
+};

@@ -2,22 +2,11 @@
 AgoraRTC.setLogLevel(3);
 
 // Initializing variables
+
+// getting meeting Link
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);
 const meetingId = urlParams.get('meetingId').trim();
-const AUTH_URL = `http://localhost:3000`;
-const API_BASE_URL = 'https://api.videosdk.live';
-// Selectors
-const videoLink = document.querySelector('.link');
-const videoContainer = document.getElementById('stream__container');
-const micBtn = document.getElementById('mic-btn');
-const cameraBtn = document.getElementById('camera-btn');
-const screenBtn = document.getElementById('screen-btn');
-const usersBtn = document.getElementById('users-btn');
-const chatBtn = document.getElementById('chat-btn');
-const leaveBtn = document.getElementById('leave-btn');
-const loader = document.getElementById('preloader');
-const linkBtn = document.getElementById('link-btn');
 
 // Expand Video Frame on Click
 let displayFrame = document.getElementById('stream__box');
@@ -54,6 +43,7 @@ const hideDisplayFrame = () => {
 };
 
 const resetTheFrames = () => {
+  const videoFrames = document.getElementsByClassName('video__container');
   for (let i = 0; videoFrames.length > i; i++) {
     videoFrames[i].style.width = '300px';
     videoFrames[i].style.height = '200px';
@@ -95,11 +85,15 @@ function membersToggle(e) {
   }
 }
 
-// Event Listeners
-// display and un-display
-linkBtn.addEventListener('click', copyClipboard);
-usersBtn.addEventListener('click', membersToggle);
-chatBtn.addEventListener('click', messagesToggle);
-displayFrame.addEventListener('click', hideDisplayFrame);
-// copying the meeting code
-// videoLink.addEventListener('click', copyClipboard);
+export {
+  displayFrame,
+  userIdInDisplayFrame,
+  videoFrames,
+  meetingId,
+  membersToggle,
+  messagesToggle,
+  copyClipboard,
+  resetTheFrames,
+  hideDisplayFrame,
+  expandVideoFrame,
+};

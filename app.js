@@ -111,6 +111,7 @@ app.get(
   passport.authenticate('google', { failureRedirect: '/home' }),
   function (req, res) {
     // Successful authentication, redirect secrets.
+    console.log(req.params);
     res.redirect('/join-and-create');
   }
 );
@@ -129,6 +130,7 @@ app.route('/join-and-create').get((req, res) => {
 app.route('/room').get((req, res) => {
   if (req.isAuthenticated()) {
     const idRoom = req.query.meetingId;
+    console.log(idRoom);
     res.render('room');
   } else {
     res.redirect('/');
