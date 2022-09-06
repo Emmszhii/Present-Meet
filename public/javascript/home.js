@@ -106,10 +106,12 @@ window.onclick = (e) => {
 };
 
 document.addEventListener('keydown', (e) => {
-  if ((modalJoin.style.display = 'block')) {
-    closeJoinModal();
-  }
-  if ((modalCreate.style.display = 'block')) {
-    closeCreateModal();
+  if (e.key === 'Escape') {
+    if ((modalJoin.style.display = 'block')) {
+      closeJoinModal();
+    }
+    if ((modalCreate.style.display = 'block')) {
+      closeCreateModal();
+    }
   }
 });
