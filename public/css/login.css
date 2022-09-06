@@ -1,0 +1,23 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e8ecef;
+  box-sizing: border-box;
+}
+
+.login {
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login p {
+  font-size: 20px;
+}
+
+@media (max-width: 1000) {
+  .login {
+    font-size: 1rem;
+  }
+}

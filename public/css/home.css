@@ -4,24 +4,11 @@ body {
   box-sizing: border-box;
 }
 
-.home {
-  position: absolute;
-  text-align: center;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .homepageMain {
-  /* position: relative; */
   display: flex;
-  /* grid-template-columns: repeat(2, 1fr); */
-  /* grid-template-rows: 1fr; */
   justify-content: space-evenly;
   align-items: center;
   height: 100vh;
-  /* place-content: center; */
-  /* place-items: center; */
 }
 
 .text > h2 {
@@ -53,9 +40,7 @@ input:focus::placeholder {
   color: transparent;
 }
 
-.buttons > .button,
 .button {
-  margin-top: 10px;
   width: 150px;
   height: 35px;
   border-radius: 10px;
@@ -63,14 +48,10 @@ input:focus::placeholder {
   cursor: pointer;
 }
 
-.space {
+.roomsBtn {
   display: flex;
-  justify-content: flex-start;
-  margin: 10px 10px 10px 0;
-}
-
-.space > button {
-  margin: 10px;
+  justify-content: space-evenly;
+  margin: 5%;
 }
 
 .button:hover {
@@ -84,7 +65,7 @@ input:focus::placeholder {
 
 .homepageFooter {
   display: flex;
-  justify-content: end;
+  justify-content: center;
   margin: 0px;
 }
 
@@ -152,23 +133,31 @@ input:focus::placeholder {
 }
 
 @media (max-width: 768px) {
+  body {
+    overflow: hidden;
+  }
   .html {
     width: 100vw;
     height: 100vh;
   }
   .homepageMain {
     display: block;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
   }
   .text {
-    /* width: 80%; */
-    margin: auto;
+    text-align: center;
   }
   .homepageImg {
-    /* width: 80%; */
     margin: auto;
   }
   .homepageImg img {
     width: 100%;
+  }
+  .homepageFooter {
+    justify-content: center;
+    margin: 10%;
   }
   .modalCreate-bg {
     width: 100vw;
@@ -178,6 +167,57 @@ input:focus::placeholder {
   }
   .joinModal,
   .createModal {
-    width: 50%;
+    width: 80%;
+  }
+  .roomsBtn {
+    display: block;
+  }
+  .roomsBtn button {
+    margin: 10px;
+  }
+}
+
+@media (max-width: 1000px) {
+  body {
+    overflow: hidden;
+  }
+  .html {
+    width: 100vw;
+    height: 100vh;
+  }
+  .homepageMain {
+    display: block;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+  }
+  .text {
+    text-align: center;
+  }
+  .homepageImg {
+    margin: auto;
+  }
+  .homepageImg img {
+    width: 100%;
+  }
+  .homepageFooter {
+    justify-content: center;
+    margin: 10%;
+  }
+  .modalCreate-bg {
+    width: 100vw;
+  }
+  .modalJoin-bg {
+    width: 100vw;
+  }
+  .joinModal,
+  .createModal {
+    width: 80%;
+  }
+  .roomsBtn {
+    display: block;
+  }
+  .roomsBtn button {
+    margin: 10px;
   }
 }
