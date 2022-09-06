@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>Present Meet</title>
     <link
@@ -22,49 +22,51 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
     />
     <link rel="stylesheet" href="css/home.css" />
-    <script defer src="javascript/script.js"></script>
+    <script defer src="javascript/home.js"></script>
   </head>
   <body>
-<!-- Main -->
-<div class="homepageMain">
-  <div class="text">
-    <h2>
-      80 Percent of Success is Showing Up. <br />
-      Attend Today, Achieve Tomorrow.
-    </h2>
-    <span
-      >We develope a secure and fast service to <br />
-      ensure meetings and attendance is available and free for all.</span
-    >
-    <div class="buttons roomsBtn">
-      <button class="button btnJoin" id="btnJoinModal">Join</button>
-      <button class="button btnCreateRoom" id="btnCreateModal">Create Room</button>
-    </div>
+    <!-- Main -->
+    <div class="homepageMain">
+      <div class="text">
+        <h2>
+          80 Percent of Success is Showing Up. <br />
+          Attend Today, Achieve Tomorrow.
+        </h2>
+        <span
+          >We develope a secure and fast service to <br />
+          ensure meetings and attendance is available and free for all.</span
+        >
+        <div class="buttons roomsBtn">
+          <button class="button btnJoin" id="btn-join-modal">Join</button>
+          <button class="button btnCreateRoom" id="btn-create-modal">
+            Create Room
+          </button>
+        </div>
 
-    <hr width="500px" />
+        <hr width="500px" />
 
-    <div class="homepageFooter">
-      <!-- <p class="text1">Learn more</p>
+        <div class="homepageFooter">
+          <!-- <p class="text1">Learn more</p>
       <p class="text2">About</p> -->
-      <form action="/logout">
-        <button class="button logout" id="logout" type="submit">Logout</button>
-      </form>
+          <form action="/logout">
+            <button class="button logout" id="logout" type="submit">
+              Logout
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="homepageImg">
+        <img src="img/2.png" alt="onCall" />
+      </div>
     </div>
-  </div>
-  <div class="homepageImg">
-    <img src="img/2.png" alt="onCall" />
-  </div>
-</div>
 
-<!-- MODALS -->
-<!-- Meeting Joining -->
-  <div id="join-screen">
-    <div class="modalJoin-bg closeBg">
+    <!-- MODALS -->
+    <!-- Meeting Joining -->
+    <div id="modal-join" class="modal-join">
       <div class="joinModal">
         <h3>Join a meeting</h3>
         <span>Enter a meeting code provided by the meeting organizer</span>
         <form action="/room" method="get">
-        
           <input
             class="input"
             type="text"
@@ -77,30 +79,37 @@
             required
           />
           <div class="buttons">
-            <button class="button" type="submit">
-            Join
-          </button>
+            <button class="button" type="submit">Join</button>
+          </div>
+          <span class="close-join-modal">X</span>
         </form>
-        <span class="modalJoin-close">X</span>
       </div>
     </div>
-  </div>
 
-  <!-- Create Meeting -->
-  <div class="modalCreate-bg closeBg">
-    <div class="createModal">
-      <h3>Create a Meeting</h3>
-      <span>Here's the link to your meeting</span>
-      <form action='/room' method="get">
-        <input class="input" type="text" name="meetingId" id="link" autocomplete="off" readonly/>
-        <button onclick="copyClipboard()" class="icon" type="button"><i class="fa-solid fa-copy"></i></button>
-        <div class="buttons">
-          <button class="button" type="submit">
-            Enter Room
+    <!-- Create Meeting -->
+    <div id="modal-create" class="modal-create">
+      <div class="createModal">
+        <h3>Create a Meeting</h3>
+        <span>Here's the link to your meeting</span>
+        <form action="/room" method="get">
+          <input
+            class="input"
+            type="text"
+            name="meetingId"
+            id="link"
+            autocomplete="off"
+            readonly
+          />
+          <button onclick="copyClipboard()" class="icon" type="button">
+            <i class="fa-solid fa-copy"></i>
           </button>
-      </form>
-        <span class="modalCreate-close">X</span>
+          <div class="buttons">
+            <button class="button" type="submit">Enter Room</button>
+          </div>
+          <span class="close-create-modal">X</span>
+        </form>
       </div>
     </div>
-  
-<%- include('partials/footer') %>
+  </body>
+</html>
+<!-- <%- include('partials/footer') %> -->

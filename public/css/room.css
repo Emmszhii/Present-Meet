@@ -89,11 +89,6 @@ body {
   background-color: green;
   color: black;
 }
-/* .button:hover,
-.copy:hover {
-  color: black !important;
-  background-color: white;
-} */
 .copy {
   color: #fff;
   background-color: #494949;
@@ -107,10 +102,6 @@ body {
 .copy:active {
   border: 1px solid black;
 }
-/* .footerBtn > .middleBtn > button {
-  color: #fff;
-  font-size: 20px;
-} */
 .mainBtn {
   display: flex;
   position: fixed;
@@ -124,27 +115,20 @@ body {
   border: none;
   color: #fff;
   text-shadow: 2px 2px black;
-  /* position: fixed; */
   bottom: 0.9rem;
   border-radius: 8px;
-  /* left: 50%; */
-  /* transform: translateX(-50%); */
   cursor: pointer;
   margin: 10px;
 }
 #quit-btn {
-  /* display: block; */
   background-color: red;
   font-size: 18px;
   padding: 15px 25px;
   border: none;
   color: #fff;
   text-shadow: 2px 2px black;
-  /* position: fixed; */
   bottom: 0.9rem;
   border-radius: 8px;
-  /* left: 40%; */
-  /* transform: translateX(-50%); */
   cursor: pointer;
   margin: 10px;
 }
@@ -222,7 +206,6 @@ body {
   text-shadow: 2px 2px black;
   padding: 0;
   bottom: 0;
-  /* right: 20px; */
 }
 
 video {
@@ -458,5 +441,13 @@ video {
   }
   .mainBtn {
     left: 55%;
+  }
+}
+
+@media (max-width: 480px) {
+  #join-btn,
+  #quit-btn {
+    font-size: 14px;
+    padding: 10px 15px;
   }
 }
