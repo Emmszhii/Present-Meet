@@ -95,6 +95,26 @@ const handleChannelMessage = async (messageData, MemberId) => {
       }
     }
   }
+
+  if (data.type === 'user_screen_share') {
+    const user = `user-container-${data.uid}`;
+    console.log(user);
+
+    // if (userIdInDisplayFrame === null) {
+    // let child = displayFrame.children[0];
+    // console.log(child);
+    // if (child) {
+    //   document.getElementById('streams__container').appendChild(child);
+    // }
+
+    //   if (displayFrame.style.display != 'block') {
+    //     displayFrame.style.display = 'block';
+    //     displayFrame.insertAdjacentHTML;
+    //     let userIdInDisplayFrame = user.id;
+    //     console.log(userIdInDisplayFrame);
+    //   }
+    // }
+  }
 };
 
 // function to send message
@@ -117,7 +137,7 @@ const sendMessage = async (e) => {
   e.target.reset();
 };
 
-// users
+// users chat room
 const addMessageToDom = (name, message) => {
   const messagesWrapper = document.getElementById('messages');
 
@@ -141,7 +161,7 @@ const addMessageToDom = (name, message) => {
   }
 };
 
-// bot
+// bot message
 const addBotMessageToDom = (botMessage) => {
   const messagesWrapper = document.getElementById('messages');
 
