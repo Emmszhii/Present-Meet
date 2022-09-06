@@ -2,7 +2,6 @@
 AgoraRTC.setLogLevel(3);
 
 // Initializing variables
-
 // getting meeting Link
 const url = window.location.search;
 const urlParams = new URLSearchParams(url);

@@ -1,4 +1,5 @@
 import { userData, rtm } from './room_rtc.js';
+import { displayFrame, userIdInDisplayFrame, videoFrames } from './room.js';
 // Initialize the variable
 const messageForm = document.getElementById('message__form');
 
@@ -73,7 +74,6 @@ const getMembers = async () => {
 
 // rtm channel message handler
 const handleChannelMessage = async (messageData, MemberId) => {
-  console.log('A new message was received');
   const data = JSON.parse(messageData.text);
 
   if (data.type === 'chat') {
@@ -170,11 +170,6 @@ const leaveChannel = async () => {
   await rtm.channel.leave();
   await rtm.client.logout();
 };
-
-// when a user forced close they will be deleted to the dom
-window.addEventListener('beforeunload', leaveChannel);
-
-messageForm.addEventListener('submit', sendMessage);
 
 export {
   sendMessage,

@@ -29,14 +29,16 @@ document.getElementById('chat-btn').addEventListener('click', messagesToggle);
 document.getElementById('users-btn').addEventListener('click', membersToggle);
 // Camera Button
 document.getElementById('camera-btn').addEventListener('click', toggleCamera);
-// // Mic Button
+// Mic Button
 document.getElementById('mic-btn').addEventListener('click', toggleMic);
-// // Screen Share Button
+// Screen Share Button
 document.getElementById('screen-btn').addEventListener('click', toggleScreen);
-// // Leave Stream
+// Leave Stream
 document.getElementById('leave-btn').addEventListener('click', leaveStream);
-//
+// Join Stream
 document.getElementById('join-btn').addEventListener('click', joinStream);
+// Leave room
+// document.getElementById('quit-btn').addEventListener('click', () => {});
 // // User send message
 document
   .getElementById('message__form')

@@ -96,9 +96,10 @@ passport.use(
 // home route
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
-    res.redirect('/join-and-create');
-  } else {
+    // res.redirect('/join-and-create');
     res.render('home');
+  } else {
+    res.render('login');
   }
 });
 
@@ -108,23 +109,23 @@ app
   .get(passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get(
   '/auth/google/secrets',
-  passport.authenticate('google', { failureRedirect: '/home' }),
+  passport.authenticate('google', { failureRedirect: '/' }),
   function (req, res) {
     // Successful authentication, redirect secrets.
     console.log(req.params);
-    res.redirect('/join-and-create');
+    res.redirect('/');
   }
 );
 
 // join or create room route
-app.route('/join-and-create').get((req, res) => {
-  // session user algorithm
-  if (req.isAuthenticated()) {
-    res.render('joinAndCreate');
-  } else {
-    res.redirect('/');
-  }
-});
+// app.route('/join-and-create').get((req, res) => {
+//   // session user algorithm
+//   if (req.isAuthenticated()) {
+//     res.render('joinAndCreate');
+//   } else {
+//     res.redirect('/');
+//   }
+// });
 
 // room Route
 app.route('/room').get((req, res) => {
@@ -251,6 +252,14 @@ app.get('/getInfo', (req, res) => {
     res.status(200).json({ user: req.user });
   } else {
     res.redirect('/');
+  }
+});
+
+app.get('/quit', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.render('home');
+  } else {
+    res.render('login');
   }
 });
 

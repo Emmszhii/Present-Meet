@@ -111,20 +111,42 @@ body {
   color: #fff;
   font-size: 20px;
 } */
+.mainBtn {
+  display: flex;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+}
 #join-btn {
-  display: block;
   background-color: #2aca3e;
   font-size: 18px;
   padding: 15px 25px;
   border: none;
   color: #fff;
   text-shadow: 2px 2px black;
-  position: fixed;
+  /* position: fixed; */
   bottom: 0.9rem;
   border-radius: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* left: 50%; */
+  /* transform: translateX(-50%); */
   cursor: pointer;
+  margin: 10px;
+}
+#quit-btn {
+  /* display: block; */
+  background-color: red;
+  font-size: 18px;
+  padding: 15px 25px;
+  border: none;
+  color: #fff;
+  text-shadow: 2px 2px black;
+  /* position: fixed; */
+  bottom: 0.9rem;
+  border-radius: 8px;
+  /* left: 40%; */
+  /* transform: translateX(-50%); */
+  cursor: pointer;
+  margin: 10px;
 }
 /* End Button */
 /* Scrollbar */
@@ -345,7 +367,6 @@ video {
 }
 
 /* end messages */
-
 /* members container */
 
 #members__container {
@@ -408,8 +429,7 @@ video {
 }
 
 /* End members */
-
-/* responsiveness of mobile */
+/* responsiveness for mobile */
 @media (max-width: 1400px) {
   .middleBtn {
     width: 40%;
@@ -421,20 +441,12 @@ video {
   .videoLink {
     width: 20%;
   }
-  /* .video__container {
-    height: 200px;
-    width: 200px;
-  } */
 }
 
 @media (max-width: 768px) {
   #stream__box {
     height: 85vh;
   }
-  /* .video__container {
-    width: 120px;
-    height: 100px;
-  } */
   .middleBtn {
     width: 40%;
   }
