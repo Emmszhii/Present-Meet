@@ -18,38 +18,37 @@
     <div id="preloader"></div>
 
     <div class="videoCall">
-      <main class="container__streams">
-        <div id="room__container">
-          <section class="tileFaces" id="stream__container">
-            <div id="stream__box"></div>
-            <div id="streams__container">
-              <!-- <div class="video__container" id="user-container-232">
+      <section class="tileFaces" id="stream__container">
+        <div id="stream__box"></div>
+        <div id="streams__container">
+          <!-- <div class="video__container" id="user-container-232">
                 <div class="video-player" id="user-12323">1
                 </div>
               </div> -->
-            </div>
-          </section>
-
-          <section id="messages__container">
-            <div id="messages"></div>
-            <form id="message__form">
-              <input
-                type="text"
-                name="message"
-                placeholder="Send a message...."
-                autocomplete="off"
-              />
-            </form>
-          </section>
-          <section id="members__container" style="display: block">
-            <div id="members__header">
-              <p>Participants</p>
-              <strong id="members__count">0</strong>
-            </div>
-            <div id="member__list"></div>
-          </section>
         </div>
-      </main>
+      </section>
+
+      <div class="modal-message">
+        <section id="messages__container">
+          <div id="messages"></div>
+          <form id="message__form">
+            <input
+              type="text"
+              name="message"
+              placeholder="Send a message...."
+              autocomplete="off"
+            />
+          </form>
+        </section>
+      </div>
+
+      <section id="members__container" style="display: block">
+        <div id="members__header">
+          <p>Participants</p>
+          <strong id="members__count">0</strong>
+        </div>
+        <div id="member__list"></div>
+      </section>
 
       <div class="footerBtn">
         <div class="videoLink">
@@ -89,7 +88,7 @@
         <div class="mainBtn">
           <button id="join-btn">Join Stream</button>
           <!-- Leaving Stream -->
-          <form action="/quit" method="get">
+          <form action="/quit">
             <button type="submit" id="quit-btn">Quit Room</button>
           </form>
         </div>

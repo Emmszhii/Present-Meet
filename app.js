@@ -256,11 +256,7 @@ app.get('/getInfo', (req, res) => {
 });
 
 app.get('/quit', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.render('home');
-  } else {
-    res.render('login');
-  }
+  res.redirect('/');
 });
 
 // logout route

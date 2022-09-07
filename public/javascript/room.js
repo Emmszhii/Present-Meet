@@ -15,17 +15,13 @@ let userIdInDisplayFrame = null;
 // Expand VideoFrame Function
 const expandVideoFrame = (e) => {
   let child = displayFrame.children[0];
-  console.log(child);
   if (child) {
     document.getElementById('streams__container').appendChild(child);
   }
 
   displayFrame.style.display = 'block';
   displayFrame.appendChild(e.currentTarget);
-  // console.log(e.currentTarget);
   userIdInDisplayFrame = e.currentTarget.id;
-  // console.log(userIdInDisplayFrame);
-  // id=user-container-uid
 
   resetTheFrames();
 };
@@ -59,7 +55,6 @@ const copyClipboard = () => {
 };
 
 // message and participant toggle
-
 function messagesToggle(e) {
   const btn = e.currentTarget;
   const x = document.getElementById('messages__container');

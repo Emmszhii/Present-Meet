@@ -37,8 +37,6 @@ document.getElementById('screen-btn').addEventListener('click', toggleScreen);
 document.getElementById('leave-btn').addEventListener('click', leaveStream);
 // Join Stream
 document.getElementById('join-btn').addEventListener('click', joinStream);
-// Leave room
-// document.getElementById('quit-btn').addEventListener('click', () => {});
 // // User send message
 document
   .getElementById('message__form')
@@ -50,6 +48,24 @@ document
 
 // // when a user forced close they will be deleted to the dom
 window.addEventListener('beforeunload', leaveChannel);
+
+document.addEventListener('keydown', (e) => {
+  const membersModal = document.getElementById('members__container');
+  const messagesModal = document.getElementById('messages__container');
+  const membersBtn = document.getElementById('users-btn');
+  const messagesBtn = document.getElementById('chat-btn');
+
+  if (e.key === 'Escape') {
+    if ((membersModal.style.display = 'block')) {
+      membersModal.style.display = 'none';
+      membersBtn.classList.remove('active');
+    }
+    if ((messagesModal.style.display = 'block')) {
+      messagesModal.style.display = 'none';
+      messagesBtn.classList.remove('active');
+    }
+  }
+});
 
 // // webpage on load
 window.addEventListener('load', () => {

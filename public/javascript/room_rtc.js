@@ -11,6 +11,7 @@ import {
   handleMemberJoin,
   handleMemberLeft,
   addBotMessageToDom,
+  sendMessage,
 } from './room_rtm.js';
 
 import {
@@ -309,6 +310,12 @@ const handleStopShareScreen = async () => {
   // then switch to camera
   resetTheFrames();
   switchToCamera();
+  rtm.channel.sendMessage({
+    text: JSON.stringify({
+      type: 'user_screen_share_close',
+      uid: userData.rtcId,
+    }),
+  });
 };
 
 // Screen function
@@ -359,15 +366,16 @@ const toggleScreen = async (e) => {
     // publish the screen track
     await rtc.client.publish([rtc.localScreenTracks]);
 
+    resetTheFrames();
     // video__container
-    let videoFrames = document.getElementsByClassName(`video__container`);
-    // reset the frames
-    for (let i = 0; videoFrames.length > i; i++) {
-      if (videoFrames[i].id != userIdInDisplayFrame) {
-        videoFrames[i].style.width = '300px';
-        videoFrames[i].style.height = '200px';
-      }
-    }
+    // let videoFrames = document.getElementsByClassName(`video__container`);
+    // // reset the frames
+    // for (let i = 0; videoFrames.length > i; i++) {
+    //   if (videoFrames[i].id != userIdInDisplayFrame) {
+    //     videoFrames[i].style.width = '300px';
+    //     videoFrames[i].style.height = '200px';
+    //   }
+    // }
     // sending my uid to make viewer view my local screen track
     rtm.channel.sendMessage({
       text: JSON.stringify({ type: 'user_screen_share', uid: userData.rtcId }),
@@ -478,4 +486,5 @@ export {
   toggleScreen,
   joinStream,
   leaveStream,
+  player,
 };

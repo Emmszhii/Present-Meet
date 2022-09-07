@@ -1,5 +1,12 @@
-import { userData, rtm } from './room_rtc.js';
-import { displayFrame, userIdInDisplayFrame, videoFrames } from './room.js';
+import { userData, rtm, player } from './room_rtc.js';
+import {
+  displayFrame,
+  userIdInDisplayFrame,
+  videoFrames,
+  resetTheFrames,
+  expandVideoFrame,
+  hideDisplayFrame,
+} from './room.js';
 // Initialize the variable
 const messageForm = document.getElementById('message__form');
 
@@ -86,34 +93,34 @@ const handleChannelMessage = async (messageData, MemberId) => {
     if (userIdInDisplayFrame === `user-container-${userData.rtcId}`) {
       displayFrame.style.display = null;
 
-      // frameVideo();
-      for (let i = 0; videoFrames.length > i; i++) {
-        if (videoFrames[i].id != userIdInDisplayFrame) {
-          videoFrames[i].style.width = '300px';
-          videoFrames[i].style.height = '200px';
-        }
-      }
+      resetTheFrames();
     }
   }
 
   if (data.type === 'user_screen_share') {
     const user = `user-container-${data.uid}`;
-    console.log(user);
+    const dom = document.getElementById(user);
 
-    // if (userIdInDisplayFrame === null) {
-    // let child = displayFrame.children[0];
-    // console.log(child);
-    // if (child) {
-    //   document.getElementById('streams__container').appendChild(child);
-    // }
+    const child = displayFrame.children[0];
+    if (child) {
+      document.getElementById('streams__container').appendChild(child);
+    }
 
-    //   if (displayFrame.style.display != 'block') {
-    //     displayFrame.style.display = 'block';
-    //     displayFrame.insertAdjacentHTML;
-    //     let userIdInDisplayFrame = user.id;
-    //     console.log(userIdInDisplayFrame);
-    //   }
-    // }
+    if (dom !== null) {
+      displayFrame.style.display = 'block';
+      displayFrame.appendChild(dom);
+      let userIdInDisplayFrame = user;
+    } else {
+      displayFrame.style.display = 'block';
+      displayFrame.insertAdjacentHTML('beforeend', player(data.uid));
+      document
+        .getElementById(`user-container-${data.uid}`)
+        .addEventListener('click', expandVideoFrame);
+    }
+  }
+
+  if (data.type === 'user_screen_share_close') {
+    hideDisplayFrame();
   }
 };
 
