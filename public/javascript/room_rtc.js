@@ -41,6 +41,9 @@ const rtc = {
   sharingScreen: false,
 };
 
+// Devices
+const devices = [];
+
 // rtm API
 const rtm = {
   // rtm.client
@@ -470,6 +473,18 @@ const leaveStream = async (e) => {
   });
 };
 
+const settings = async () => {
+  await AgoraRTC.getDevices().then((device) => {
+    device.filter((dev) => {
+      console.log(dev);
+      if (dev.deviceId !== 'default' && dev.deviceId !== 'communications') {
+        devices.push(dev);
+      }
+    });
+  });
+  console.log(devices);
+};
+
 export {
   userData,
   rtc,
@@ -487,4 +502,5 @@ export {
   joinStream,
   leaveStream,
   player,
+  settings,
 };

@@ -9,6 +9,7 @@ import {
   toggleScreen,
   joinStream,
   leaveStream,
+  settings,
 } from './room_rtc.js';
 import { sendMessage, leaveChannel } from './room_rtm.js';
 import {
@@ -37,6 +38,9 @@ document.getElementById('screen-btn').addEventListener('click', toggleScreen);
 document.getElementById('leave-btn').addEventListener('click', leaveStream);
 // Join Stream
 document.getElementById('join-btn').addEventListener('click', joinStream);
+// settings
+document.getElementById('settings-btn').addEventListener('click', settings);
+
 // // User send message
 document
   .getElementById('message__form')

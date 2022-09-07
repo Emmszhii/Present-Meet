@@ -8,8 +8,8 @@ body {
 .videoCall {
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
-
 /* loader */
 #preloader {
   background: #000 url('/public/img/bigLoader.gif') no-repeat center center;
@@ -19,21 +19,6 @@ body {
   position: fixed;
   z-index: 100;
 }
-/* .tileFaces {
-  z-index: 1;
-  margin: 0 auto;
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-57%, -49%);
-  height: 90vh;
-  width: 86%;
-  overflow: hidden;
-  overflow-y: auto;
-  text-align: justify;
-  float: left;
-} */
-
 /* Buttons */
 .footerBtn {
   z-index: 9;
@@ -152,7 +137,21 @@ body {
 }
 /* End ScrollBar */
 /* Users Stream */
-.tileFaces {
+/* .streams {
+  z-index: 1;
+  margin: 0 auto;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-57%, -49%);
+  height: 90vh;
+  width: 86%;
+  overflow: hidden;
+  overflow-y: auto;
+  text-align: justify;
+  float: left;
+} */
+.streams {
   z-index: 1;
   margin: 0 auto;
   position: absolute;
@@ -229,7 +228,8 @@ video {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin: 10px;
+  /* margin: 10px auto; */
+  /*  */
   gap: 2em;
 }
 .container__stream {

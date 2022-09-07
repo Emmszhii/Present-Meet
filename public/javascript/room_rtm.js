@@ -2,7 +2,6 @@ import { userData, rtm, player } from './room_rtc.js';
 import {
   displayFrame,
   userIdInDisplayFrame,
-  videoFrames,
   resetTheFrames,
   expandVideoFrame,
   hideDisplayFrame,
@@ -81,12 +80,15 @@ const getMembers = async () => {
 
 // rtm channel message handler
 const handleChannelMessage = async (messageData, MemberId) => {
+  // Initialize data variable to parse the data
   const data = JSON.parse(messageData.text);
 
+  // Add dom message element
   if (data.type === 'chat') {
     addMessageToDom(data.displayName, data.message);
   }
 
+  // If user left delete them in the stream
   if (data.type === 'user_left') {
     document.getElementById(`user-container-${data.uid}`).remove();
 
@@ -97,6 +99,7 @@ const handleChannelMessage = async (messageData, MemberId) => {
     }
   }
 
+  // if other user share a screen expand them in display frame
   if (data.type === 'user_screen_share') {
     const user = `user-container-${data.uid}`;
     const dom = document.getElementById(user);
@@ -119,6 +122,7 @@ const handleChannelMessage = async (messageData, MemberId) => {
     }
   }
 
+  // if other screen share is close hide and reset frames
   if (data.type === 'user_screen_share_close') {
     hideDisplayFrame();
   }
