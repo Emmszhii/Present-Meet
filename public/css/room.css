@@ -422,8 +422,8 @@ video {
   cursor: pointer;
 }
 
-#left-settings {
-  float: left;
+#devices-settings {
+  display: flex;
 }
 
 /* responsiveness for mobile */

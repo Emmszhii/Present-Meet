@@ -1,4 +1,4 @@
-import { settings, devices, userData } from './room_rtc.js';
+import { settings, userData, device } from './room_rtc.js';
 
 // For logging errors in agora set 3 for warnings and error to be log at console set 1 to log it all.
 AgoraRTC.setLogLevel(3);
@@ -86,7 +86,7 @@ const membersToggle = (e) => {
 };
 
 const settingsToggle = (e) => {
-  const btn = e.currentTarget;
+  const btn = document.getElementById('settings-btn');
   const z = document.getElementById('modal-settings');
 
   if (z.style.display === 'block') {
@@ -94,11 +94,32 @@ const settingsToggle = (e) => {
     z.style.display = 'none';
     document.getElementById(`user-container-${userData.rtcId}`).remove();
   } else {
-    settings();
-    // console.log(devices);
     btn.classList.add('active');
     z.style.display = 'block';
+    settings();
   }
+};
+
+const createSelectElement = (name, val) => {
+  const select = document.createElement('select');
+  select.name = name;
+  select.id = name;
+  for (let i = 0; val.length > i; i++) {
+    const option = document.createElement('option');
+    option.value = val[i].label;
+    option.text = val[i].label;
+    select.appendChild(option);
+  }
+
+  const label = document.createElement('label');
+  label.innerHTML = name;
+  label.htmlFor = name;
+
+  document
+    .getElementById('devices-settings')
+    .appendChild(label)
+    .appendChild(select)
+    .addEventListener('change', (e) => {});
 };
 
 export {
@@ -113,4 +134,5 @@ export {
   hideDisplayFrame,
   expandVideoFrame,
   settingsToggle,
+  createSelectElement,
 };

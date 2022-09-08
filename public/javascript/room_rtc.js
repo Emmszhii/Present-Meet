@@ -20,6 +20,7 @@ import {
   userIdInDisplayFrame,
   expandVideoFrame,
   resetTheFrames,
+  createSelectElement,
 } from './room.js';
 
 // user local data and tokens
@@ -41,10 +42,7 @@ const rtc = {
   sharingScreen: false,
 };
 
-// Devices
-const devices = [];
-
-// Local Device selected
+// selected device
 const device = {};
 
 // rtm API
@@ -394,6 +392,41 @@ const toggleScreen = async (e) => {
   }
 };
 
+AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
+  try {
+    if (changedDevice.state === 'ACTIVE') {
+      rtc.localTracks[0].setDevice(changedDevice.device.deviceId);
+      // Switch to an existing device when the current device is unplugged.
+    } else if (
+      changedDevice.device.label === rtc.localTracks[0].getTrackLabel()
+    ) {
+      const oldMicrophones = await AgoraRTC.getMicrophones();
+      oldMicrophones[0] &&
+        rtc.localTracks[0].setDevice(oldMicrophones[0].deviceId);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  // When plugging in a device, switch to a device that is newly plugged in.
+};
+
+AgoraRTC.onCameraChanged = async (changedDevice) => {
+  // When plugging in a device, switch to a device that is newly plugged in.
+  try {
+    if (changedDevice.state === 'ACTIVE') {
+      rtc.localTracks[1].setDevice(changedDevice.device.deviceId);
+      // Switch to an existing device when the current device is unplugged.
+    } else if (
+      changedDevice.device.label === rtc.localTracks[1].getTrackLabel()
+    ) {
+      const oldCameras = await AgoraRTC.getCameras();
+      oldCameras[0] && rtc.localTracks[1].setDevice(oldCameras[0].deviceId);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 // joining the stream
 const joinStream = async () => {
   loader.style.display = 'block';
@@ -402,6 +435,8 @@ const joinStream = async () => {
 
   // initialize local tracks
   rtc.localTracks = await AgoraRTC.createMicrophoneAndCameraTracks({}, {});
+
+  // await rtc.localTracks[0].on('onCameraChanged', handleCameraChange);
 
   // add the player into the DOM
   document
@@ -460,7 +495,12 @@ const leaveStream = async (e) => {
 };
 
 const settings = async () => {
+  // Devices
+  const devices = [];
+  // Local Device selected
+
   await AgoraRTC.getDevices().then((device) => {
+    console.log(device);
     device.filter((dev) => {
       // console.log(dev);
       if (dev.deviceId !== 'default' && dev.deviceId !== 'communications') {
@@ -468,6 +508,7 @@ const settings = async () => {
       }
     });
   });
+  console.log(devices);
 
   const playerDom = document.getElementById(`user-container-${userData.rtcId}`);
   if (!playerDom) {
@@ -475,9 +516,10 @@ const settings = async () => {
       .getElementById('video-settings')
       .insertAdjacentHTML('beforeend', player(userData.rtcId));
   }
-  const localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
-  localTracks[1].play(`user-${userData.rtcId}`);
+  rtc.localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
+  rtc.localTracks[1].play(`user-${userData.rtcId}`);
 
+  // storing devices
   const video_devices = [];
   const audio_devices = [];
   devices.map((item) => {
@@ -488,16 +530,7 @@ const settings = async () => {
       audio_devices.push(item);
     }
   });
-  // const select = document.createElement('select');
-  // const select_video = document.getElementById('video-device');
-  // console.log(video_devices);
-  // for (let i = 0; video_devices.length > i; i++) {
-  //   const option = document.createElement('option');
-  //   option.value = video_devices[i].label;
-  //   option.text = video_devices[i].label;
-  //   select_video.appendChild(option);
-  // }
-  // const select_audio = document;
+
   const videoDom = document.getElementById('Video');
   const audioDom = document.getElementById('Audio');
   if (!videoDom) {
@@ -508,32 +541,11 @@ const settings = async () => {
   }
 };
 
-const createSelectElement = (name, val) => {
-  const select = document.createElement('select');
-  select.name = name;
-  select.id = name;
-  for (let i = 0; val.length > i; i++) {
-    const option = document.createElement('option');
-    option.value = val[i].label;
-    option.text = val[i].label;
-    select.appendChild(option);
-  }
-
-  const label = document.createElement('label');
-  label.innerHTML = name;
-  label.htmlFor = name;
-
-  document
-    .getElementById('devices-settings')
-    .appendChild(label)
-    .appendChild(select);
-};
-
 export {
   userData,
   rtc,
   rtm,
-  devices,
+  device,
   joinRoomInit,
   getTokens,
   handleMemberJoin,
