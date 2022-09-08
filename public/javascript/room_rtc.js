@@ -479,20 +479,54 @@ const settings = async () => {
   localTracks[1].play(`user-${userData.rtcId}`);
 
   const video_devices = [];
+  const audio_devices = [];
   devices.map((item) => {
     if (item.kind === 'videoinput') {
       video_devices.push(item);
     }
+    if (item.kind === 'audioinput') {
+      audio_devices.push(item);
+    }
   });
+  // const select = document.createElement('select');
+  // const select_video = document.getElementById('video-device');
+  // console.log(video_devices);
+  // for (let i = 0; video_devices.length > i; i++) {
+  //   const option = document.createElement('option');
+  //   option.value = video_devices[i].label;
+  //   option.text = video_devices[i].label;
+  //   select_video.appendChild(option);
+  // }
+  // const select_audio = document;
+  const videoDom = document.getElementById('Video');
+  const audioDom = document.getElementById('Audio');
+  if (!videoDom) {
+    createSelectElement('Video', video_devices);
+  }
+  if (!audioDom) {
+    createSelectElement('Audio', audio_devices);
+  }
+};
 
-  const select = document.getElementById('video-device');
-  console.log(video_devices);
-  for (let i = 0; video_devices.length > i; i++) {
+const createSelectElement = (name, val) => {
+  const select = document.createElement('select');
+  select.name = name;
+  select.id = name;
+  for (let i = 0; val.length > i; i++) {
     const option = document.createElement('option');
-    option.value = video_devices[i].label;
-    option.text = video_devices[i].label;
+    option.value = val[i].label;
+    option.text = val[i].label;
     select.appendChild(option);
   }
+
+  const label = document.createElement('label');
+  label.innerHTML = name;
+  label.htmlFor = name;
+
+  document
+    .getElementById('devices-settings')
+    .appendChild(label)
+    .appendChild(select);
 };
 
 export {
