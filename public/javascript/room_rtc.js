@@ -44,6 +44,9 @@ const rtc = {
 // Devices
 const devices = [];
 
+// Local Device selected
+const device = {};
+
 // rtm API
 const rtm = {
   // rtm.client
@@ -150,16 +153,9 @@ const joinRoomInit = async () => {
 
   // join stream functions
   // joinStream();
+
   // if All are loaded loader will be gone
   loader.style.display = 'none';
-
-  // await AgoraRTC.getCameras()
-  //   .then((devices) => {
-  //     console.log(devices);
-  //   })
-  //   .catch((e) => {
-  //     console.log(e);
-  //   });
 };
 
 // user joined the meeting handler
@@ -310,8 +306,9 @@ const handleStopShareScreen = async () => {
   //unpublish the local screen tracks
   await rtc.client.unpublish([rtc.localScreenTracks]);
 
-  // then switch to camera
+  // reset users frame
   resetTheFrames();
+  // then switch to camera
   switchToCamera();
   rtm.channel.sendMessage({
     text: JSON.stringify({
@@ -369,16 +366,9 @@ const toggleScreen = async (e) => {
     // publish the screen track
     await rtc.client.publish([rtc.localScreenTracks]);
 
+    // reset each user Frames
     resetTheFrames();
-    // video__container
-    // let videoFrames = document.getElementsByClassName(`video__container`);
-    // // reset the frames
-    // for (let i = 0; videoFrames.length > i; i++) {
-    //   if (videoFrames[i].id != userIdInDisplayFrame) {
-    //     videoFrames[i].style.width = '300px';
-    //     videoFrames[i].style.height = '200px';
-    //   }
-    // }
+
     // sending my uid to make viewer view my local screen track
     rtm.channel.sendMessage({
       text: JSON.stringify({ type: 'user_screen_share', uid: userData.rtcId }),
@@ -459,13 +449,14 @@ const leaveStream = async (e) => {
   if (userIdInDisplayFrame === `user-container-${userData.rtcId}`) {
     displayFrame.style.display = null;
 
+    resetTheFrames();
     // frameVideo();
-    for (let i = 0; videoFrames.length > i; i++) {
-      if (videoFrames[i].id != userIdInDisplayFrame) {
-        videoFrames[i].style.width = '300px';
-        videoFrames[i].style.height = '200px';
-      }
-    }
+    // for (let i = 0; videoFrames.length > i; i++) {
+    //   if (videoFrames[i].id != userIdInDisplayFrame) {
+    //     videoFrames[i].style.width = '300px';
+    //     videoFrames[i].style.height = '200px';
+    //   }
+    // }
   }
 
   rtm.channel.sendMessage({
@@ -476,19 +467,21 @@ const leaveStream = async (e) => {
 const settings = async () => {
   await AgoraRTC.getDevices().then((device) => {
     device.filter((dev) => {
-      console.log(dev);
+      // console.log(dev);
       if (dev.deviceId !== 'default' && dev.deviceId !== 'communications') {
         devices.push(dev);
       }
     });
   });
-  console.log(devices);
+
+  // console.log(devices);
 };
 
 export {
   userData,
   rtc,
   rtm,
+  devices,
   joinRoomInit,
   getTokens,
   handleMemberJoin,

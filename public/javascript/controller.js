@@ -18,6 +18,7 @@ import {
   messagesToggle,
   copyClipboard,
   hideDisplayFrame,
+  settingsToggle,
 } from './room.js';
 
 // Event Listeners
@@ -38,8 +39,14 @@ document.getElementById('screen-btn').addEventListener('click', toggleScreen);
 document.getElementById('leave-btn').addEventListener('click', leaveStream);
 // Join Stream
 document.getElementById('join-btn').addEventListener('click', joinStream);
-// settings
-document.getElementById('settings-btn').addEventListener('click', settings);
+// open settings modal
+document
+  .getElementById('settings-btn')
+  .addEventListener('click', settingsToggle);
+// close modal settings
+document
+  .getElementsByClassName('close-settings-modal')[0]
+  .addEventListener('click', settingsToggle);
 
 // // User send message
 document

@@ -1,3 +1,5 @@
+import { settings, devices } from './room_rtc.js';
+
 // For logging errors in agora set 3 for warnings and error to be log at console set 1 to log it all.
 AgoraRTC.setLogLevel(3);
 
@@ -55,7 +57,7 @@ const copyClipboard = () => {
 };
 
 // message and participant toggle
-function messagesToggle(e) {
+const messagesToggle = (e) => {
   const btn = e.currentTarget;
   const x = document.getElementById('messages__container');
   const y = document.getElementById('members__container');
@@ -67,9 +69,9 @@ function messagesToggle(e) {
     btn.classList.add('active');
     x.style.display = 'block';
   }
-}
+};
 
-function membersToggle(e) {
+const membersToggle = (e) => {
   const btn = e.currentTarget;
   const x = document.getElementById('members__container');
   const y = document.getElementById('messages__container');
@@ -81,7 +83,24 @@ function membersToggle(e) {
     btn.classList.add('active');
     x.style.display = 'block';
   }
-}
+};
+
+const settingsToggle = (e) => {
+  const btn = e.currentTarget;
+  const x = document.getElementById('members__container');
+  const y = document.getElementById('messages__container');
+  const z = document.getElementById('modal-settings');
+
+  if (z.style.display === 'block') {
+    btn.classList.remove('active');
+    z.style.display = 'none';
+  } else {
+    settings();
+    console.log(devices);
+    btn.classList.add('active');
+    z.style.display = 'block';
+  }
+};
 
 export {
   displayFrame,
@@ -94,4 +113,5 @@ export {
   resetTheFrames,
   hideDisplayFrame,
   expandVideoFrame,
+  settingsToggle,
 };
