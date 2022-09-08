@@ -120,10 +120,12 @@ const joinRoomInit = async () => {
   // login to the rtm with user id and rtmToken
   await rtm.client.login(rtmOption);
 
+  // give the name of the local user to remote users
   await rtm.client.addOrUpdateLocalUserAttributes({ name: userData.fullName });
 
   // create channel with meetingId
   rtm.channel = await rtm.client.createChannel(meetingId);
+
   // join RTM
   await rtm.channel.join();
 
@@ -450,13 +452,6 @@ const leaveStream = async (e) => {
     displayFrame.style.display = null;
 
     resetTheFrames();
-    // frameVideo();
-    // for (let i = 0; videoFrames.length > i; i++) {
-    //   if (videoFrames[i].id != userIdInDisplayFrame) {
-    //     videoFrames[i].style.width = '300px';
-    //     videoFrames[i].style.height = '200px';
-    //   }
-    // }
   }
 
   rtm.channel.sendMessage({
@@ -474,7 +469,30 @@ const settings = async () => {
     });
   });
 
-  // console.log(devices);
+  const playerDom = document.getElementById(`user-container-${userData.rtcId}`);
+  if (!playerDom) {
+    document
+      .getElementById('video-settings')
+      .insertAdjacentHTML('beforeend', player(userData.rtcId));
+  }
+  const localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
+  localTracks[1].play(`user-${userData.rtcId}`);
+
+  const video_devices = [];
+  devices.map((item) => {
+    if (item.kind === 'videoinput') {
+      video_devices.push(item);
+    }
+  });
+
+  const select = document.getElementById('video-device');
+  console.log(video_devices);
+  for (let i = 0; video_devices.length > i; i++) {
+    const option = document.createElement('option');
+    option.value = video_devices[i].label;
+    option.text = video_devices[i].label;
+    select.appendChild(option);
+  }
 };
 
 export {

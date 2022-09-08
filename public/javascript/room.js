@@ -1,4 +1,4 @@
-import { settings, devices } from './room_rtc.js';
+import { settings, devices, userData } from './room_rtc.js';
 
 // For logging errors in agora set 3 for warnings and error to be log at console set 1 to log it all.
 AgoraRTC.setLogLevel(3);
@@ -87,16 +87,15 @@ const membersToggle = (e) => {
 
 const settingsToggle = (e) => {
   const btn = e.currentTarget;
-  const x = document.getElementById('members__container');
-  const y = document.getElementById('messages__container');
   const z = document.getElementById('modal-settings');
 
   if (z.style.display === 'block') {
     btn.classList.remove('active');
     z.style.display = 'none';
+    document.getElementById(`user-container-${userData.rtcId}`).remove();
   } else {
     settings();
-    console.log(devices);
+    // console.log(devices);
     btn.classList.add('active');
     z.style.display = 'block';
   }
