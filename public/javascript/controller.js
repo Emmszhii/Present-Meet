@@ -44,9 +44,7 @@ document
   .getElementById('settings-btn')
   .addEventListener('click', settingsToggle);
 // close modal settings
-document
-  .getElementsByClassName('close-settings-modal')[0]
-  .addEventListener('click', settingsToggle);
+document.getElementById('setup-btn').addEventListener('click', settingsToggle);
 
 // // User send message
 document
@@ -65,14 +63,14 @@ document.addEventListener('keydown', (e) => {
   const messagesModal = document.getElementById('messages__container');
   const membersBtn = document.getElementById('users-btn');
   const messagesBtn = document.getElementById('chat-btn');
-  const settingsModal = document.getElementById('modal-settings');
-  const settingsBtn = document.getElementById('settings-btn');
+  // const settingsModal = document.getElementById('modal-settings');
+  // const settingsBtn = document.getElementById('settings-btn');
 
   if (e.key === 'Escape') {
-    if ((settingsModal.style.display = 'block')) {
-      settingsModal.style.display = 'none';
-      settingsBtn.classList.remove('active');
-    }
+    // if ((settingsModal.style.display = 'block')) {
+    //   settingsModal.style.display = 'none';
+    //   settingsBtn.classList.remove('active');
+    // }
     if ((membersModal.style.display = 'block')) {
       membersModal.style.display = 'none';
       membersBtn.classList.remove('active');
@@ -84,14 +82,14 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-window.onclick = (e) => {
-  const modal_settings = document.getElementById('modal-settings');
-  const settings_btn = document.getElementById('settings-btn');
-  if (e.target === modal_settings) {
-    modal_settings.style.display = 'none';
-    settings_btn.classList.remove('active');
-  }
-};
+// window.onclick = (e) => {
+// const modal_settings = document.getElementById('modal-settings');
+// const settings_btn = document.getElementById('settings-btn');
+// if (e.target === modal_settings) {
+//   modal_settings.style.display = 'none';
+//   settings_btn.classList.remove('active');
+// }
+// };
 
 // // webpage on load
 window.addEventListener('load', () => {

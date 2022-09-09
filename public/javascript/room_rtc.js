@@ -11,7 +11,6 @@ import {
   handleMemberJoin,
   handleMemberLeft,
   addBotMessageToDom,
-  sendMessage,
 } from './room_rtm.js';
 
 import {
@@ -43,7 +42,10 @@ const rtc = {
 };
 
 // selected device
-const device = {};
+const device = {
+  localAudio: null,
+  localVideo: null,
+};
 
 // rtm API
 const rtm = {
@@ -156,6 +158,9 @@ const joinRoomInit = async () => {
 
   // if All are loaded loader will be gone
   loader.style.display = 'none';
+
+  // set the users camera and mic
+  settings();
 };
 
 // user joined the meeting handler
@@ -216,13 +221,14 @@ const handleUserLeft = async (user) => {
     displayFrame.style.display = null;
 
     // videoFrames variable
-    let videoFrames = document.getElementsByClassName('video__container');
+    // let videoFrames = document.getElementsByClassName('video__container');
 
-    // default size
-    for (let i = 0; videoFrames.length > i; i++) {
-      videoFrames[i].style.width = '300px';
-      videoFrames[i].style.height = '200px';
-    }
+    // // default size
+    // for (let i = 0; videoFrames.length > i; i++) {
+    //   videoFrames[i].style.width = '300px';
+    //   videoFrames[i].style.height = '200px';
+    // }
+    resetTheFrames();
   }
 };
 
@@ -394,36 +400,39 @@ const toggleScreen = async (e) => {
 
 AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
   try {
-    if (changedDevice.state === 'ACTIVE') {
-      rtc.localTracks[0].setDevice(changedDevice.device.deviceId);
-      // Switch to an existing device when the current device is unplugged.
-    } else if (
-      changedDevice.device.label === rtc.localTracks[0].getTrackLabel()
-    ) {
-      const oldMicrophones = await AgoraRTC.getMicrophones();
-      oldMicrophones[0] &&
-        rtc.localTracks[0].setDevice(oldMicrophones[0].deviceId);
+    if (!rtc.localTracks[0].muted) {
+      if (changedDevice.state === 'ACTIVE') {
+        rtc.localTracks[0].setDevice(changedDevice.device.deviceId);
+        // Switch to an existing device when the current device is unplugged.
+      } else if (
+        changedDevice.device.label === rtc.localTracks[0].getTrackLabel()
+      ) {
+        const oldMicrophones = await AgoraRTC.getMicrophones();
+        oldMicrophones[0] &&
+          rtc.localTracks[0].setDevice(oldMicrophones[0].deviceId);
+      }
     }
-  } catch (err) {
-    console.log(err);
+  } catch (e) {
+    console.log(e);
   }
-  // When plugging in a device, switch to a device that is newly plugged in.
 };
 
 AgoraRTC.onCameraChanged = async (changedDevice) => {
-  // When plugging in a device, switch to a device that is newly plugged in.
   try {
-    if (changedDevice.state === 'ACTIVE') {
-      rtc.localTracks[1].setDevice(changedDevice.device.deviceId);
-      // Switch to an existing device when the current device is unplugged.
-    } else if (
-      changedDevice.device.label === rtc.localTracks[1].getTrackLabel()
-    ) {
-      const oldCameras = await AgoraRTC.getCameras();
-      oldCameras[0] && rtc.localTracks[1].setDevice(oldCameras[0].deviceId);
+    if (!rtc.localTracks[1].muted) {
+      // When plugging in a device, switch to a device that is newly plugged in.
+      if (changedDevice.state === 'ACTIVE') {
+        rtc.localTracks[1].setDevice(changedDevice.device.deviceId);
+        // Switch to an existing device when the current device is unplugged.
+      } else if (
+        changedDevice.device.label === rtc.localTracks[1].getTrackLabel()
+      ) {
+        const oldCameras = await AgoraRTC.getCameras();
+        oldCameras[0] && rtc.localTracks[1].setDevice(oldCameras[0].deviceId);
+      }
     }
-  } catch (err) {
-    console.log(err);
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -432,11 +441,14 @@ const joinStream = async () => {
   loader.style.display = 'block';
   document.getElementsByClassName('mainBtn')[0].style.display = 'none';
   document.getElementsByClassName('middleBtn')[0].style.display = 'flex';
+  document.getElementById('settings-btn').style.display = 'none';
 
   // initialize local tracks
   rtc.localTracks = await AgoraRTC.createMicrophoneAndCameraTracks({}, {});
 
-  // await rtc.localTracks[0].on('onCameraChanged', handleCameraChange);
+  // handle error on video track
+  await rtc.localTracks[0].on('track-ended', () => {});
+  await rtc.localTracks[1].on('track-ended', () => {});
 
   // add the player into the DOM
   document
@@ -446,10 +458,24 @@ const joinStream = async () => {
     .getElementById(`user-container-${userData.rtcId}`)
     .addEventListener('click', expandVideoFrame);
 
+  rtc.localTracks[0]
+    .setDevice(device.localAudio)
+    .then(() => {
+      rtc.localTracks[0].setMuted(true);
+    })
+    .catch((e) => console.log(e));
+  rtc.localTracks[1]
+    .setDevice(device.localVideo)
+    .then(() => {
+      rtc.localTracks[1].setMuted(true);
+    })
+    .catch((e) => console.log(e));
+
   // mute video and audio local track
-  rtc.localTracks[0].setMuted(true);
-  rtc.localTracks[1].setMuted(true);
+  // rtc.localTracks[0].setMuted(true);
+  // rtc.localTracks[1].setMuted(true);
   // play the local video track of the user
+
   rtc.localTracks[1].play(`user-${userData.rtcId}`);
 
   // publish the video for other users to see
@@ -466,6 +492,7 @@ const leaveStream = async (e) => {
   document.getElementById('mic-btn').classList.remove('active');
   document.getElementsByClassName('mainBtn')[0].style.display = 'flex';
   document.getElementsByClassName('middleBtn')[0].style.display = 'none';
+  document.getElementById('settings-btn').style.display = 'block';
 
   await rtc.client.unpublish([rtc.localTracks[0], rtc.localTracks[1]]);
 
@@ -474,12 +501,7 @@ const leaveStream = async (e) => {
     rtc.client.sharingScreen = false;
   }
 
-  if (rtc.localTracks !== null) {
-    for (let i = 0; rtc.localTracks.length > i; i++) {
-      rtc.localTracks[i].stop();
-      rtc.localTracks[i].close();
-    }
-  }
+  clearLocalTracks();
 
   document.getElementById(`user-container-${userData.rtcId}`).remove();
 
@@ -494,35 +516,29 @@ const leaveStream = async (e) => {
   });
 };
 
-const settings = async () => {
-  // Devices
-  const devices = [];
-  // Local Device selected
+const clearLocalTracks = () => {
+  if (rtc.localTracks !== null) {
+    for (let i = 0; rtc.localTracks.length > i; i++) {
+      rtc.localTracks[i].stop();
+      rtc.localTracks[i].close();
+    }
+  }
+};
 
+// Local Devices
+const localDevice = [];
+const video_devices = [];
+const audio_devices = [];
+const devices = async () => {
   await AgoraRTC.getDevices().then((device) => {
-    console.log(device);
     device.filter((dev) => {
       // console.log(dev);
       if (dev.deviceId !== 'default' && dev.deviceId !== 'communications') {
-        devices.push(dev);
+        localDevice.push(dev);
       }
     });
   });
-  console.log(devices);
-
-  const playerDom = document.getElementById(`user-container-${userData.rtcId}`);
-  if (!playerDom) {
-    document
-      .getElementById('video-settings')
-      .insertAdjacentHTML('beforeend', player(userData.rtcId));
-  }
-  rtc.localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
-  rtc.localTracks[1].play(`user-${userData.rtcId}`);
-
-  // storing devices
-  const video_devices = [];
-  const audio_devices = [];
-  devices.map((item) => {
+  localDevice.map((item) => {
     if (item.kind === 'videoinput') {
       video_devices.push(item);
     }
@@ -530,6 +546,26 @@ const settings = async () => {
       audio_devices.push(item);
     }
   });
+};
+
+// settings modal user choosing their preferable device
+const settings = async () => {
+  devices();
+  // add local user to the dom
+  const playerDom = document.getElementById(`user-container-${userData.rtcId}`);
+  if (!playerDom) {
+    document
+      .getElementById('video-settings')
+      .insertAdjacentHTML('beforeend', player(userData.rtcId));
+  }
+
+  //
+  rtc.localTracks = await AgoraRTC.createMicrophoneAndCameraTracks();
+  rtc.localTracks[1].play(`user-${userData.rtcId}`);
+
+  // storing devices
+  device.localVideo = video_devices[0].deviceId;
+  device.localAudio = audio_devices[0].deviceId;
 
   const videoDom = document.getElementById('Video');
   const audioDom = document.getElementById('Audio');
@@ -546,6 +582,10 @@ export {
   rtc,
   rtm,
   device,
+  localDevice,
+  audio_devices,
+  video_devices,
+  clearLocalTracks,
   joinRoomInit,
   getTokens,
   handleMemberJoin,

@@ -1,7 +1,7 @@
 import { userData, rtm, player } from './room_rtc.js';
 import {
-  displayFrame,
   userIdInDisplayFrame,
+  displayFrame,
   resetTheFrames,
   expandVideoFrame,
   hideDisplayFrame,
@@ -118,7 +118,8 @@ const handleChannelMessage = async (messageData, MemberId) => {
       displayFrame.insertAdjacentHTML('beforeend', player(data.uid));
       document
         .getElementById(`user-container-${data.uid}`)
-        .addEventListener('click', expandVideoFrame);
+        .addEventListener('click', expandVideoFrame)
+        .scrollIntoView();
     }
   }
 

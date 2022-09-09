@@ -1,4 +1,13 @@
-import { settings, userData, device } from './room_rtc.js';
+import {
+  settings,
+  userData,
+  device,
+  rtc,
+  localDevice,
+  audio_devices,
+  video_devices,
+  clearLocalTracks,
+} from './room_rtc.js';
 
 // For logging errors in agora set 3 for warnings and error to be log at console set 1 to log it all.
 AgoraRTC.setLogLevel(3);
@@ -22,7 +31,7 @@ const expandVideoFrame = (e) => {
   }
 
   displayFrame.style.display = 'block';
-  displayFrame.appendChild(e.currentTarget);
+  displayFrame.appendChild(e.currentTarget).scrollIntoView();
   userIdInDisplayFrame = e.currentTarget.id;
 
   resetTheFrames();
@@ -38,7 +47,9 @@ const hideDisplayFrame = () => {
   displayFrame.style.display = null;
 
   let child = displayFrame.children[0];
-  document.getElementById('streams__container').appendChild(child);
+  if (child) {
+    document.getElementById('streams__container').appendChild(child);
+  }
 
   resetTheFrames();
 };
@@ -88,18 +99,24 @@ const membersToggle = (e) => {
 const settingsToggle = (e) => {
   const btn = document.getElementById('settings-btn');
   const z = document.getElementById('modal-settings');
-
   if (z.style.display === 'block') {
     btn.classList.remove('active');
     z.style.display = 'none';
+    localDevice.length = 0;
+    audio_devices.length = 0;
+    video_devices.length = 0;
     document.getElementById(`user-container-${userData.rtcId}`).remove();
+    clearLocalTracks();
+    // rtc.localTracks[0].setMuted(true);
+    // rtc.localTracks[1].setMuted(true);
   } else {
+    settings();
     btn.classList.add('active');
     z.style.display = 'block';
-    settings();
   }
 };
 
+// create dropdown selected DOM
 const createSelectElement = (name, val) => {
   const select = document.createElement('select');
   select.name = name;
@@ -119,7 +136,19 @@ const createSelectElement = (name, val) => {
     .getElementById('devices-settings')
     .appendChild(label)
     .appendChild(select)
-    .addEventListener('change', (e) => {});
+    .addEventListener('change', (e) => {
+      if (name === 'Video') {
+        const dev = val.find((device) => device.label === e.target.value);
+        rtc.localTracks[1].setDevice(dev.deviceId).catch((e) => console.log(e));
+        device.localVideo = dev.deviceId;
+      }
+      if (name === 'Audio') {
+        const dev = val.find((device) => device.label === e.target.value);
+        rtc.localTracks[0].setDevice(dev.deviceId).catch((e) => console.log(e));
+        device.localAudio = dev.deviceId;
+      }
+    });
+  document.getElementById('setup-btn').style.display = 'block';
 };
 
 export {
