@@ -92,7 +92,7 @@ const handleChannelMessage = async (messageData, MemberId) => {
   if (data.type === 'user_left') {
     document.getElementById(`user-container-${data.uid}`).remove();
 
-    if (userIdInDisplayFrame === `user-container-${userData.rtcId}`) {
+    if (userIdInDisplayFrame.val === `user-container-${userData.rtcId}`) {
       displayFrame.style.display = null;
 
       resetTheFrames();
@@ -112,7 +112,7 @@ const handleChannelMessage = async (messageData, MemberId) => {
     if (dom !== null) {
       displayFrame.style.display = 'block';
       displayFrame.appendChild(dom);
-      let userIdInDisplayFrame = user;
+      userIdInDisplayFrame.val = user;
     } else {
       displayFrame.style.display = 'block';
       displayFrame.insertAdjacentHTML('beforeend', player(data.uid));

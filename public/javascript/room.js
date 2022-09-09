@@ -21,7 +21,7 @@ const meetingId = urlParams.get('meetingId').trim();
 // Expand Video Frame on Click
 let displayFrame = document.getElementById('stream__box');
 let videoFrames = document.getElementsByClassName('video__container');
-let userIdInDisplayFrame = null;
+const userIdInDisplayFrame = { val: null };
 
 // Expand VideoFrame Function
 const expandVideoFrame = (e) => {
@@ -32,7 +32,7 @@ const expandVideoFrame = (e) => {
 
   displayFrame.style.display = 'block';
   displayFrame.appendChild(e.currentTarget).scrollIntoView();
-  userIdInDisplayFrame = e.currentTarget.id;
+  userIdInDisplayFrame.val = e.currentTarget.id;
 
   resetTheFrames();
 };
@@ -43,7 +43,7 @@ for (let i = 0; videoFrames.length > i; i++) {
 
 // Hide Display Frame Function
 const hideDisplayFrame = () => {
-  userIdInDisplayFrame = null;
+  userIdInDisplayFrame.val = null;
   displayFrame.style.display = null;
 
   let child = displayFrame.children[0];
@@ -153,8 +153,8 @@ const createSelectElement = (name, val) => {
 
 export {
   displayFrame,
-  userIdInDisplayFrame,
   videoFrames,
+  userIdInDisplayFrame,
   meetingId,
   membersToggle,
   messagesToggle,

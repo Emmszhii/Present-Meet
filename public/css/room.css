@@ -175,9 +175,9 @@ body {
   overflow: hidden;
   overflow-y: auto;
   text-align: justify;
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 .video__container {
   color: white;
@@ -241,8 +241,7 @@ video {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  /* margin: 10px auto; */
-  /*  */
+  margin-top: 2rem;
   gap: 2em;
 }
 .container__stream {

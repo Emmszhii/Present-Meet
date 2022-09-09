@@ -216,7 +216,7 @@ const handleUserLeft = async (user) => {
   if (item) {
     item.remove();
   }
-  if (userIdInDisplayFrame === `user-container-${user.uid}`) {
+  if (userIdInDisplayFrame.val === `user-container-${user.uid}`) {
     // if user is on big display and left delete it
     displayFrame.style.display = null;
 
@@ -364,7 +364,7 @@ const toggleScreen = async (e) => {
       .addEventListener('click', expandVideoFrame);
 
     //
-    let userIdInDisplayFrame = `user-container-${userData.rtcId}`;
+    userIdInDisplayFrame.val = `user-container-${userData.rtcId}`;
     rtc.localScreenTracks.play(`user-${userData.rtcId}`);
 
     // unpublish the video track
@@ -380,21 +380,22 @@ const toggleScreen = async (e) => {
       text: JSON.stringify({ type: 'user_screen_share', uid: userData.rtcId }),
     });
   } else {
-    rtc.sharingScreen = false;
-    cameraBtn.style.display = 'block';
-    if (screenBtn.classList.contains('active')) {
-      screenBtn.classList.remove('active');
-    }
+    handleStopShareScreen();
+    // rtc.sharingScreen = false;
+    // cameraBtn.style.display = 'block';
+    // if (screenBtn.classList.contains('active')) {
+    //   screenBtn.classList.remove('active');
+    // }
 
-    // remove the local screen tracks to the dom
-    document.getElementById(`user-container-${userData.rtcId}`).remove();
+    // // remove the local screen tracks to the dom
+    // document.getElementById(`user-container-${userData.rtcId}`).remove();
 
-    //unpublish the local screen tracks
-    await rtc.client.unpublish([rtc.localScreenTracks]);
+    // //unpublish the local screen tracks
+    // await rtc.client.unpublish([rtc.localScreenTracks]);
 
-    await rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
-    // then switch to camera
-    switchToCamera();
+    // await rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
+    // // then switch to camera
+    // switchToCamera();
   }
 };
 
@@ -505,7 +506,7 @@ const leaveStream = async (e) => {
 
   document.getElementById(`user-container-${userData.rtcId}`).remove();
 
-  if (userIdInDisplayFrame === `user-container-${userData.rtcId}`) {
+  if (userIdInDisplayFrame.val === `user-container-${userData.rtcId}`) {
     displayFrame.style.display = null;
 
     resetTheFrames();
