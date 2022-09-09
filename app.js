@@ -97,7 +97,7 @@ passport.use(
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
     // res.redirect('/join-and-create');
-    res.render('home');
+    res.render('register');
   } else {
     res.render('login');
   }

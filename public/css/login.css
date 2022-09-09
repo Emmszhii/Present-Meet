@@ -1,7 +1,9 @@
-body {
+* {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #e8ecef;
   box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
 }
 
 .login {
@@ -14,6 +16,10 @@ body {
 
 .login p {
   font-size: 20px;
+}
+
+.fa-google {
+  background-color: #dd4b39;
 }
 
 @media (max-width: 1000) {
