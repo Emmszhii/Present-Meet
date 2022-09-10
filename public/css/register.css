@@ -15,6 +15,7 @@ main {
   padding: 20px;
   border-radius: 10px;
   width: 40%;
+  margin: 10px;
 }
 
 #form {
@@ -26,16 +27,11 @@ main {
   align-items: center;
   color: black;
   font-size: 1.5rem;
+  flex-direction: column;
 }
 
 form > div {
   margin: 20px;
-}
-
-#submit-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #user-type-div {
@@ -59,7 +55,8 @@ select {
   margin: 10px auto;
 }
 
-#submit-btn {
+#submit-btn,
+#change-pw-btn {
   background-color: #2aca3e;
   font-size: 18px;
   padding: 10px 15px;
@@ -69,7 +66,7 @@ select {
   bottom: 0.9rem;
   border-radius: 8px;
   display: flex;
-  margin: auto;
+  margin: 3% auto;
   cursor: pointer;
 }
 
@@ -144,4 +141,16 @@ select {
 
 .attMsgPopup > button > a {
   text-decoration: none;
+}
+
+@media (max-width: 1600px) {
+  main {
+    display: block;
+  }
+  #form {
+    width: 100vw;
+  }
+  #user-face {
+    width: 100vw;
+  }
 }

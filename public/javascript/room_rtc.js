@@ -84,7 +84,7 @@ const getInfo = async () => {
 const getTokens = async () => {
   // User Information 1st
   getInfo().then(async (user) => {
-    userData.fullName = user.user.fullName;
+    userData.fullName = `${user.user.firstName} ${user.user.lastName}`;
     userData.id = user.user._id;
     userData.rtcId = user.user._id.slice(-4);
     userData.rtmId = user.user._id.slice(-9);

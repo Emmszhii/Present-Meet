@@ -49,8 +49,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/userDB', { useNewUrlParser: true });
 const userSchema = new mongoose.Schema({
   username: String,
   googleId: String,
-  fullName: String,
+  firstName: String,
+  lastName: String,
   photoUrl: String,
+  type: String,
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -83,7 +85,8 @@ passport.use(
         {
           username: profile.emails[0].value,
           googleId: profile.id,
-          fullName: profile.displayName,
+          firstName: profile.name.givenName,
+          lastName: profile.name.familyName,
           photoUrl: profile.photos[0].value,
         },
         function (err, user) {
@@ -97,7 +100,6 @@ passport.use(
 // home route
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
-    // res.redirect('/join-and-create');
     res.render('home');
   } else {
     res.render('login');
@@ -243,13 +245,13 @@ app.get('/getInfo', (req, res) => {
 
 app.get('/register', (req, res) => {
   if (req.isAuthenticated()) {
-    res.render('register');
+    res.render('register', { user: req.user });
   } else {
     res.redirect('/');
   }
 });
 
-app.post('/register', (req, res) => {
+app.post('/profile', (req, res) => {
   const firstName = req.body.first_name;
 
   console.log(req.body);

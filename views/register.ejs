@@ -16,12 +16,13 @@
     <main>
       <div id="form">
         <div class="card">
-          <form action="/register" id="user-info" method="post">
+          <form action="/profile" id="user-info" method="post">
             <label for="first_name">First Name</label>
             <input
               type="text"
               name="first_name"
               id="first_name"
+              value="<%= user.firstName %>"
               autocomplete="off"
             />
             <label for="last_name">Last Name</label>
@@ -29,35 +30,58 @@
               type="text"
               name="last_name"
               id="last_name"
+              value="<%= user.lastName %>"
               autocomplete="off"
             />
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" autocomplete="off" />
-            <label for="password">Password</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value="<%= user.username %>"
+              autocomplete="off"
+            />
+            <!-- <label for="password">Password</label>
             <input
               type="password"
               name="password"
               id="password"
               autocomplete="off"
-            />
+            /> -->
             <label for="birthday">Birthday</label>
             <input
               type="date"
               name="birthday"
               id="birthday"
+              min="1950-01-01"
               max="2013-01-01"
+              value="<%= user.birthday %>"
               autocomplete="off"
             />
+            <label for="type">User type</label>
             <select name="type" id="user-type">
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
               <option value="host">Host</option>
               <option value="audience">Audience</option>
             </select>
+
             <button type="submit" id="submit-btn">Submit</button>
           </form>
         </div>
+        <div class="card">
+          <form action="/password">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="pw" />
+            <label for="new-pw">New Password</label>
+            <input type="password" name="new-pw" id="new-pw" />
+            <label for="new-pw2">Confirm New Password</label>
+            <input type="password" name="new-pw2" id="new-pw2" />
+            <button type="submit" id="change-pw-btn">Change Password</button>
+          </form>
+        </div>
       </div>
+
       <section id="user-face">
         <div class="take-photo" id="take-photo">
           <div class="attendance-camera"></div>
@@ -65,12 +89,11 @@
             <button id="attendance-btn">Photo</button>
           </div>
         </div>
-
-        <div class="attMsgPopup" id="attPopupMsg">
-          <button><a href="../signInpage/signIn.html">x</a></button>
-          <p>Your data has been recorded</p>
-        </div>
       </section>
     </main>
+    <script defer>
+      document.getElementById('user-type').value =
+        '<%=user.type%>' || 'student';
+    </script>
   </body>
 </html>
