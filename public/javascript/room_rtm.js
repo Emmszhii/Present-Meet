@@ -6,11 +6,8 @@ import {
   expandVideoFrame,
   hideDisplayFrame,
 } from './room.js';
-// Initialize the variable
-const messageForm = document.getElementById('message__form');
 
 // get members names and total and add it to the dom;
-
 // member joining handler
 const handleMemberJoin = async (MemberId) => {
   // console.log('A new member has joined the room', MemberId);
@@ -36,7 +33,6 @@ const addMemberToDom = async (MemberId) => {
       <p class="member_name">${name}</p>
     </div>
   `;
-
   membersWrapper.insertAdjacentHTML('beforeend', memberItem);
 };
 
@@ -77,7 +73,6 @@ const getMembers = async () => {
 };
 
 // message functionalities
-
 // rtm channel message handler
 const handleChannelMessage = async (messageData, MemberId) => {
   // Initialize data variable to parse the data

@@ -96,21 +96,26 @@ const membersToggle = (e) => {
   }
 };
 
-const settingsToggle = (e) => {
+const settingsToggle = () => {
   const btn = document.getElementById('settings-btn');
   const z = document.getElementById('modal-settings');
   if (z.style.display === 'block') {
+    // display none
     btn.classList.remove('active');
     z.style.display = 'none';
+    // reset local devices
     localDevice.length = 0;
     audio_devices.length = 0;
     video_devices.length = 0;
+    // remove the player in the dom
     document.getElementById(`user-container-${userData.rtcId}`).remove();
+    // clear local tracks
     clearLocalTracks();
-    // rtc.localTracks[0].setMuted(true);
-    // rtc.localTracks[1].setMuted(true);
   } else {
+    // run settings modal
     settings();
+
+    // set active buttons and display it
     btn.classList.add('active');
     z.style.display = 'block';
   }
@@ -118,6 +123,7 @@ const settingsToggle = (e) => {
 
 // create dropdown selected DOM
 const createSelectElement = (name, val) => {
+  // dynamic select
   const select = document.createElement('select');
   select.name = name;
   select.id = name;
@@ -148,6 +154,8 @@ const createSelectElement = (name, val) => {
         device.localAudio = dev.deviceId;
       }
     });
+
+  // after settings are displayed then display the button to exit
   document.getElementById('setup-btn').style.display = 'block';
 };
 

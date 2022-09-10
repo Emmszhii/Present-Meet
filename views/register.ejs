@@ -16,16 +16,23 @@
     <main>
       <div id="form">
         <div class="card">
-          <form action="#" id="user-info">
-            <!-- <div id="name-div"> -->
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" autocomplete="off" />
-            <!-- </div> -->
-            <!-- <div id="email-div"> -->
+          <form action="/register" id="user-info" method="post">
+            <label for="first_name">First Name</label>
+            <input
+              type="text"
+              name="first_name"
+              id="first_name"
+              autocomplete="off"
+            />
+            <label for="last_name">Last Name</label>
+            <input
+              type="text"
+              name="last_name"
+              id="last_name"
+              autocomplete="off"
+            />
             <label for="email">Email</label>
             <input type="email" name="email" id="email" autocomplete="off" />
-            <!-- </div> -->
-            <!-- <div id="password-div"> -->
             <label for="password">Password</label>
             <input
               type="password"
@@ -33,8 +40,6 @@
               id="password"
               autocomplete="off"
             />
-            <!-- </div> -->
-            <!-- <div id="birthday-div"> -->
             <label for="birthday">Birthday</label>
             <input
               type="date"
@@ -43,18 +48,13 @@
               max="2013-01-01"
               autocomplete="off"
             />
-            <!-- </div> -->
-            <!-- <div id="user-type-div"> -->
             <select name="type" id="user-type">
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
               <option value="host">Host</option>
               <option value="audience">Audience</option>
             </select>
-            <!-- </div> -->
-            <!-- <div id="submit-div"> -->
             <button type="submit" id="submit-btn">Submit</button>
-            <!-- </div> -->
           </form>
         </div>
       </div>

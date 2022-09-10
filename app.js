@@ -47,6 +47,7 @@ app.use(passport.session());
 mongoose.connect('mongodb://127.0.0.1:27017/userDB', { useNewUrlParser: true });
 
 const userSchema = new mongoose.Schema({
+  username: String,
   googleId: String,
   fullName: String,
   photoUrl: String,
@@ -97,7 +98,7 @@ passport.use(
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
     // res.redirect('/join-and-create');
-    res.render('register');
+    res.render('home');
   } else {
     res.render('login');
   }
@@ -112,26 +113,13 @@ app.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   function (req, res) {
     // Successful authentication, redirect secrets.
-    console.log(req.params);
     res.redirect('/');
   }
 );
 
-// join or create room route
-// app.route('/join-and-create').get((req, res) => {
-//   // session user algorithm
-//   if (req.isAuthenticated()) {
-//     res.render('joinAndCreate');
-//   } else {
-//     res.redirect('/');
-//   }
-// });
-
 // room Route
 app.route('/room').get((req, res) => {
   if (req.isAuthenticated()) {
-    const idRoom = req.query.meetingId;
-    console.log(idRoom);
     res.render('room');
   } else {
     res.redirect('/');
@@ -139,7 +127,6 @@ app.route('/room').get((req, res) => {
 });
 
 // AgoraSDK TOKEN
-
 const nocache = (_, resp, next) => {
   resp.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   resp.header('Expires', '-1');
@@ -204,7 +191,6 @@ const generateRTCToken = (req, resp) => {
 };
 
 // GENERATE RTM TOKEN
-
 const generateRTMToken = (req, resp) => {
   // set response header
   resp.header('Access-Control-Allow-Origin', '*');
@@ -253,6 +239,22 @@ app.get('/getInfo', (req, res) => {
   } else {
     res.redirect('/');
   }
+});
+
+app.get('/register', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.render('register');
+  } else {
+    res.redirect('/');
+  }
+});
+
+app.post('/register', (req, res) => {
+  const firstName = req.body.first_name;
+
+  console.log(req.body);
+  console.log(firstName);
+  // res.status(200).json({ text: req.body });
 });
 
 app.get('/quit', (req, res) => {

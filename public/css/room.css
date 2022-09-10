@@ -3,6 +3,8 @@
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
+}
+body {
   background-color: #000000;
 }
 .videoCall {
@@ -224,7 +226,6 @@ video {
   height: 88vh;
   width: 89vw;
   margin-bottom: 20px;
-  margin-top: 25%;
   display: none;
 }
 #stream__box .video__container {
@@ -312,7 +313,7 @@ video {
   margin: 0;
 }
 #message__form {
-  width: 23.2rem;
+  width: 100%;
   position: inherit;
   bottom: 0;
   /* display: none; */
@@ -359,13 +360,14 @@ video {
   /* position: fixed; */
   font-size: 18px;
   background-color: #323143;
-  width: 218px;
+  /* width: 218px; */
+  height: 7%;
 }
 #member__list {
   color: white;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
@@ -444,9 +446,6 @@ video {
 
 /* responsiveness for mobile */
 @media (max-width: 1600px) {
-  #stream__box {
-    margin-top: 32%;
-  }
   .settings-modal {
     width: 40%;
   }
@@ -463,7 +462,7 @@ video {
     width: 20%;
   }
   #stream__box {
-    margin-top: 103%;
+    /* margin-top: 103%; */
   }
   .settings-modal {
     width: 50%;
@@ -472,7 +471,7 @@ video {
 @media (max-width: 768px) {
   #stream__box {
     height: 85vh;
-    margin-top: 145%;
+    /* margin-top: 145%; */
   }
   .middleBtn {
     width: 50%;

@@ -55,6 +55,8 @@ select {
   font-size: 1rem;
   padding: 5px 10px;
   font-size: 1rem;
+  display: flex;
+  margin: 10px auto;
 }
 
 #submit-btn {
@@ -66,8 +68,9 @@ select {
   text-shadow: 2px 2px black;
   bottom: 0.9rem;
   border-radius: 8px;
+  display: flex;
+  margin: auto;
   cursor: pointer;
-  margin: 10px;
 }
 
 /* face recognition */
@@ -100,7 +103,8 @@ select {
   width: 100px;
   background-color: #000000;
   border-radius: 100%;
-  margin: 20px auto;
+  margin: 0px auto;
+  margin-top: 20px;
 }
 
 .photo-btn > button {

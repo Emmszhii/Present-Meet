@@ -65,8 +65,8 @@ input:focus::placeholder {
 
 .homepageFooter {
   display: flex;
-  justify-content: center;
-  margin: 0px;
+  justify-content: space-evenly;
+  margin: 5%;
 }
 
 .modal-join,
@@ -147,8 +147,8 @@ input:focus::placeholder {
     width: 100%;
   }
   .homepageFooter {
-    justify-content: center;
-    margin: 10%;
+    justify-content: space-evenly;
+    /* margin: 10%; */
   }
   .modalCreate-bg {
     width: 100vw;

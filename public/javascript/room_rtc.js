@@ -22,8 +22,19 @@ import {
   createSelectElement,
 } from './room.js';
 
-// user local data and tokens
+// User Local Data and Tokens
 const userData = {};
+
+// User Local Devices
+const localDevice = [];
+const video_devices = [];
+const audio_devices = [];
+
+// selected device
+const device = {
+  localAudio: null,
+  localVideo: null,
+};
 
 // rtc API
 const rtc = {
@@ -39,12 +50,6 @@ const rtc = {
   localScreenTracks: null,
   // rtc boolean screen share
   sharingScreen: false,
-};
-
-// selected device
-const device = {
-  localAudio: null,
-  localVideo: null,
 };
 
 // rtm API
@@ -187,7 +192,7 @@ const handleUserPublished = async (user, mediaType) => {
 
   // if big screen is true let the other users resize their screen
   if (displayFrame.style.display) {
-    let videoFrame = document.getElementById(`user-container-${user.uid}`);
+    const videoFrame = document.getElementById(`user-container-${user.uid}`);
     videoFrame.style.width = `300px`;
     videoFrame.style.height = `200px`;
   }
@@ -219,15 +224,7 @@ const handleUserLeft = async (user) => {
   if (userIdInDisplayFrame.val === `user-container-${user.uid}`) {
     // if user is on big display and left delete it
     displayFrame.style.display = null;
-
-    // videoFrames variable
-    // let videoFrames = document.getElementsByClassName('video__container');
-
-    // // default size
-    // for (let i = 0; videoFrames.length > i; i++) {
-    //   videoFrames[i].style.width = '300px';
-    //   videoFrames[i].style.height = '200px';
-    // }
+    // reset user frames
     resetTheFrames();
   }
 };
@@ -247,9 +244,7 @@ const toggleCamera = async (e) => {
       await rtc.localTracks[1].setMuted(true);
       button.classList.remove('active');
     }
-  } catch (err) {
-    // console.log(err);
-  }
+  } catch (err) {}
 };
 // Audio function
 const toggleMic = async (e) => {
@@ -265,9 +260,7 @@ const toggleMic = async (e) => {
       await rtc.localTracks[0].setMuted(true);
       button.classList.remove('active');
     }
-  } catch (err) {
-    // console.log(err);
-  }
+  } catch (err) {}
 };
 
 // After disabling the share screen function then switch to Camera
@@ -381,21 +374,6 @@ const toggleScreen = async (e) => {
     });
   } else {
     handleStopShareScreen();
-    // rtc.sharingScreen = false;
-    // cameraBtn.style.display = 'block';
-    // if (screenBtn.classList.contains('active')) {
-    //   screenBtn.classList.remove('active');
-    // }
-
-    // // remove the local screen tracks to the dom
-    // document.getElementById(`user-container-${userData.rtcId}`).remove();
-
-    // //unpublish the local screen tracks
-    // await rtc.client.unpublish([rtc.localScreenTracks]);
-
-    // await rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
-    // // then switch to camera
-    // switchToCamera();
   }
 };
 
@@ -439,7 +417,10 @@ AgoraRTC.onCameraChanged = async (changedDevice) => {
 
 // joining the stream
 const joinStream = async () => {
+  // display loader
   loader.style.display = 'block';
+
+  // reset the button
   document.getElementsByClassName('mainBtn')[0].style.display = 'none';
   document.getElementsByClassName('middleBtn')[0].style.display = 'flex';
   document.getElementById('settings-btn').style.display = 'none';
@@ -472,16 +453,14 @@ const joinStream = async () => {
     })
     .catch((e) => console.log(e));
 
-  // mute video and audio local track
-  // rtc.localTracks[0].setMuted(true);
-  // rtc.localTracks[1].setMuted(true);
-  // play the local video track of the user
-
+  // play the local video and audio to the dom
   rtc.localTracks[1].play(`user-${userData.rtcId}`);
 
   // publish the video for other users to see
   // localTracks[0] for audio and localTracks[1] for the video
   await rtc.client.publish([rtc.localTracks[0], rtc.localTracks[1]]);
+
+  // loader done
   loader.style.display = 'none';
 };
 
@@ -526,10 +505,6 @@ const clearLocalTracks = () => {
   }
 };
 
-// Local Devices
-const localDevice = [];
-const video_devices = [];
-const audio_devices = [];
 const devices = async () => {
   await AgoraRTC.getDevices().then((device) => {
     device.filter((dev) => {
