@@ -1,22 +1,56 @@
 <%- include('partials/header') %>
 
-<div class="login">
-  <div class="logo"></div>
-  <h1>Present Meet</h1>
-  <h2>Log in to your account</h2>
-  <p>Sign in Using</p>
-  <div class="socialmediaIcon">
-    <div class="card-body">
-      <a
-        class="btn btn-block btn-social btn-google"
-        href="/auth/google"
-        role="button"
-      >
-        <i class="fab fa-google"></i>
-        Google
-      </a>
+<main>
+  <div id="form">
+    <div class="card">
+      <div class="logo"></div>
+      <h1>Present Meet</h1>
+      <h2>Log in to your account</h2>
+      <p>Sign in using</p>
+      <div class="socialmediaIcon">
+        <div class="card-body">
+          <a
+            class="btn btn-block btn-social btn-google"
+            href="/auth/google"
+            role="button"
+          >
+            <i class="fab fa-google"></i>
+            Google
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div id="login">
+        <form action="/login" id="user-login" method="post">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value=""
+            autocomplete="off"
+          />
+          <label for="email">Email</label>
+          <input
+            type="password"
+            name="password"
+            id="password-input"
+            value=""
+            autocomplete="off"
+          />
+          <label for="password">Password</label>
+          <button type="submit" id="login-btn">Login</button>
+        </form>
+      </div>
+      <div class="footer">
+        <p>No account? Sign up now!</p>
+        <a href="/register"
+          ><button type="button" id="sign-up">Sign up</button></a
+        >
+        <a href="#" id="forgot-pw"><p>Forgot password?</p></a>
+      </div>
     </div>
   </div>
-</div>
-
+  <script></script>
+</main>
 <%- include('partials/footer') %>

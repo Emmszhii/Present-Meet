@@ -9,7 +9,10 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 const cors = require('cors');
 const morgan = require('morgan');
+const validator = require('validator');
+const bcrypt = require('bcrypt');
 const { default: fetch } = require('node-fetch');
+const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const {
   RtcTokenBuilder,
@@ -21,16 +24,16 @@ const {
 const PORT = process.env.PORT || 3000;
 
 const mongoose = require('mongoose');
+
 const app = express();
 
 app.use(cors());
 app.use(express.static('public'));
+app.use('/public', express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(morgan('dev'));
-
-app.use('/public', express.static('public'));
 
 app.use(
   session({
@@ -47,12 +50,26 @@ app.use(passport.session());
 mongoose.connect('mongodb://127.0.0.1:27017/userDB', { useNewUrlParser: true });
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  email: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    unique: true,
+    // required: [true, 'Please enter an email.'],
+    // validate: [validator.isEmail, 'Please enter a valid E-mail'],
+  },
+  password: {
+    type: String,
+    // required: [true, 'Password is a required field.'],
+    // minlength: 6,
+  },
+
   googleId: String,
   firstName: String,
   lastName: String,
-  photoUrl: String,
+  birthday: String,
   type: String,
+  photoUrl: String,
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -83,7 +100,8 @@ passport.use(
     function (accessToken, refreshToken, profile, cb) {
       User.findOrCreate(
         {
-          username: profile.emails[0].value,
+          username: profile.id,
+          email: profile.emails[0].value,
           googleId: profile.id,
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
@@ -237,13 +255,17 @@ app.get('/rtm/:uid', nocache, generateRTMToken);
 // fetch user information
 app.get('/getInfo', (req, res) => {
   if (req.isAuthenticated()) {
-    res.status(200).json({ user: req.user });
+    try {
+      res.status(200).json({ user: req.user });
+    } catch (e) {
+      res.status(400).json({ err: 'Something gone wrong!' });
+    }
   } else {
     res.redirect('/');
   }
 });
 
-app.get('/register', (req, res) => {
+app.get('/profile', (req, res) => {
   if (req.isAuthenticated()) {
     res.render('register', { user: req.user });
   } else {
@@ -251,11 +273,65 @@ app.get('/register', (req, res) => {
   }
 });
 
-app.post('/profile', (req, res) => {
-  const firstName = req.body.first_name;
+app.get('/register', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.redirect('/');
+  } else {
+    res.render('register');
+  }
+});
 
-  console.log(req.body);
-  console.log(firstName);
+app.post('/login', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  User.findOne({ email: email }, (err, foundUser) => {
+    if (err) return console.log(err);
+    if (foundUser) {
+      bcrypt.compare(password, foundUser.password, (err, result) => {
+        if (result === true) {
+          res.render('home');
+        }
+      });
+    }
+  });
+});
+
+app.post('/register', async (req, res) => {
+  // const saltRounds = 10;
+  // bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+  //   try {
+  //     const newUser = new User({
+  //       email: req.body.email,
+  //       password: hash,
+  //       firstName: req.body.first_name,
+  //       lastName: req.body.last_name,
+  //       birthday: req.body.birthday,
+  //       type: req.body.type,
+  //     });
+  //     await newUser.save();
+  //     res.render('home');
+  //     // res.status(200).send(newUser);
+  //   } catch (err) {
+  //     res.status(400).send(err.message);
+  //   }
+  // });
+  User.register({ email: req.body.email }, req.body.password, (err, user) => {
+    if (err) {
+      console.log(err);
+      res.redirect('/');
+    } else {
+      passport.authenticate('local')(req, res, () => {
+        res.redirect('/');
+      });
+    }
+  });
+});
+
+app.post('/profile', (req, res) => {
+  // const firstName = req.body.first_name;
+  // console.log(req.body);
+  // console.log(firstName);
   // res.status(200).json({ text: req.body });
 });
 

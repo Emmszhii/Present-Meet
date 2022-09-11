@@ -1,6 +1,1 @@
-POST http://localhost:3000/create-meeting
-Content-Type: application/json
-
-{
-  "message" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIyMjEwYWFmMy1mYjZjLTQ2YTItYjE1Mi04NTc4MGU3NjE0YTAiLCJ2ZXJzaW9uIjoyLCJyb2xlcyI6WyJDUkFXTEVSIl0sImlhdCI6MTY2MjA1ODUwMiwiZXhwIjoxNjYyMDYzOTAyfQ.8ZVvmnvjxxICZ3XGb_Z8JKyaLeMV93kPRbRGkBmiNNI"
-}
+GET http://localhost:3000/getInfo

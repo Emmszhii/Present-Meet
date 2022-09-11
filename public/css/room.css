@@ -28,7 +28,6 @@ body {
   width: 100%;
   bottom: 0px;
   display: flex;
-  /* justify-content: space-between; */
   place-items: center;
   padding: 10px 0 10px 0;
   color: #fff;
@@ -177,9 +176,6 @@ body {
   overflow: hidden;
   overflow-y: auto;
   text-align: justify;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
 }
 .video__container {
   color: white;
@@ -357,10 +353,8 @@ video {
   justify-content: space-around;
   align-items: center;
   padding: 0 1rem;
-  /* position: fixed; */
   font-size: 18px;
   background-color: #323143;
-  /* width: 218px; */
   height: 7%;
 }
 #member__list {
@@ -392,10 +386,8 @@ video {
   line-height: 0;
 }
 /* End members */
-
 /* settings modal */
 #modal-settings {
-  /* display: block; */
   z-index: 3;
   position: fixed;
   width: 100%;
@@ -412,7 +404,6 @@ video {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* margin: 0 auto; */
   transform: translate(-50%, -50%);
   text-align: center;
   border-radius: 10px;
@@ -422,7 +413,6 @@ video {
   display: flex;
   align-items: center;
   flex-direction: column;
-  /* position: relative; */
 }
 
 .close-settings-modal {
@@ -461,9 +451,6 @@ video {
   .videoLink {
     width: 20%;
   }
-  #stream__box {
-    /* margin-top: 103%; */
-  }
   .settings-modal {
     width: 50%;
   }
@@ -471,7 +458,6 @@ video {
 @media (max-width: 768px) {
   #stream__box {
     height: 85vh;
-    /* margin-top: 145%; */
   }
   .middleBtn {
     width: 50%;
