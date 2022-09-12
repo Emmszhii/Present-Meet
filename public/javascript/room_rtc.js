@@ -458,10 +458,12 @@ const joinStream = async () => {
 
   // publish the video for other users to see
   // localTracks[0] for audio and localTracks[1] for the video
-  await rtc.client.publish([rtc.localTracks[0], rtc.localTracks[1]]);
-
-  // loader done
-  loader.style.display = 'none';
+  await rtc.client
+    .publish([rtc.localTracks[0], rtc.localTracks[1]])
+    .then(() => {
+      // loader done
+      loader.style.display = 'none';
+    });
 };
 
 // leave stream

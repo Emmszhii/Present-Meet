@@ -9,17 +9,18 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 const cors = require('cors');
 const morgan = require('morgan');
+
+const { nocache, generateRTCToken } = require('./rtcToken');
+const { generateRTMToken } = require('./rtmToken');
+
+const initializePassport = require('./passport-config');
+const flash = require('express-flash');
+const methodOverride = require('method-override');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const { default: fetch } = require('node-fetch');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
-const {
-  RtcTokenBuilder,
-  RtcRole,
-  RtmTokenBuilder,
-  RtmRole,
-} = require('agora-access-token');
 
 const PORT = process.env.PORT || 3000;
 
@@ -30,7 +31,7 @@ const app = express();
 app.use(cors());
 app.use(express.static('public'));
 app.use('/public', express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(morgan('dev'));
@@ -40,9 +41,15 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {},
+    // cookie: {},
   })
 );
+
+// initializePassport(
+//   passport,
+//   (email) => User.find((user) => user.email === email),
+//   (id) => User.find((user) => user._id === id)
+// );
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -100,7 +107,7 @@ passport.use(
     function (accessToken, refreshToken, profile, cb) {
       User.findOrCreate(
         {
-          username: profile.id,
+          username: profile.emails[0].value,
           email: profile.emails[0].value,
           googleId: profile.id,
           firstName: profile.name.givenName,
@@ -111,6 +118,26 @@ passport.use(
           return cb(err, user);
         }
       );
+      // User.findOne({ googleId: profile.id }, (err, foundUser) => {
+      //   if (!err) {
+      //     if (foundUser) {
+      //       return cb(null, foundUser);
+      //     } else {
+      //       const newUser = new User({
+      //         googleId: profile.id,
+      //         email: profile.emails[0].value,
+      //         firstName: profile.name.givenName,
+      //         lastName: profile.name.familyName,
+      //         photoUrl: profile.photos[0].value,
+      //       });
+      //       newUser.save((err) => {
+      //         if (!err) {
+      //           return cb(null, newUser);
+      //         }
+      //       });
+      //     }
+      //   }
+      // });
     }
   )
 );
@@ -145,106 +172,6 @@ app.route('/room').get((req, res) => {
     res.redirect('/');
   }
 });
-
-// AgoraSDK TOKEN
-const nocache = (_, resp, next) => {
-  resp.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  resp.header('Expires', '-1');
-  resp.header('Pragma', 'no-cache');
-  next();
-};
-
-// GENERATE RTC TOKEN
-const generateRTCToken = (req, resp) => {
-  resp.header('Access-Control-Allow-Origin', '*');
-  const channelName = req.params.channel;
-  if (!channelName) {
-    return resp.status(500).json({ error: 'channel is required' });
-  }
-  let id = req.params.id;
-  if (!id || id === '') {
-    return resp.status(500).json({ error: 'id is required' });
-  }
-  // get role
-  let role;
-  if (req.params.role === 'publisher') {
-    role = RtcRole.PUBLISHER;
-  } else if (req.params.role === 'audience') {
-    role = RtcRole.SUBSCRIBER;
-  } else {
-    return resp.status(500).json({ error: 'role is incorrect' });
-  }
-  let expireTime = req.query.expiry;
-  if (!expireTime || expireTime === '') {
-    expireTime = 3600;
-  } else {
-    expireTime = parseInt(expireTime, 10);
-  }
-  const currentTime = Math.floor(Date.now() / 1000);
-  const privilegeExpireTime = currentTime + expireTime;
-  let token;
-  if (req.params.tokentype === 'userAccount') {
-    token = RtcTokenBuilder.buildTokenWithAccount(
-      process.env.AGORA_APP_ID,
-      process.env.AGORA_APP_CERTIFICATE,
-      channelName,
-      id,
-      role,
-      privilegeExpireTime
-    );
-  } else if (req.params.tokentype === 'uid') {
-    token = RtcTokenBuilder.buildTokenWithUid(
-      process.env.AGORA_APP_ID,
-      process.env.AGORA_APP_CERTIFICATE,
-      channelName,
-      id,
-      role,
-      privilegeExpireTime
-    );
-  } else {
-    return resp.status(500).json({ error: 'token type is invalid' });
-  }
-  return resp.json({
-    AGORA_APP_ID: process.env.AGORA_APP_ID,
-    rtcToken: token,
-  });
-};
-
-// GENERATE RTM TOKEN
-const generateRTMToken = (req, resp) => {
-  // set response header
-  resp.header('Access-Control-Allow-Origin', '*');
-
-  // get uid
-  const uid = req.params.uid;
-  if (!uid || uid === '') {
-    return resp.status(500).json({ error: 'uid is required' });
-  }
-  // get role
-  const role = RtmRole.Rtm_User;
-  // get the expire time
-  let expireTime = req.query.expiry;
-  if (!expireTime || expireTime === '') {
-    expireTime = 3600;
-  } else {
-    expireTime = parseInt(expireTime, 10);
-  }
-  // calculate privilege expire time
-  const currentTime = Math.floor(Date.now() / 1000);
-  const privilegeExpireTime = currentTime + expireTime;
-  // build the token
-  const APP_ID = process.env.AGORA_APP_ID;
-  const APP_CERTIFICATE = process.env.AGORA_APP_CERTIFICATE;
-  const token = RtmTokenBuilder.buildToken(
-    APP_ID,
-    APP_CERTIFICATE,
-    uid,
-    role,
-    privilegeExpireTime
-  );
-  // return the token
-  return resp.json({ rtmToken: token });
-};
 
 // fetch rtc token
 app.get('/rtc/:channel/:role/:tokentype/:id', nocache, generateRTCToken);
@@ -282,16 +209,29 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  // const email = req.body.email;
+  // const password = req.body.password;
+  // User.findOne({ email: email }, (err, foundUser) => {
+  //   if (err) return console.log(err);
+  //   if (foundUser) {
+  //     bcrypt.compare(password, foundUser.password, (err, result) => {
+  //       if (result === true) {
+  //         res.render('home');
+  //       }
+  //     });
+  //   }
+  // });
 
-  User.findOne({ email: email }, (err, foundUser) => {
-    if (err) return console.log(err);
-    if (foundUser) {
-      bcrypt.compare(password, foundUser.password, (err, result) => {
-        if (result === true) {
-          res.render('home');
-        }
+  const user = new User({
+    username: req.body.email,
+    password: req.body.password,
+  });
+  req.login(user, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      passport.authenticate('local')(req, res, () => {
+        res.redirect('/');
       });
     }
   });
@@ -316,16 +256,21 @@ app.post('/register', async (req, res) => {
   //     res.status(400).send(err.message);
   //   }
   // });
-  User.register({ email: req.body.email }, req.body.password, (err, user) => {
-    if (err) {
-      console.log(err);
-      res.redirect('/');
-    } else {
-      passport.authenticate('local')(req, res, () => {
+
+  User.register(
+    { username: req.body.email },
+    req.body.password,
+    (err, user) => {
+      if (err) {
+        console.log(err);
         res.redirect('/');
-      });
+      } else {
+        passport.authenticate('local')(req, res, () => {
+          res.redirect('/');
+        });
+      }
     }
-  });
+  );
 });
 
 app.post('/profile', (req, res) => {
