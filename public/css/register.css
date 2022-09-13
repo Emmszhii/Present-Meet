@@ -30,8 +30,8 @@ main {
   flex-direction: column;
 }
 
-form > div {
-  margin: 20px;
+.form-group {
+  margin: 5px;
 }
 
 #user-type-div {
@@ -68,6 +68,11 @@ select {
   display: flex;
   margin: 3% auto;
   cursor: pointer;
+}
+
+.footer {
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 /* face recognition */

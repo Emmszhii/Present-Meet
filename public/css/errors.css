@@ -1,0 +1,33 @@
+.errors {
+  text-align: center;
+  border: none;
+  background-color: #16213e;
+  color: white;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin: 10px;
+}
+
+.success {
+  padding: 5px;
+  text-align: center;
+  border: none;
+  background-color: green;
+  color: white;
+  text-shadow: 2px 2px black;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin: 10px;
+}
+
+.warning {
+  padding: 5px;
+  text-align: center;
+  border: none;
+  background-color: orange;
+  color: black;
+  /* text-shadow: 2px 2px white; */
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin: 10px;
+}

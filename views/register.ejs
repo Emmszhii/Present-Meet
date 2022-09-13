@@ -4,11 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>Present Meet</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
-    />
-    <!-- CSS only -->
     <link rel="stylesheet" href="css/register.css" />
     <script defer src="javascript/register.js"></script>
   </head>
@@ -16,62 +11,91 @@
     <main>
       <div id="form">
         <div class="card">
+          <%- include('partials/messages') %>
           <form action="/register" id="user-info" method="post">
-            <label for="first_name">First Name</label>
-            <input
-              type="text"
-              name="first_name"
-              id="first_name"
-              autocomplete="off"
-            />
-            <label for="last_name">Last Name</label>
-            <input
-              type="text"
-              name="last_name"
-              id="last_name"
-              autocomplete="off"
-            />
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" autocomplete="off" />
-            <label for="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              autocomplete="off"
-            />
-            <label for="birthday">Birthday</label>
-            <input
-              type="date"
-              name="birthday"
-              id="birthday"
-              min="1950-01-01"
-              max="2013-01-01"
-              value="2000-01-01"
-              autocomplete="off"
-            />
-            <label for="type">User type</label>
-            <select name="type" id="user-type">
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="host">Host</option>
-              <option value="audience">Audience</option>
-            </select>
-
+            <div class="form-group">
+              <label for="first_name">First Name</label>
+              <input
+                type="text"
+                name="first_name"
+                id="first_name"
+                value="<%= typeof first_name != 'undefined' ? first_name : '' %>"
+                required
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="last_name">Last Name</label>
+              <input
+                type="text"
+                name="last_name"
+                id="last_name"
+                value="<%= typeof last_name != 'undefined' ? last_name : '' %>"
+                required
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="birthday">Birthday</label>
+              <input
+                type="date"
+                name="birthday"
+                id="birthday"
+                min="1950-01-01"
+                max="2013-12-31"
+                value="<%= typeof birthday != 'undefined' ? birthday : '' %>"
+                required
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="type">User type</label>
+              <select name="type" id="user-type" required>
+                <option value="" selected disabled hidden>
+                  Please Choose an Account Type
+                </option>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="host">Host</option>
+                <option value="audience">Audience</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value="<%= typeof email != 'undefined' ? email : '' %>"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                value="<%= typeof password != 'undefined' ? password : '' %>"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password2">Confirm Password</label>
+              <input
+                type="password"
+                name="password2"
+                id="password2"
+                value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
+              />
+            </div>
             <button type="submit" id="submit-btn">Submit</button>
           </form>
+          <div class="footer">
+            <p>Have an account?</p>
+            <a href="/">Login</a>
+          </div>
         </div>
-        <!-- <div class="card">
-          <form action="/password">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="pw" />
-            <label for="new-pw">New Password</label>
-            <input type="password" name="new-pw" id="new-pw" />
-            <label for="new-pw2">Confirm New Password</label>
-            <input type="password" name="new-pw2" id="new-pw2" />
-            <button type="submit" id="change-pw-btn">Change Password</button>
-          </form>
-        </div> -->
       </div>
 
       <section id="user-face">
