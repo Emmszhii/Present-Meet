@@ -10,6 +10,10 @@ router.get('/', ensureAuthenticated, (req, res) => {
   res.render('home');
 });
 
+router.get('/face-recognition', (req, res) => {
+  res.render('face_recognition');
+});
+
 // app.get('/profile', (req, res) => {
 //   if (req.isAuthenticated()) {
 //     res.render('register', { user: req.user });

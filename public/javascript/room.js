@@ -113,8 +113,8 @@ const settingsToggle = () => {
     clearLocalTracks();
   } else {
     // run settings modal
-    settings();
-
+    // settings();
+    refreshDeviceModal();
     // set active buttons and display it
     btn.classList.add('active');
     z.style.display = 'block';
@@ -135,6 +135,7 @@ const createSelectElement = (name, val) => {
   }
 
   const label = document.createElement('label');
+  label.id = name;
   label.innerHTML = name;
   label.htmlFor = name;
 
@@ -159,6 +160,21 @@ const createSelectElement = (name, val) => {
   document.getElementById('setup-btn').style.display = 'block';
 };
 
+const refreshDeviceModal = () => {
+  localDevice.length = 0;
+  audio_devices.length = 0;
+  video_devices.length = 0;
+  document.getElementById('setup-btn').style.display = 'none';
+
+  clearLocalTracks();
+
+  const playerDom = document.getElementById(`user-container-${userData.rtcId}`);
+  if (playerDom) playerDom.remove();
+  document.getElementById('Video').remove();
+  document.getElementById('Audio').remove();
+  settings();
+};
+
 export {
   displayFrame,
   videoFrames,
@@ -172,4 +188,5 @@ export {
   expandVideoFrame,
   settingsToggle,
   createSelectElement,
+  refreshDeviceModal,
 };

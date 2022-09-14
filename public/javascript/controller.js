@@ -9,7 +9,6 @@ import {
   toggleScreen,
   joinStream,
   leaveStream,
-  settings,
 } from './room_rtc.js';
 import { sendMessage, leaveChannel } from './room_rtm.js';
 import {
@@ -19,9 +18,15 @@ import {
   copyClipboard,
   hideDisplayFrame,
   settingsToggle,
+  refreshDeviceModal,
 } from './room.js';
 
 // Event Listeners
+
+// refresh devices
+document
+  .getElementById('refresh')
+  .addEventListener('click', refreshDeviceModal);
 
 // copy to clipboard
 document.getElementById('link-btn').addEventListener('click', copyClipboard);

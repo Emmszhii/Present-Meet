@@ -1,0 +1,105 @@
+* {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #e8ecef;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+}
+
+/* face recognition buttons */
+
+#attendance-btn {
+  font-size: 1.1rem;
+}
+
+.photo-btn > button {
+  height: 70px;
+  width: 70px;
+  border-radius: 100%;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+}
+
+.button {
+  border: none;
+  background-color: #000000;
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+}
+
+.button:hover {
+  background-color: green;
+  color: black;
+}
+
+/* face recognition */
+.text {
+  margin: 20px;
+}
+
+.take-photo {
+  text-align: center;
+}
+
+#user-face {
+  background-color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attendance-camera {
+  width: 720px;
+  height: 480px;
+  background-color: #e9e9e9;
+  /* top: 8rem;
+  left: 25rem; */
+  border: solid 1px black;
+  margin: auto;
+  position: relative;
+}
+
+.photo-btn {
+  display: flex;
+  place-content: center;
+  place-items: center;
+  /* top: 28rem; */
+  /* left: 34rem; */
+  /* height: 100px; */
+  /* width: 100px; */
+  background-color: #000000;
+  border-radius: 100%;
+  margin: 0px auto;
+  /* margin-top: 20px; */
+}
+
+#video {
+  width: 720px;
+  height: 480px;
+  object-fit: fill;
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

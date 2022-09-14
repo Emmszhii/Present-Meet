@@ -147,7 +147,7 @@ input:focus::placeholder {
     width: 100%;
   }
   .homepageFooter {
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
     /* margin: 10%; */
   }
   .modalCreate-bg {
@@ -161,7 +161,7 @@ input:focus::placeholder {
     width: 80%;
   }
   .roomsBtn {
-    display: block;
+    /* display: block; */
   }
   .roomsBtn button {
     margin: 10px;
@@ -177,7 +177,7 @@ input:focus::placeholder {
     height: 100vh;
   }
   .homepageMain {
-    display: block;
+    /* display: block; */
     width: 80%;
     margin: auto;
     overflow: hidden;
@@ -192,7 +192,7 @@ input:focus::placeholder {
     width: 100%;
   }
   .homepageFooter {
-    justify-content: center;
+    /* justify-content: center; */
     margin: 10%;
   }
   .modalCreate-bg {
@@ -206,7 +206,7 @@ input:focus::placeholder {
     width: 80%;
   }
   .roomsBtn {
-    display: block;
+    /* display: block; */
   }
   .roomsBtn button {
     margin: 10px;

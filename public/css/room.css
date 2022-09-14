@@ -427,6 +427,12 @@ video {
   display: flex;
 }
 
+.refresh {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
 /* settings label */
 
 #Video,

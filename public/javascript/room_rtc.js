@@ -429,6 +429,8 @@ const joinStream = async () => {
   // display loader
   loader.style.display = 'block';
 
+  // clearLocalTracks();
+
   // reset the button
   document.getElementsByClassName('mainBtn')[0].style.display = 'none';
   document.getElementsByClassName('middleBtn')[0].style.display = 'flex';
@@ -449,18 +451,27 @@ const joinStream = async () => {
     .getElementById(`user-container-${userData.rtcId}`)
     .addEventListener('click', expandVideoFrame);
 
-  rtc.localTracks[0]
-    .setDevice(device.localAudio)
-    .then(() => {
-      rtc.localTracks[0].setMuted(true);
-    })
-    .catch((e) => console.log(e));
-  rtc.localTracks[1]
-    .setDevice(device.localVideo)
-    .then(() => {
-      rtc.localTracks[1].setMuted(true);
-    })
-    .catch((e) => console.log(e));
+  if (device.localAudio) {
+    rtc.localTracks[0]
+      .setDevice(device.localAudio)
+      .then(() => {
+        rtc.localTracks[0].setMuted(true);
+      })
+      .catch((e) => console.log(e));
+  } else {
+    rtc.localTracks[0].setMuted(true);
+  }
+
+  if (device.localVideo) {
+    rtc.localTracks[1]
+      .setDevice(device.localVideo)
+      .then(() => {
+        rtc.localTracks[1].setMuted(true);
+      })
+      .catch((e) => console.log(e));
+  } else {
+    rtc.localTracks[1].setMuted(true);
+  }
 
   // play the local video and audio to the dom
   rtc.localTracks[1].play(`user-${userData.rtcId}`);
@@ -589,4 +600,5 @@ export {
   leaveStream,
   player,
   settings,
+  devices,
 };

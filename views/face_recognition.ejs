@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/face_recognition.css" />
+    <title>Present Meet</title>
+    <script defer src="javascript/face_recognition.js"></script>
+  </head>
+  <body>
+    <main>
+      <section id="user-face">
+        <div class="take-photo" id="take-photo">
+          <div class="text">
+            <p>
+              If you allow to access your camera, you will be able to use the
+              face recognition function in the room.
+            </p>
+            <p>
+              Note that when you are taking the attendance, other users won't be
+              able to see you.
+            </p>
+          </div>
+          <div class="attendance-camera" id="video-container">
+            <video id="video" autoplay></video>
+            <canvas id="canvas" width="1920" height="1080"></canvas>
+          </div>
+          <div class="buttons">
+            <button class="button" id="camera-btn">Start</button>
+            <!-- <button class="button" id="capture-btn">Capture</button> -->
+            <div class="photo-btn">
+              <button id="attendance-btn">Photo</button>
+            </div>
+            <button class="button" id="recognize-btn">Recognize</button>
+          </div>
+          <div id="devices"></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
