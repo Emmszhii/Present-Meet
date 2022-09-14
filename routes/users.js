@@ -121,7 +121,7 @@ router.post('/register', (req, res) => {
                   'success_msg',
                   'You are now Registered and can log in'
                 );
-                res.redirect('/');
+                res.redirect('/login');
               })
               .catch((err) => console.log(err));
           })

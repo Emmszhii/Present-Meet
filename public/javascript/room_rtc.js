@@ -170,7 +170,7 @@ const joinRoomInit = async () => {
 };
 
 const handleTokenExpire = async () => {
-  console.log(
+  alert(
     `token will expire and user will be redirect at homepage at 30 seconds`
   );
   window.location.href = '/';

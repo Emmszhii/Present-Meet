@@ -93,21 +93,21 @@ input:focus {
     font-size: 1rem;
   }
   .card {
-    width: 30%;
+    width: 40%;
   }
 }
 @media (max-width: 1400px) {
   .card {
-    width: 40%;
+    width: 50%;
   }
 }
 @media (max-width: 768px) {
   .card {
-    width: 50%;
+    width: 60%;
   }
 }
 @media (max-width: 480px) {
   .card {
-    width: 60%;
+    width: 65%;
   }
 }
