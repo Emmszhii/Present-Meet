@@ -157,6 +157,7 @@ const joinRoomInit = async () => {
   // on user publish and left method
   rtc.client.on('user-published', handleUserPublished);
   rtc.client.on('user-left', handleUserLeft);
+  rtc.client.on('token-privilege-will-expire', handleTokenExpire);
 
   // join stream functions
   // joinStream();
@@ -166,6 +167,13 @@ const joinRoomInit = async () => {
 
   // set the users camera and mic
   settings();
+};
+
+const handleTokenExpire = async () => {
+  console.log(
+    `token will expire and user will be redirect at homepage at 30 seconds`
+  );
+  window.location.href = '/';
 };
 
 // user joined the meeting handler
@@ -329,6 +337,7 @@ const toggleScreen = async (e) => {
       rtc.localScreenTracks = await AgoraRTC.createScreenVideoTrack({
         withAudio: 'auto',
       }).catch(async (err) => {
+        // on buttons
         rtc.sharingScreen = false;
         screenBtn.classList.remove('active');
         error = !error;
@@ -339,8 +348,6 @@ const toggleScreen = async (e) => {
     if (error === true) return;
 
     // if error is false this will run
-    await rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
-
     rtc.sharingScreen = true;
     screenBtn.classList.add('active');
     cameraBtn.classList.remove('active');
@@ -372,6 +379,8 @@ const toggleScreen = async (e) => {
     rtm.channel.sendMessage({
       text: JSON.stringify({ type: 'user_screen_share', uid: userData.rtcId }),
     });
+
+    await rtc.localScreenTracks.on('track-ended', handleStopShareScreen);
   } else {
     handleStopShareScreen();
   }
@@ -476,14 +485,16 @@ const leaveStream = async (e) => {
   document.getElementsByClassName('middleBtn')[0].style.display = 'none';
   document.getElementById('settings-btn').style.display = 'block';
 
+  clearLocalTracks();
+
   await rtc.client.unpublish([rtc.localTracks[0], rtc.localTracks[1]]);
 
   if (rtc.localScreenTracks) {
     await rtc.client.unpublish([rtc.localScreenTracks]);
     rtc.client.sharingScreen = false;
+    cameraBtn.style.display = 'block';
+    screenBtn.classList.remove('active');
   }
-
-  clearLocalTracks();
 
   document.getElementById(`user-container-${userData.rtcId}`).remove();
 

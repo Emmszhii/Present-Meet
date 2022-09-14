@@ -87,10 +87,11 @@ const handleChannelMessage = async (messageData, MemberId) => {
   if (data.type === 'user_left') {
     document.getElementById(`user-container-${data.uid}`).remove();
 
-    if (userIdInDisplayFrame.val === `user-container-${userData.rtcId}`) {
-      displayFrame.style.display = null;
+    if (userIdInDisplayFrame.val === `user-container-${data.uid}`) {
+      hideDisplayFrame();
+      // displayFrame.style.display = null;
 
-      resetTheFrames();
+      // resetTheFrames();
     }
   }
 

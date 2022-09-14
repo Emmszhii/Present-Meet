@@ -98,21 +98,21 @@ router.post('/register', (req, res) => {
       } else {
         const fname = capitalize(first_name);
         const lname = capitalize(last_name);
-        const newUser = new User({
-          firstName: fname,
-          lastName: lname,
-          birthday,
-          type,
-          email,
-          password,
-        });
-        console.log(newUser);
         // Hash password
         bcrypt.genSalt(10, (err, salt) =>
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
+          bcrypt.hash(password, salt, (err, hash) => {
             if (err) throw err;
             // set password to hash
-            newUser.password = hash;
+            const newUser = new User({
+              firstName: fname,
+              lastName: lname,
+              birthday,
+              type,
+              email,
+              password: hash,
+            });
+            console.log(newUser);
+            // newUser.password = hash;
             // save user
             newUser
               .save()
