@@ -12,6 +12,10 @@ Promise.all([
 // console.log(faceapi.nets);
 
 const startVideo = () => {
+  const overlay = document.getElementById('overlay');
+  if (overlay) {
+    overlay.remove();
+  }
   if ((video.style.display = 'none')) {
     video.style.display = 'block';
     canvas.style.display = 'none';
@@ -80,7 +84,8 @@ const stopVideo = () => {
     video.pause();
     video.currentTime = 0;
     video.style.display = 'none';
-    document.getElementById('overlay').remove();
+  } else {
+    startVideo();
   }
 };
 
@@ -90,8 +95,7 @@ const drawCanvas = async (input, detectionWithFaceLandMarks) => {
   container.style.position = 'absolute';
   container.id = 'overlay';
   const ctx = container.getContext('2d');
-  console.log(ctx);
-  document.getElementById('video-container').append(container);
+  document.getElementById('video-container').appendChild(container);
 
   const displaySize = { width: input.width, height: input.height };
   const canvas_overlay = document.getElementById('overlay');
@@ -108,8 +112,8 @@ const drawCanvas = async (input, detectionWithFaceLandMarks) => {
     .withFaceLandmarks();
   // resized the detected boxes and landmarks
   const resizedResults = faceapi.resizeResults(
-    detectionWithFaceLandMarks,
-    // detectionWithLandmarks,
+    // detectionWithFaceLandMarks,
+    detectionWithLandmarks,
     displaySize
   );
   // draw the landmarks into the canvas
