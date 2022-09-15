@@ -51,6 +51,7 @@ main {
 /* face recognition */
 .text {
   margin: 20px;
+  font-size: 1.2rem;
 }
 
 .take-photo {
@@ -97,6 +98,15 @@ main {
 }
 
 #canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* bounding boxes */
+#overlay {
   position: absolute;
   top: 0;
   left: 0;

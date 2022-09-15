@@ -21,10 +21,16 @@
               Note that when you are taking the attendance, other users won't be
               able to see you.
             </p>
+            <p>
+              Lastly, if you want some best performance it's recommendable if
+              you turn on hardware accelerator, much better if you have decent
+              GPU.
+            </p>
           </div>
           <div class="attendance-camera" id="video-container">
-            <video id="video" autoplay></video>
+            <video id="video" autoplay muted></video>
             <canvas id="canvas" width="1920" height="1080"></canvas>
+            <!-- <canvas id="overlay"></canvas> -->
           </div>
           <div class="buttons">
             <button class="button" id="camera-btn">Start</button>
@@ -38,5 +44,8 @@
         </div>
       </section>
     </main>
+    <script src="javascript/FaceApi/face-api.js"></script>
+    <!-- <script src="javascript/FaceApi/face-api.js.map"></script> -->
+    <script src="javascript/FaceApi/face-api.min.js"></script>
   </body>
 </html>
