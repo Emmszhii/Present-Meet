@@ -10,6 +10,18 @@
   </head>
   <body>
     <main>
+      <section id="upload-img">
+        <div id="input-container">
+          <label for="imgFile">Upload your Image with a single face</label>
+          <input
+            type="file"
+            name="imgFile"
+            id="imgUpload"
+            accept="image/png, image/jpeg"
+          />
+        </div>
+        <div id="img-container"></div>
+      </section>
       <section id="user-face">
         <div class="take-photo" id="take-photo">
           <div class="text">
@@ -27,13 +39,13 @@
               GPU.
             </p>
           </div>
-          <div class="attendance-camera" id="video-container">
+          <div class="attendance-camera">
             <video id="video" autoplay muted></video>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <!-- <canvas id="overlay"></canvas> -->
           </div>
           <div class="buttons">
-            <button class="button" id="camera-btn">Start</button>
+            <button class="button" id="camera-btn">Start Camera</button>
             <!-- <button class="button" id="capture-btn">Capture</button> -->
             <div class="photo-btn">
               <button id="attendance-btn">Photo</button>
