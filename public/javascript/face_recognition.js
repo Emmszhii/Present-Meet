@@ -1,139 +1,126 @@
-const canvas = document.querySelector('#canvas');
-const context = canvas.getContext('2d');
-const video = document.getElementById('video');
-
-Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-  // faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-  // faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models'),
-  faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-  faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-]);
-
-// // UPLOADING IMAGE
-// const imgUploadHandler = async (e) => {
-//   const id = e.target.value;
-//   if (imgUpload.files[0]) {
-//     const image = await faceapi.bufferToImage(imgUpload.files[0]);
-//     addImgToDom(image, id);
-//     // createCanvas(image, id);
-//     detectFaces(image, id);
-//   } else {
-//     console.log(`no file`);
-//   }
-// };
-
-// // face detection
-// const detectFaces = async (img) => {
-//   const detections = await faceapi
-//     .detectAllFaces(img)
-//     .withFaceLandmarks()
-//     .withFaceDescriptors();
-//   if (detections.length >= 2) {
-//     console.log(`you uploaded many faces please upload only one face`);
-//   } else {
-//     console.log(`ok`);
-//   }
-// };
-
-// // adding user image in the dom
-// const addImgToDom = (img, id) => {
-//   const container = document.getElementById('img-container');
-//   const imageExist = document.getElementsByTagName('img');
-//   if (imageExist[0]) {
-//     imageExist[0].remove();
-//   }
-//   img.width = 720;
-//   img.height = 480;
-//   img.id = id;
-//   container.append(img);
-// };
-
-// const createCanvas = (img, id) => {
-//   const container = document.getElementById('img-container');
-//   const canvas = document.createElement('canvas');
-//   const existCanvas = document.getElementsByTagName(`canvas`)[0];
-//   if (existCanvas) {
-//     existCanvas.remove();
-//   }
-//   canvas.width = img.width;
-//   canvas.height = img.height;
-//   canvas.id = id;
-//   canvas.style.position = `absolute`;
-//   container.append(canvas);
-// };
-
+const preloader = document.getElementById('preloader');
+const camera = document.querySelector('.attendance-camera');
+let track;
 const refUser = [];
+const validation = { img1: null, img: null };
 
 // VIDEO HANDLER
-const startVideoHandler = () => {
+const startVideoHandler = async () => {
+  preloader.style.display = 'block';
+  const vid = document.createElement('video');
+  vid.id = 'video';
+  vid.autoplay = false;
+  vid.muted = true;
+  // vid.width = '1920';
+  // vid.height = '1080';
+
   const overlay = document.getElementById('overlay');
   if (overlay) {
     overlay.remove();
   }
-  if ((video.style.display = 'none')) {
-    video.style.display = 'block';
-    canvas.style.display = 'none';
-  } else {
+  const canvas = document.getElementById('canvas');
+  if (canvas) {
+    canvas.remove();
+  }
+  const video = document.getElementById('video');
+  if (!video) {
+    camera.insertBefore(vid, camera.firstChild);
   }
   navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-    video.srcObject = stream;
-    video.play();
+    const vid = document.getElementById('video');
+    vid.srcObject = stream;
+    vid.play();
+    track = stream.getTracks();
+    resetMessages();
+    preloader.style.display = 'none';
   });
 };
 
 // PHOTO HANDLER
 const photoHandler = async () => {
+  preloader.style.display = 'block';
+  const video = document.getElementById('video');
+  const canvas = document.createElement('canvas');
+  canvas.id = 'canvas';
+  canvas.width = '1920';
+  canvas.height = '1080';
+  const context = canvas.getContext('2d');
+  const canvasDom = document.getElementById('canvas');
+  if (!canvasDom) camera.append(canvas);
+
   // need to take a loader
-  if ((video.style.display = 'block')) {
-    context.imageSmoothingEnabled = false;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = 'block';
-    // const ctx = canvas.getContext('2d');
-    const id = document.getElementById('canvas');
+  try {
+    if (video) {
+      context.imageSmoothingEnabled = false;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const id = document.getElementById('canvas');
 
-    // face api detection
-    const detection = await faceapi
-      .detectAllFaces(id)
-      .withFaceLandmarks()
-      .withFaceDescriptors();
+      // face api detection
+      const detection = await faceapi
+        .detectAllFaces(id)
+        .withFaceLandmarks()
+        .withFaceDescriptors();
 
-    // if no detection
-    if (!detection || detection.length > 1) {
+      // if no detection
+      if (!detection || detection.length > 1) {
+        stopVideo();
+        errorHandler('Image are invalid. Please Try again!');
+        return startVideoHandler();
+      }
+      // stop video play
       stopVideo();
-      return startVideoHandler();
+      // reset array
+      refUser.length = [];
+      // input user array
+      refUser.push(detection);
+      // if face is detected
+      drawCanvas(canvas);
+    } else {
+      errorHandler('Start the Camera First!');
     }
-    // reset array
-    refUser.length = [];
-    // input user array
-    refUser.push(detection);
-    console.log(refUser);
-    // if face is detected
-    drawCanvas(canvas);
+  } catch (err) {
+    console.log(err);
   }
-  stopVideo();
+  preloader.style.display = 'none';
 };
 
 // stop video when capturing
 const stopVideo = () => {
-  if ((video.style.display = 'block')) {
-    video.pause();
-    video.currentTime = 0;
-    video.style.display = 'none';
+  const video = document.getElementById('video');
+  if (video) {
+    track[0].stop();
+    video.remove();
   } else {
     startVideo();
   }
 };
 
+const resetMessages = () => {
+  const err = document.getElementById('err');
+  const msg = document.getElementById('msg');
+  if (err) err.remove();
+  if (msg) msg.remove();
+};
+
 // recognize handler
 const recognizeHandler = async () => {
+  const video = document.getElementById('video');
+  if (refUser.length === 0) return errorHandler('No Reference Image !');
   const img1 = refUser[0];
   let img2;
-  if ((video.style.display = 'block')) {
+
+  // create Canvas
+  const canvas = document.createElement('canvas');
+  canvas.id = 'canvas';
+  canvas.width = '1920';
+  canvas.height = '1080';
+  const context = canvas.getContext('2d');
+  const canvasDom = document.getElementById('canvas');
+  if (!canvasDom) camera.append(canvas);
+
+  if (video) {
     context.imageSmoothingEnabled = false;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.style.display = 'block';
-    // const ctx = canvas.getContext('2d');
     const id = document.getElementById('canvas');
 
     // face api detection
@@ -149,53 +136,81 @@ const recognizeHandler = async () => {
     }
 
     img2 = detection[0];
+    stopVideo();
+    // guard clause
+    if (!img1[0]) return errorHandler(`no image 1`);
+    if (!img2) return errorHandler(`no image 2`);
+    // comparing the 2 image
+    comparePerson(img1[0], img2);
+  } else {
+    errorHandler('Take a photo first!');
   }
-  stopVideo();
-  console.log(img1[0]);
-  console.log(img2);
-  // guard clause
-  if (!img1[0]) return console.log(`img1 err`);
-  if (!img2) return console.log(`img2 err`);
-
-  comparePerson(img1[0], img2);
 };
 
-// compare Handler
-const compareHandler = () => {};
+const errorHandler = (err) => {
+  const msg = document.getElementById('msg');
+  if (msg) {
+    msg.remove();
+  }
+  const p = document.createElement('p');
+  p.textContent = err;
+  p.id = 'err';
 
+  const errP = document.getElementById('err');
+  if (errP) {
+    errP.innerText = err;
+  } else {
+    document.getElementById('messages').appendChild(p);
+  }
+};
+
+const msgHandler = (msg) => {
+  const err = document.getElementById('err');
+  if (err) {
+    err.remove();
+  }
+  const p = document.createElement('p');
+  p.textContent = msg;
+  p.id = 'msg';
+
+  const msgP = document.getElementById('msg');
+  if (msgP) {
+    msgP.innerText = msg;
+  } else {
+    document.getElementById('messages').appendChild(p);
+  }
+};
+
+// compare the person
 const comparePerson = async (referenceImg, queryImg) => {
-  if (!referenceImg) return console.log(`Please register an image first`);
-  if (!queryImg) return console.log(`Query img is invalid`);
-
-  // single face
-  // const qryImg = await faceapi
-  //   .detectSingleFace(queryImg)
-  //   .withFaceLandmarks()
-  //   .withFaceDescriptor();
-
+  // guard clause if input is null
+  if (!referenceImg) return errorHandler('Please register an image first');
+  if (!queryImg) return errorHandler('Query img is invalid');
+  // if both are defined run the face recognition
   if (queryImg) {
     // matching B query
     const dist = faceapi.euclideanDistance(
       referenceImg.descriptor,
       queryImg.descriptor
     );
-    console.log(dist);
     if (dist <= 0.4) {
-      console.log(`match`);
+      msgHandler(
+        `Image 1 and image 2 are match, you can retry recognizing it if you're satisfied then you can now save it!`
+      );
     } else {
-      console.log(`no match`);
+      errorHandler('Image 1 and image 2 are NOT match Please Try again!');
     }
   } else {
-    console.log(`no single result`);
+    errorHandler('No face detected for recognizing the user!');
   }
 };
 
 const drawCanvas = async (input) => {
   // Init
+  preloader.style.display = 'block';
   const container = document.createElement('canvas');
   container.style.position = 'absolute';
   container.id = 'overlay';
-  // const ctx = container.getContext('2d');
   document.querySelector('.attendance-camera').appendChild(container);
 
   // camera default size
@@ -219,6 +234,10 @@ const drawCanvas = async (input) => {
 
   // draw detections points into canvas
   faceapi.draw.drawDetections(canvas_overlay, resizedResults);
+  msgHandler(
+    'If you are satisfied with this photo try to recognize else retry'
+  );
+  preloader.style.display = 'none';
 };
 
 // const getUserCameraDevices = () => {
@@ -253,13 +272,21 @@ const drawCanvas = async (input) => {
 document
   .getElementById('recognize-btn')
   .addEventListener('click', recognizeHandler);
-// document
-//   .getElementById('imgUpload')
-//   .addEventListener('change', imgUploadHandler);
 document
   .getElementById('camera-btn')
   .addEventListener('click', startVideoHandler);
 document.getElementById('photo-btn').addEventListener('click', photoHandler);
-// document
-//   .getElementById('compare-btn')
-//   .addEventListener('click', compareHandler);
+
+window.addEventListener('load', () => {
+  Promise.all([
+    faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+  ])
+    .then(() => {
+      preloader.style.display = 'none';
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});

@@ -9,21 +9,8 @@
     <script type="module" src="javascript/face_recognition.js"></script>
   </head>
   <body>
+    <div id="preloader"></div>
     <main>
-      <!-- <section id="upload-img">
-        <div class="text">
-          <p>Upload your Image with a single face</p>
-        </div>
-        <div id="input-container">
-          <input
-            type="file"
-            name="imgFile"
-            id="imgUpload"
-            accept="image/png, image/jpeg"
-          />
-        </div>
-        <div id="img-container"></div>
-      </section> -->
       <section id="user-face">
         <div class="text">
           <p>
@@ -39,24 +26,22 @@
             turn on hardware accelerator, much better if you have decent GPU.
           </p>
         </div>
-        <div class="attendance-camera">
-          <video id="video" autoplay muted></video>
-          <canvas id="canvas" width="1920" height="1080"></canvas>
-          <!-- <canvas id="overlay"></canvas> -->
-        </div>
+        <!-- validation messages -->
+        <div id="messages"></div>
+        <!-- Camera and canvas -->
+        <div class="attendance-camera"></div>
         <div class="buttons">
           <button class="button" id="camera-btn">Start Camera</button>
           <button class="button" id="photo-btn">Take Photo</button>
           <button class="button .disabled-btn" id="recognize-btn">
             Recognize
           </button>
-          <!-- <button class="button" id="compare-btn">Compare</button> -->
         </div>
+        <!-- devices -->
         <div id="devices"></div>
       </section>
     </main>
     <script src="javascript/FaceApi/face-api.js"></script>
-    <!-- <script src="javascript/FaceApi/face-api.js.map"></script> -->
     <script src="javascript/FaceApi/face-api.min.js"></script>
   </body>
 </html>
