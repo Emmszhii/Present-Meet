@@ -9,58 +9,61 @@ Promise.all([
   faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
   faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
 ]);
-// console.log(faceapi.nets);
 
-// UPLOADING IMAGE
-const imgUploadHandler = async (e) => {
-  const id = e.target.value;
-  if (imgUpload.files[0]) {
-    const image = await faceapi.bufferToImage(imgUpload.files[0]);
-    addImgToDom(image, id);
-    // createCanvas(image, id);
-    detectFaces(image, id);
-  } else {
-    console.log(`no file`);
-  }
-};
+// // UPLOADING IMAGE
+// const imgUploadHandler = async (e) => {
+//   const id = e.target.value;
+//   if (imgUpload.files[0]) {
+//     const image = await faceapi.bufferToImage(imgUpload.files[0]);
+//     addImgToDom(image, id);
+//     // createCanvas(image, id);
+//     detectFaces(image, id);
+//   } else {
+//     console.log(`no file`);
+//   }
+// };
 
-const detectFaces = async (img) => {
-  const detections = await faceapi
-    .detectAllFaces(img)
-    .withFaceLandmarks()
-    .withFaceDescriptors();
-  if (detections.length >= 2) {
-    console.log(`you uploaded many faces please upload only one face`);
-  } else {
-    console.log(`ok`);
-  }
-};
+// // face detection
+// const detectFaces = async (img) => {
+//   const detections = await faceapi
+//     .detectAllFaces(img)
+//     .withFaceLandmarks()
+//     .withFaceDescriptors();
+//   if (detections.length >= 2) {
+//     console.log(`you uploaded many faces please upload only one face`);
+//   } else {
+//     console.log(`ok`);
+//   }
+// };
 
-const addImgToDom = (img, id) => {
-  const container = document.getElementById('img-container');
-  const imageExist = document.getElementsByTagName('img');
-  if (imageExist[0]) {
-    imageExist[0].remove();
-  }
-  img.width = 720;
-  img.height = 480;
-  img.id = id;
-  container.append(img);
-};
+// // adding user image in the dom
+// const addImgToDom = (img, id) => {
+//   const container = document.getElementById('img-container');
+//   const imageExist = document.getElementsByTagName('img');
+//   if (imageExist[0]) {
+//     imageExist[0].remove();
+//   }
+//   img.width = 720;
+//   img.height = 480;
+//   img.id = id;
+//   container.append(img);
+// };
 
-const createCanvas = (img, id) => {
-  const container = document.getElementById('img-container');
-  const canvas = document.createElement('canvas');
-  const existCanvas = document.getElementsByTagName(`canvas`)[0];
-  if (existCanvas) {
-    existCanvas.remove();
-  }
-  canvas.width = img.width;
-  canvas.height = img.height;
-  canvas.id = id;
-  canvas.style.position = `absolute`;
-  container.append(canvas);
-};
+// const createCanvas = (img, id) => {
+//   const container = document.getElementById('img-container');
+//   const canvas = document.createElement('canvas');
+//   const existCanvas = document.getElementsByTagName(`canvas`)[0];
+//   if (existCanvas) {
+//     existCanvas.remove();
+//   }
+//   canvas.width = img.width;
+//   canvas.height = img.height;
+//   canvas.id = id;
+//   canvas.style.position = `absolute`;
+//   container.append(canvas);
+// };
+
+const refUser = [];
 
 // VIDEO HANDLER
 const startVideoHandler = () => {
@@ -79,10 +82,6 @@ const startVideoHandler = () => {
   });
 };
 
-const createVideoElement = () => {
-  const video = document.createElement('video');
-};
-
 // PHOTO HANDLER
 const photoHandler = async () => {
   // need to take a loader
@@ -90,20 +89,27 @@ const photoHandler = async () => {
     context.imageSmoothingEnabled = false;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     canvas.style.display = 'block';
-    const ctx = canvas.getContext('2d');
-    console.log(ctx);
-    // console.log(img);
+    // const ctx = canvas.getContext('2d');
     const id = document.getElementById('canvas');
+
     // face api detection
     const detection = await faceapi
-      .detectSingleFace(id)
+      .detectAllFaces(id)
       .withFaceLandmarks()
-      .withFaceDescriptor();
-    console.log(detection);
-    if (!detection) return stopVideo();
-    drawCanvas(canvas, detection);
+      .withFaceDescriptors();
 
-    // comparePerson(canvas, img);
+    // if no detection
+    if (!detection || detection.length > 1) {
+      stopVideo();
+      return startVideoHandler();
+    }
+    // reset array
+    refUser.length = [];
+    // input user array
+    refUser.push(detection);
+    console.log(refUser);
+    // if face is detected
+    drawCanvas(canvas);
   }
   stopVideo();
 };
@@ -119,12 +125,77 @@ const stopVideo = () => {
   }
 };
 
-const drawCanvas = async (input, detectionWithFaceLandMarks) => {
+// recognize handler
+const recognizeHandler = async () => {
+  const img1 = refUser[0];
+  let img2;
+  if ((video.style.display = 'block')) {
+    context.imageSmoothingEnabled = false;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.style.display = 'block';
+    // const ctx = canvas.getContext('2d');
+    const id = document.getElementById('canvas');
+
+    // face api detection
+    const detection = await faceapi
+      .detectAllFaces(id)
+      .withFaceLandmarks()
+      .withFaceDescriptors();
+
+    // if no detection
+    if (!detection || detection.length > 1) {
+      stopVideo();
+      return startVideoHandler();
+    }
+
+    img2 = detection[0];
+  }
+  stopVideo();
+  console.log(img1[0]);
+  console.log(img2);
+  // guard clause
+  if (!img1[0]) return console.log(`img1 err`);
+  if (!img2) return console.log(`img2 err`);
+
+  comparePerson(img1[0], img2);
+};
+
+// compare Handler
+const compareHandler = () => {};
+
+const comparePerson = async (referenceImg, queryImg) => {
+  if (!referenceImg) return console.log(`Please register an image first`);
+  if (!queryImg) return console.log(`Query img is invalid`);
+
+  // single face
+  // const qryImg = await faceapi
+  //   .detectSingleFace(queryImg)
+  //   .withFaceLandmarks()
+  //   .withFaceDescriptor();
+
+  if (queryImg) {
+    // matching B query
+    const dist = faceapi.euclideanDistance(
+      referenceImg.descriptor,
+      queryImg.descriptor
+    );
+    console.log(dist);
+    if (dist <= 0.4) {
+      console.log(`match`);
+    } else {
+      console.log(`no match`);
+    }
+  } else {
+    console.log(`no single result`);
+  }
+};
+
+const drawCanvas = async (input) => {
   // Init
   const container = document.createElement('canvas');
   container.style.position = 'absolute';
   container.id = 'overlay';
-  const ctx = container.getContext('2d');
+  // const ctx = container.getContext('2d');
   document.querySelector('.attendance-camera').appendChild(container);
 
   // camera default size
@@ -146,79 +217,16 @@ const drawCanvas = async (input, detectionWithFaceLandMarks) => {
   // draw the landmarks into the canvas
   faceapi.draw.drawFaceLandmarks(canvas_overlay, resizedResults);
 
-  // draw detections into canvas
+  // draw detections points into canvas
   faceapi.draw.drawDetections(canvas_overlay, resizedResults);
 };
 
-// recognize handler
-const recognizeHandler = async () => {
-  const img1 = document.getElementsByTagName('img')[0];
-  const img2 = document.getElementsByTagName('canvas')[0];
-
-  // guard clause
-  if (!img1) return console.log(`img1 err`);
-  if (!img2) return console.log(`img2 err`);
-  // many face
-  // const result1 = await faceapi
-  //   .detectAllFaces(img1)
-  //   .withFaceLandmarks()
-  //   .withFaceDescriptors();
-  // // console.log(result1[0]);
-  // // console.log(img1, img2);
-
-  // const result2 = await faceapi
-  //   .detectAllFaces(img2)
-  //   .withFaceLandmarks()
-  //   .withFaceDescriptors();
-
-  // if (result1.length > 1) return console.log(`error to many faces`);
-
-  comparePerson(img1, img2);
-  console.log(`success`);
-};
-
-const comparePerson = async (referenceImg, queryImg) => {
-  // one face
-  const result = await faceapi
-    .detectSingleFace(referenceImg)
-    .withFaceLandmarks()
-    .withFaceDescriptor();
-
-  if (!result) return console.log(`no result`);
-
-  const labeledDescriptors = [
-    new faceapi.LabeledFaceDescriptors('Emms', [result.descriptor]),
-    new faceapi.LabeledFaceDescriptors('Emms', [result.descriptor]),
-    new faceapi.LabeledFaceDescriptors('Emms', [result.descriptor]),
-    new faceapi.LabeledFaceDescriptors('Emms', [result.descriptor]),
-  ];
-
-  // matching A reference
-  const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors);
-
-  // single face
-  const singleResult = await faceapi
-    .detectSingleFace(queryImg)
-    .withFaceLandmarks()
-    .withFaceDescriptor();
-
-  if (singleResult) {
-    // matching B query
-    const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor);
-    console.log(bestMatch);
-    console.log(bestMatch.distance);
-    console.log(bestMatch.toString());
-  } else {
-    console.log(`no single result`);
-  }
-};
-
-const getUserCameraDevices = () => {
-  return navigator.mediaDevices.enumerateDevices().then((devices) => {
-    console.log(devices);
-    return devices.filter((item) => item.kind === 'videoinput');
-  });
-};
+// const getUserCameraDevices = () => {
+//   return navigator.mediaDevices.enumerateDevices().then((devices) => {
+//     console.log(devices);
+//     return devices.filter((item) => item.kind === 'videoinput');
+//   });
+// };
 
 // getUserCameraDevices().then((i) => createSelectElement('Video', i));
 
@@ -245,12 +253,13 @@ const getUserCameraDevices = () => {
 document
   .getElementById('recognize-btn')
   .addEventListener('click', recognizeHandler);
-document
-  .getElementById('imgUpload')
-  .addEventListener('change', imgUploadHandler);
+// document
+//   .getElementById('imgUpload')
+//   .addEventListener('change', imgUploadHandler);
 document
   .getElementById('camera-btn')
   .addEventListener('click', startVideoHandler);
-document
-  .getElementById('attendance-btn')
-  .addEventListener('click', photoHandler);
+document.getElementById('photo-btn').addEventListener('click', photoHandler);
+// document
+//   .getElementById('compare-btn')
+//   .addEventListener('click', compareHandler);

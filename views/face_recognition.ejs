@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/face_recognition.css" />
     <title>Present Meet</title>
-    <script defer src="javascript/face_recognition.js"></script>
+    <script type="module" src="javascript/face_recognition.js"></script>
   </head>
   <body>
     <main>
-      <section id="upload-img">
+      <!-- <section id="upload-img">
+        <div class="text">
+          <p>Upload your Image with a single face</p>
+        </div>
         <div id="input-container">
-          <label for="imgFile">Upload your Image with a single face</label>
           <input
             type="file"
             name="imgFile"
@@ -21,39 +23,36 @@
           />
         </div>
         <div id="img-container"></div>
-      </section>
+      </section> -->
       <section id="user-face">
-        <div class="take-photo" id="take-photo">
-          <div class="text">
-            <p>
-              If you allow to access your camera, you will be able to use the
-              face recognition function in the room.
-            </p>
-            <p>
-              Note that when you are taking the attendance, other users won't be
-              able to see you.
-            </p>
-            <p>
-              Lastly, if you want some best performance it's recommendable if
-              you turn on hardware accelerator, much better if you have decent
-              GPU.
-            </p>
-          </div>
-          <div class="attendance-camera">
-            <video id="video" autoplay muted></video>
-            <canvas id="canvas" width="1920" height="1080"></canvas>
-            <!-- <canvas id="overlay"></canvas> -->
-          </div>
-          <div class="buttons">
-            <button class="button" id="camera-btn">Start Camera</button>
-            <!-- <button class="button" id="capture-btn">Capture</button> -->
-            <div class="photo-btn">
-              <button id="attendance-btn">Photo</button>
-            </div>
-            <button class="button" id="recognize-btn">Recognize</button>
-          </div>
-          <div id="devices"></div>
+        <div class="text">
+          <p>
+            If you allow to access your camera, you will be able to use the face
+            recognition function in the room.
+          </p>
+          <p>
+            Note that when you are taking the attendance, other users won't be
+            able to see you.
+          </p>
+          <p>
+            Lastly, if you want some best performance it's recommendable if you
+            turn on hardware accelerator, much better if you have decent GPU.
+          </p>
         </div>
+        <div class="attendance-camera">
+          <video id="video" autoplay muted></video>
+          <canvas id="canvas" width="1920" height="1080"></canvas>
+          <!-- <canvas id="overlay"></canvas> -->
+        </div>
+        <div class="buttons">
+          <button class="button" id="camera-btn">Start Camera</button>
+          <button class="button" id="photo-btn">Take Photo</button>
+          <button class="button .disabled-btn" id="recognize-btn">
+            Recognize
+          </button>
+          <!-- <button class="button" id="compare-btn">Compare</button> -->
+        </div>
+        <div id="devices"></div>
       </section>
     </main>
     <script src="javascript/FaceApi/face-api.js"></script>
