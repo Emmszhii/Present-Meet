@@ -51,7 +51,6 @@ input:focus::placeholder {
 .roomsBtn {
   display: flex;
   justify-content: space-evenly;
-  margin: 5%;
 }
 
 .button:hover {
@@ -66,19 +65,16 @@ input:focus::placeholder {
 .homepageFooter {
   display: flex;
   justify-content: space-evenly;
-  margin: 5%;
 }
 
 .modal-join,
 .modal-create {
   display: none;
-  /* position: relative; */
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  /* visibility: hidden; */
   overflow: auto;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.5);
@@ -89,7 +85,6 @@ input:focus::placeholder {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* margin: 0 auto; */
   transform: translate(-50%, -50%);
   text-align: center;
   border-radius: 10px;
@@ -99,7 +94,6 @@ input:focus::placeholder {
   display: flex;
   align-items: center;
   flex-direction: column;
-  /* position: relative; */
 }
 
 .close-join-modal,

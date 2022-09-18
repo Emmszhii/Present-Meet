@@ -5,6 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/face_recognition.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Present Meet</title>
     <script type="module" src="javascript/face_controller.js"></script>
   </head>
@@ -25,6 +32,9 @@
             Lastly, if you want some best performance it's recommendable if you
             turn on hardware accelerator, much better if you have decent GPU.
           </p>
+          <a href="/" id="home"
+            ><button class="button"><i class="fa fa-home"></i></button
+          ></a>
         </div>
         <!-- validation messages -->
         <div id="messages"></div>
@@ -39,6 +49,19 @@
         <div id="devices"></div>
       </section>
     </main>
+    <div id="modal-confirm">
+      <div id="modal-content">
+        <label for="password">Password</label>
+        <input
+          class="input"
+          type="password"
+          name="password"
+          id="password"
+          required
+        />
+        <button class="button" id="confirm">Confirm</button>
+      </div>
+    </div>
     <script src="javascript/FaceApi/face-api.js"></script>
     <script src="javascript/FaceApi/face-api.min.js"></script>
   </body>

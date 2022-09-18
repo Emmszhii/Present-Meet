@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
   type: String,
   googleId: String,
   photoUrl: String,
+  descriptor: String,
 });
 
 const User = mongoose.model('User', UserSchema);

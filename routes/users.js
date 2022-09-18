@@ -8,9 +8,14 @@ const { ensureAuthenticated } = require('../config/auth');
 
 // User model
 const User = require('../models/User');
+const { render } = require('ejs');
 
 router.get('/login', (req, res) => {
-  res.render('login');
+  if (req.isAuthenticated()) {
+    res.redirect('/');
+  } else {
+    res.render('login');
+  }
 });
 
 // register page
@@ -26,8 +31,8 @@ const capitalize = (string) => {
 router.post('/register', (req, res) => {
   const { first_name, last_name, email, password, password2, birthday, type } =
     req.body;
-  console.log(req.body);
-  let errors = [];
+
+  const errors = [];
   // check required fields
   if (
     !first_name ||
@@ -129,6 +134,11 @@ router.post('/register', (req, res) => {
       }
     });
   }
+});
+
+// profile handle
+router.get('/profile', ensureAuthenticated, (req, res) => {
+  res.render('register', {});
 });
 
 // Login Handle

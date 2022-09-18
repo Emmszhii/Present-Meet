@@ -198,7 +198,6 @@ const comparePerson = async (referenceImg, queryImg) => {
       referenceImg.descriptor,
       queryImg.descriptor
     );
-    console.log(dist);
     if (dist <= 0.4) {
       msgHandler(
         `Image 1 and image 2 are match, you can retry recognizing it if you're satisfied then you can now save it!`
@@ -220,11 +219,23 @@ const createPostButton = async () => {
   button.id = 'submit-btn';
 
   buttons.append(button);
-  button.addEventListener('click', postToServer);
+  button.addEventListener('click', showConfirm);
+  // button.addEventListener('click', postToServer);
+};
+
+const showConfirm = () => {
+  const modal = document.getElementById('modal-confirm');
+  const confirmBtn = document.getElementById('confirm');
+
+  modal.style.display = 'block';
+
+  confirmBtn.addEventListener('click', postToServer);
 };
 
 const postToServer = async (e) => {
   e.preventDefault();
+  const password = document.getElementById('password').value;
+  document.getElementById('modal-confirm').style.display = 'none';
   try {
     const id = refUser[0];
     const descriptor = id[0].descriptor.toString();
@@ -235,7 +246,7 @@ const postToServer = async (e) => {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ descriptor }),
+      body: JSON.stringify({ descriptor, password }),
     }).then(() => {
       console.log(`this run`);
     });
