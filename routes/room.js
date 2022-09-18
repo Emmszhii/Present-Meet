@@ -19,19 +19,6 @@ router.get('/rtc/:channel/:role/:tokentype/:id', nocache, generateRTCToken);
 // // fetch rtm token
 router.get('/rtm/:uid', nocache, generateRTMToken);
 
-// // fetch user information
-router.get('/getInfo', (req, res) => {
-  if (req.isAuthenticated()) {
-    try {
-      res.status(200).json({ user: req.user });
-    } catch (e) {
-      res.status(400).json({ err: 'Something gone wrong!' });
-    }
-  } else {
-    res.redirect('/');
-  }
-});
-
 // quit the room
 router.get('/quit', (req, res) => {
   res.redirect('/');

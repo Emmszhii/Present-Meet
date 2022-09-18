@@ -10,8 +10,17 @@ router.get('/', ensureAuthenticated, (req, res) => {
   res.render('home');
 });
 
-router.get('/face-recognition', (req, res) => {
-  res.render('face_recognition');
+// // fetch user information
+router.get('/getInfo', (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      res.status(200).json({ user: req.user });
+    } catch (e) {
+      res.status(400).json({ err: 'Something gone wrong!' });
+    }
+  } else {
+    res.redirect('/');
+  }
 });
 
 // app.get('/profile', (req, res) => {

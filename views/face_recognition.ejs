@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/face_recognition.css" />
     <title>Present Meet</title>
-    <script type="module" src="javascript/face_recognition.js"></script>
+    <script type="module" src="javascript/face_controller.js"></script>
   </head>
   <body>
     <div id="preloader"></div>
@@ -32,10 +32,8 @@
         <div class="attendance-camera"></div>
         <div class="buttons">
           <button class="button" id="camera-btn">Start Camera</button>
-          <button class="button" id="photo-btn">Take Photo</button>
-          <button class="button .disabled-btn" id="recognize-btn">
-            Recognize
-          </button>
+          <button class="button" id="photo-btn">Record Face</button>
+          <button class="button" id="recognize-btn">Recognize</button>
         </div>
         <!-- devices -->
         <div id="devices"></div>

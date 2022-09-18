@@ -22,12 +22,10 @@ import {
 } from './room.js';
 
 // Event Listeners
-
 // refresh devices
 document
   .getElementById('refresh')
   .addEventListener('click', refreshDeviceModal);
-
 // copy to clipboard
 document.getElementById('link-btn').addEventListener('click', copyClipboard);
 // messages toggle
@@ -50,7 +48,6 @@ document
   .addEventListener('click', settingsToggle);
 // close modal settings
 document.getElementById('setup-btn').addEventListener('click', settingsToggle);
-
 // // User send message
 document
   .getElementById('message__form')
@@ -59,10 +56,9 @@ document
 document
   .getElementById('stream__box')
   .addEventListener('click', hideDisplayFrame);
-
 // // when a user forced close they will be deleted to the dom
 window.addEventListener('beforeunload', leaveChannel);
-
+// // when users click esc btn close the msg & members modal
 document.addEventListener('keydown', (e) => {
   const membersModal = document.getElementById('members__container');
   const messagesModal = document.getElementById('messages__container');

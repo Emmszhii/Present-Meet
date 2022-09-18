@@ -30,7 +30,7 @@ app.set('view engine', 'ejs');
 
 // BodyParser
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(express.json());
 
 // express session
 app.use(
@@ -60,6 +60,7 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/room'));
+app.use('/', require('./routes/face_recognition'));
 
 // listen to the route
 app.listen(PORT, () => {

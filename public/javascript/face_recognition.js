@@ -2,7 +2,6 @@ const preloader = document.getElementById('preloader');
 const camera = document.querySelector('.attendance-camera');
 let track;
 const refUser = [];
-const validation = { img1: null, img: null };
 
 // VIDEO HANDLER
 const startVideoHandler = async () => {
@@ -11,9 +10,11 @@ const startVideoHandler = async () => {
   vid.id = 'video';
   vid.autoplay = false;
   vid.muted = true;
-  // vid.width = '1920';
-  // vid.height = '1080';
 
+  const submit = document.getElementById('submit-btn');
+  if (submit) {
+    submit.remove();
+  }
   const overlay = document.getElementById('overlay');
   if (overlay) {
     overlay.remove();
@@ -76,7 +77,7 @@ const photoHandler = async () => {
       // if face is detected
       drawCanvas(canvas);
     } else {
-      errorHandler('Start the Camera First!');
+      errorHandler('Start the camera first!');
     }
   } catch (err) {
     console.log(err);
@@ -105,7 +106,9 @@ const resetMessages = () => {
 // recognize handler
 const recognizeHandler = async () => {
   const video = document.getElementById('video');
-  if (refUser.length === 0) return errorHandler('No Reference Image !');
+  if (refUser.length === 0) {
+    return errorHandler('No Reference Image !');
+  }
   const img1 = refUser[0];
   let img2;
 
@@ -138,12 +141,14 @@ const recognizeHandler = async () => {
     img2 = detection[0];
     stopVideo();
     // guard clause
-    if (!img1[0]) return errorHandler(`no image 1`);
+    if (!img1[0]) {
+      return errorHandler(`no image 1`);
+    }
     if (!img2) return errorHandler(`no image 2`);
     // comparing the 2 image
     comparePerson(img1[0], img2);
   } else {
-    errorHandler('Take a photo first!');
+    errorHandler('Start the camera first!');
   }
 };
 
@@ -193,15 +198,50 @@ const comparePerson = async (referenceImg, queryImg) => {
       referenceImg.descriptor,
       queryImg.descriptor
     );
+    console.log(dist);
     if (dist <= 0.4) {
       msgHandler(
         `Image 1 and image 2 are match, you can retry recognizing it if you're satisfied then you can now save it!`
       );
+      createPostButton();
     } else {
       errorHandler('Image 1 and image 2 are NOT match Please Try again!');
     }
   } else {
     errorHandler('No face detected for recognizing the user!');
+  }
+};
+
+const createPostButton = async () => {
+  const buttons = document.querySelector('.buttons');
+  const button = document.createElement('button');
+  button.classList.add('button');
+  button.innerHTML = 'Submit';
+  button.id = 'submit-btn';
+
+  buttons.append(button);
+  button.addEventListener('click', postToServer);
+};
+
+const postToServer = async (e) => {
+  e.preventDefault();
+  try {
+    const id = refUser[0];
+    const descriptor = id[0].descriptor.toString();
+
+    const response = await fetch(`/descriptor`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ descriptor }),
+    }).then(() => {
+      console.log(`this run`);
+    });
+    await response.json();
+  } catch (err) {
+    errorHandler(err);
   }
 };
 
@@ -269,24 +309,20 @@ const drawCanvas = async (input) => {
 //   document.getElementById('devices').appendChild(label).appendChild(select);
 // };
 
-document
-  .getElementById('recognize-btn')
-  .addEventListener('click', recognizeHandler);
-document
-  .getElementById('camera-btn')
-  .addEventListener('click', startVideoHandler);
-document.getElementById('photo-btn').addEventListener('click', photoHandler);
-
-window.addEventListener('load', () => {
-  Promise.all([
-    faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-  ])
-    .then(() => {
-      preloader.style.display = 'none';
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+export {
+  preloader,
+  camera,
+  track,
+  refUser,
+  startVideoHandler,
+  photoHandler,
+  stopVideo,
+  resetMessages,
+  recognizeHandler,
+  errorHandler,
+  msgHandler,
+  comparePerson,
+  createPostButton,
+  postToServer,
+  drawCanvas,
+};
