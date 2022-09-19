@@ -7,7 +7,6 @@ const { ensureAuthenticated } = require('../config/auth');
 
 // User model
 const User = require('../models/User');
-const { validationResult } = require('express-validator');
 
 router.get('/login', (req, res) => {
   if (req.isAuthenticated()) {
@@ -121,7 +120,7 @@ router.post('/register', (req, res) => {
               email,
               password: hash,
             });
-            console.log(newUser);
+
             // newUser.password = hash;
             // save user
             newUser
@@ -141,7 +140,7 @@ router.post('/register', (req, res) => {
   }
 });
 
-// profile handle
+// profile get request
 router.get('/profile', ensureAuthenticated, (req, res) => {
   const {
     firstName: first_name,
@@ -149,11 +148,10 @@ router.get('/profile', ensureAuthenticated, (req, res) => {
     birthday,
     type,
   } = req.user;
-  // console.log(first_name, last_name, birthday, type);
-  // console.log(req.user);
   res.render('profile', { first_name, last_name, birthday, type });
 });
 
+// profile post request
 router.post('/profile', ensureAuthenticated, (req, res) => {
   const { first_name, last_name, birthday, type, password } = req.body;
   console.log(req.body);
@@ -199,8 +197,8 @@ router.post('/profile', ensureAuthenticated, (req, res) => {
         birthday,
         type,
       };
-      User.updateOne({ id: req.user.id }, data, (err, result) => {
-        if (err) return res.status(200).json({ err: err });
+      User.updateOne({ id: req.user.id }, data, (error, result) => {
+        if (error) return res.status(200).json({ err: error });
         console.log(result.acknowledged);
         if (result.acknowledged) {
           return res.status(200).json({ msg: 'User info has been updated' });
@@ -210,6 +208,56 @@ router.post('/profile', ensureAuthenticated, (req, res) => {
       });
     } else {
       return res.status(400).json({ err: 'Invalid Password' });
+    }
+  });
+});
+
+router.post('/password', ensureAuthenticated, (req, res) => {
+  const {
+    password: oldPw,
+    newPassword: newPw,
+    newPassword1: newPw1,
+  } = req.body;
+
+  if (!oldPw || !newPw || !newPw1)
+    return res
+      .status(400)
+      .json({ err: 'All fields in password are required!' });
+
+  if (newPw < 6)
+    return res
+      .status(400)
+      .json({ err: 'Password must contain 6 or more characters!' });
+
+  if (newPw !== newPw1)
+    return res
+      .status(400)
+      .json({ err: 'New Password and confirm password is not the same!' });
+
+  bcrypt.compare(oldPw, req.user.password, (err, result) => {
+    if (err) return res.status(400).json({ err: 'Old Password is incorrect' });
+    if (result) {
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) return res.status(400).json({ err: 'Something gone wrong' });
+        bcrypt.hash(newPw, salt, (err, hash) => {
+          if (err) return res.status(400).json({ err: 'Something gone wrong' });
+
+          User.updateOne(
+            { id: req.user.id },
+            { password: hash },
+            (error, result) => {
+              if (error)
+                return res.status(400).json({ err: 'Something gone wrong' });
+
+              if (result) {
+                return res
+                  .status(200)
+                  .json({ msg: 'Password have been changed!' });
+              }
+            }
+          );
+        });
+      });
     }
   });
 });

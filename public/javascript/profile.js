@@ -34,6 +34,33 @@ const updateUser = async () => {
   }
 };
 
+const updatePassword = async () => {
+  const oldPw = document.getElementById('change_password');
+  const newPw = document.getElementById('change_password1');
+  const confirmPw = document.getElementById('change_password2');
+  const password = {
+    password: oldPw.value,
+    newPassword: newPw.value,
+    newPassword1: confirmPw.value,
+  };
+
+  const resp = await fetch('/password', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(password),
+  });
+  const data = await resp.json();
+  if (data.msg) {
+    msgHandler(data.msg);
+  } else {
+    errorHandler(data.err);
+  }
+  closeModalChangePw();
+};
+
 const errorHandler = (err) => {
   const msg = document.getElementById('msg');
   if (msg) {
@@ -78,6 +105,27 @@ const closeModal = () => {
   modal.style.display = 'none';
 };
 
+const openModalChangePw = () => {
+  const modal = document.getElementById('modal-password');
+  modal.style.display = 'block';
+};
+
+const closeModalChangePw = () => {
+  const modal = document.getElementById('modal-password');
+  modal.style.display = 'none';
+};
+// modals
 document.getElementById('submit-btn').addEventListener('click', openModal);
 document.getElementById('cancel').addEventListener('click', closeModal);
+document
+  .getElementById('change-pw')
+  .addEventListener('click', openModalChangePw);
+document
+  .getElementById('cancel_change_pw')
+  .addEventListener('click', closeModalChangePw);
+// update info
 document.getElementById('confirm').addEventListener('click', updateUser);
+// change password
+document
+  .getElementById('change_pw_btn')
+  .addEventListener('click', updatePassword);

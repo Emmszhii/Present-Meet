@@ -30,7 +30,8 @@ main {
   font-size: 1.5rem;
 }
 
-#modal-confirm {
+#modal-confirm,
+#modal-password {
   display: none;
   position: fixed;
   width: 100%;
