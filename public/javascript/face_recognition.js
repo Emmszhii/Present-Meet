@@ -247,12 +247,21 @@ const postToServer = async (e) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ descriptor, password }),
-    }).then(() => {
-      console.log(`this run`);
     });
-    await response.json();
+    const data = await response.json();
+    console.log(response);
+    console.log(data);
+    if (response.status === 200) {
+      if (data.msg) {
+        return msgHandler(data.msg);
+      } else {
+        return errorHandler(data.err);
+      }
+    } else {
+      return errorHandler(data.err);
+    }
   } catch (err) {
-    errorHandler(err);
+    return errorHandler(err);
   }
 };
 

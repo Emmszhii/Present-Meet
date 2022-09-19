@@ -3,12 +3,11 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { isEmail } = require('validator');
-
 const { ensureAuthenticated } = require('../config/auth');
 
 // User model
 const User = require('../models/User');
-const { render } = require('ejs');
+const { validationResult } = require('express-validator');
 
 router.get('/login', (req, res) => {
   if (req.isAuthenticated()) {
@@ -57,9 +56,15 @@ router.post('/register', (req, res) => {
   if (birthday.trim() === '') {
     errors.push({ msg: 'Must input a birthday' });
   }
-  // check if type is not null
-  if (type.trim() === '') {
-    errors.push({ msg: 'Please input an account type' });
+  // check if type is not null and valid
+  if (
+    type.trim() === '' &&
+    type !== 'student' &&
+    type !== 'teacher' &&
+    type !== 'audience' &&
+    type !== 'host'
+  ) {
+    res.status(400).json({ msg: 'Please input a valid account type' });
   }
   // check if email is valid
   if (!isEmail(email)) {
@@ -138,7 +143,75 @@ router.post('/register', (req, res) => {
 
 // profile handle
 router.get('/profile', ensureAuthenticated, (req, res) => {
-  res.render('register', {});
+  const {
+    firstName: first_name,
+    lastName: last_name,
+    birthday,
+    type,
+  } = req.user;
+  // console.log(first_name, last_name, birthday, type);
+  // console.log(req.user);
+  res.render('profile', { first_name, last_name, birthday, type });
+});
+
+router.post('/profile', ensureAuthenticated, (req, res) => {
+  const { first_name, last_name, birthday, type, password } = req.body;
+  console.log(req.body);
+
+  if (!first_name || !last_name || !birthday || !type || !password) {
+    return res
+      .status(400)
+      .json({ err: 'PLease fill in all the required fields' });
+  }
+  // check if first_name is valid
+  if (first_name < 3 || first_name.trim() === '') {
+    return res
+      .status(400)
+      .json({ err: 'First name must contain at least 3 letters' });
+  }
+  // check if last_name is valid
+  if (last_name < 3 || last_name.trim() === '') {
+    return res
+      .status(400)
+      .json({ err: 'Last name must contain at least 3 letter' });
+  }
+  // check if birthday is not null
+  if (birthday.trim() === '') {
+    return res.status(400).json({ err: 'Must input a birthday' });
+  }
+  // check if type is not null
+  if (
+    type.trim() === '' &&
+    type !== 'student' &&
+    type !== 'teacher' &&
+    type !== 'audience' &&
+    type !== 'host'
+  ) {
+    return res.status(400).json({ err: 'Please input a valid account type' });
+  }
+
+  bcrypt.compare(password, req.user.password, (err, result) => {
+    if (err) return console.log(err);
+    if (result) {
+      const data = {
+        firstName: first_name,
+        lastName: last_name,
+        birthday,
+        type,
+      };
+      User.updateOne({ id: req.user.id }, data, (err, result) => {
+        if (err) return res.status(200).json({ err: err });
+        console.log(result.acknowledged);
+        if (result.acknowledged) {
+          return res.status(200).json({ msg: 'User info has been updated' });
+        } else {
+          return res.status(400).json({ err: 'Something gone wrong' });
+        }
+      });
+    } else {
+      return res.status(400).json({ err: 'Invalid Password' });
+    }
+  });
 });
 
 // Login Handle

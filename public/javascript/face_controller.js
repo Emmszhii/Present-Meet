@@ -19,10 +19,11 @@ window.addEventListener('load', () => {
     faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
     faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
   ])
-    .then(() => {
-      preloader.style.display = 'none';
-    })
+    .then(() => {})
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      preloader.style.display = 'none';
     });
 });

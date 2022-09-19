@@ -162,11 +162,10 @@ const joinRoomInit = async () => {
   // join stream functions
   // joinStream();
 
-  // if All are loaded loader will be gone
-  loader.style.display = 'none';
-
   // set the users camera and mic
   settings();
+  // if All are loaded loader will be gone
+  loader.style.display = 'none';
 };
 
 const handleTokenExpire = async () => {

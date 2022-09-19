@@ -11,31 +11,33 @@ router.get('/face-recognition', ensureAuthenticated, (req, res) => {
 });
 
 router.post('/descriptor', ensureAuthenticated, (req, res) => {
-  const errors = [];
   const descriptor = req.body.descriptor;
   const password = req.body.password;
-  if (password.trim() === ``) return errors.push({ msg: 'Password is Empty!' });
-  console.log(password, descriptor);
-  bcrypt.compare(password, req.user.password, (err, result) => {
-    if (err) return errors.push({ msg: 'Something gone wrong!' });
-    if (result) {
-      const float = descriptor.split(',');
-      const errors = [];
-      if (!descriptor) errors.push({ msg: 'No Face detected' });
-      if (float.length !== 128) errors.push({ msg: 'Invalid Face' });
-      if (descriptor.trim() === ``) errors.push({ msg: 'Face is not valid' });
-      const data = new Float32Array(float);
 
-      User.updateOne({ id: req.user.id }, { descriptor: data }, (err) => {
+  if (descriptor.trim() === ``)
+    return res.status(400).json({ err: 'Face is not valid' });
+  if (password.trim() === ``)
+    return res.status(400).json({ err: 'Password is invalid' });
+
+  bcrypt.compare(password, req.user.password, (err, result) => {
+    if (err) return res.status(400).json({ err: 'Password is incorrect!' });
+    if (result) {
+      // splitting the string into an array string
+      const float = descriptor.split(',');
+      if (!descriptor) return res.status(400).json({ err: 'No Face detected' });
+      if (float.length !== 128)
+        return res.status(400).json({ err: 'Invalid Face' });
+      // converting the split descriptor array to float32array
+      // const data = new Float32Array(float);
+      User.updateOne({ id: req.user.id }, { descriptor: descriptor }, (err) => {
         if (err) return console.log(err);
+        res.status(200).json({ msg: `Successfully save to database` });
         console.log(`successfully updated the document`);
       });
     } else {
-      return errors.push({ msg: 'Something gone wrong!' });
+      return res.status(400).json({ err: 'Password is incorrect!' });
     }
   });
-
-  // console.log(data);
 });
 
 module.exports = router;
