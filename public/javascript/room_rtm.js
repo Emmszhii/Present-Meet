@@ -1,4 +1,5 @@
 import { userData, rtm, player } from './room_rtc.js';
+import { faceRecognitionHandler } from './room_face_recognition.js';
 import {
   userIdInDisplayFrame,
   displayFrame,
@@ -122,6 +123,19 @@ const handleChannelMessage = async (messageData, MemberId) => {
   // if other screen share is close hide and reset frames
   if (data.type === 'user_screen_share_close') {
     hideDisplayFrame();
+  }
+
+  // if student
+  if (userData.type === 'host' || userData.type === 'student') {
+    // if a teacher or host decided to take attendance
+    if (data.type === 'take_attendance') {
+      faceRecognitionHandler();
+      console.log(`this run`);
+    }
+    if (data.type === 'take_attendance_off') {
+      console.log(`this also run`);
+      // stopTimer();
+    }
   }
 };
 

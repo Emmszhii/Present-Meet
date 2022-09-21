@@ -59,7 +59,6 @@ const generateRTCToken = (req, resp) => {
     return resp.status(500).json({ error: 'token type is invalid' });
   }
   return resp.json({
-    AGORA_APP_ID: process.env.AGORA_APP_ID,
     rtcToken: token,
   });
 };

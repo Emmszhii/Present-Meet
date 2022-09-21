@@ -1,6 +1,7 @@
 // For logging errors in agora set 3 for warnings and error to be log at console set 1 to log it all.
 AgoraRTC.setLogLevel(3);
 
+import { faceRecognitionHandler } from './room_face_recognition.js';
 import {
   getTokens,
   joinRoomInit,
@@ -82,7 +83,26 @@ window.addEventListener('load', () => {
   // display the meeting link
   document.querySelector('.link').textContent = meetingId;
   // get tokens and user info
-  getTokens();
-  // need 3 seconds to run because of fetching the info and tokens
-  setTimeout(joinRoomInit, 3000);
+  // load faces
+  Promise.all([
+    faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+  ])
+    .then(() => {
+      console.log(`face api module success`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  getTokens()
+    .then(() => {
+      console.log(`data success`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  // faceRecognitionHandler();
 });

@@ -154,8 +154,6 @@ router.get('/profile', ensureAuthenticated, (req, res) => {
 // profile post request
 router.post('/profile', ensureAuthenticated, (req, res) => {
   const { first_name, last_name, birthday, type, password } = req.body;
-  console.log(req.body);
-
   if (!first_name || !last_name || !birthday || !type || !password) {
     return res
       .status(400)
@@ -194,10 +192,10 @@ router.post('/profile', ensureAuthenticated, (req, res) => {
       const data = {
         firstName: first_name,
         lastName: last_name,
-        birthday,
-        type,
+        birthday: birthday,
+        type: type,
       };
-      User.updateOne({ id: req.user.id }, data, (error, result) => {
+      User.updateOne({ _id: req.user.id }, data, (error, result) => {
         if (error) return res.status(200).json({ err: error });
         console.log(result.acknowledged);
         if (result.acknowledged) {
@@ -243,7 +241,7 @@ router.post('/password', ensureAuthenticated, (req, res) => {
           if (err) return res.status(400).json({ err: 'Something gone wrong' });
 
           User.updateOne(
-            { id: req.user.id },
+            { _id: req.user.id },
             { password: hash },
             (error, result) => {
               if (error)

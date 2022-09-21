@@ -14,7 +14,10 @@ router.get('/', ensureAuthenticated, (req, res) => {
 router.get('/getInfo', (req, res) => {
   if (req.isAuthenticated()) {
     try {
-      res.status(200).json({ user: req.user });
+      res.status(200).json({
+        user: req.user,
+        AGORA_APP_ID: process.env.AGORA_APP_ID,
+      });
     } catch (e) {
       res.status(400).json({ err: 'Something gone wrong!' });
     }
