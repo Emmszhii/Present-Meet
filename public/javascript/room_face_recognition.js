@@ -1,8 +1,9 @@
 import { userData, rtm } from './room_rtc.js';
 
 let track;
-const startingMinutes = 1;
+const startingMinutes = 0.1;
 let time = startingMinutes * 60;
+let interval;
 
 const dom = () => {
   return `
@@ -22,18 +23,19 @@ const updateCountdown = () => {
   const minutes = Math.floor(time / 60);
   let seconds = time % 60;
 
-  document.getElementById('countdown').innerHTML = `${minutes}: ${seconds}`;
+  document.getElementById('countdown').innerHTML = `${minutes}:${seconds}`;
   time--;
 
-  if (time === 0) {
-    console.log(`this run`);
-    document.getElementById('modal_face').remove();
+  console.log(time);
+
+  if (time <= 0) {
+    stopTimer();
   }
 };
 
 const stopTimer = () => {
-  clearInterval(timer);
-  const dom = document.getElementById('modal_face');
+  clearInterval(interval);
+  const dom = document.querySelector('.modal_face');
   if (dom) {
     dom.remove();
   }
@@ -130,7 +132,7 @@ const faceRecognitionHandler = () => {
   document.querySelector('.videoCall').insertAdjacentHTML('beforeend', dom);
   startCamera();
 
-  setInterval(updateCountdown);
+  interval = setInterval(updateCountdown, 1000);
 
   document
     .getElementById('face_camera_btn')
@@ -138,8 +140,6 @@ const faceRecognitionHandler = () => {
   document
     .getElementById('face_recognize_btn')
     .addEventListener('click', faceRecognized);
-
-  // timer();
 };
 
 // Teacher host
